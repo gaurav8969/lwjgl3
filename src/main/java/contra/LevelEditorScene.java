@@ -1,6 +1,8 @@
 package contra;
 
 import Render.Shader;
+import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -15,10 +17,10 @@ public class LevelEditorScene extends Scene{
     private int vertexID, fragmentID, shaderProgram;
     private float[] vertexArray = {
              //position                      //colour
-             0.5f,-0.5f, 0.0f,              1.0f,0.0f,0.0f,1.0f,    //Bottom right 0
-            -0.5f, 0.5f, 0.0f,              0.0f,1.0f,0.0f,1.0f,    //Top Left     1
-             0.5f, 0.5f, 0.0f,              0.0f,0.0f,1.0f,1.0f,    //Top Right    2
-            -0.5f,-0.5f, 0.0f,              1.0f,1.0f,0.0f,1.0f    //Bottom-Right  3
+             100.5f,   0.5f,  0.0f,              1.0f,0.0f,0.0f,1.0f,    //Bottom right 0
+              -0.5f, 100.5f,  0.0f,              0.0f,1.0f,0.0f,1.0f,    //Top Left     1
+             100.5f, 100.5f,  0.0f,              0.0f,0.0f,1.0f,1.0f,    //Top Right    2
+               0.5f,  -0.5f,  0.0f,              1.0f,1.0f,0.0f,1.0f    //Bottom-Right  3
     };
 
     //vertices form triangles, which constitute elements
@@ -35,6 +37,7 @@ public class LevelEditorScene extends Scene{
     }
     @Override
     public void init(){
+        this.camera = new Camera(new Vector2f(-200, -300));
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile(); //compile individual shaders and link them
 
@@ -76,6 +79,8 @@ public class LevelEditorScene extends Scene{
     @Override
     public void update(float dt) {
         defaultShader.use();
+        defaultShader.uploadMat4f("uProjection", camera.getProjectionMatrix());
+        defaultShader.uploadMat4f("uView", camera.getViewMatrix());
 
         //bind the VAO that we're using
         glBindVertexArray(vaoID);
