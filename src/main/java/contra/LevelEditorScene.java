@@ -7,6 +7,7 @@ import components.Transform;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
+import util.AssetPool;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -18,6 +19,11 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 public class LevelEditorScene extends Scene{
     public LevelEditorScene() {
 
+    }
+
+    //load big resources in the init fn, avoid lag spike mid-play
+    private void loadResources(){
+        AssetPool.getShader("assets/shaders/default.glsl");
     }
     @Override
     public void init(){
@@ -42,10 +48,14 @@ public class LevelEditorScene extends Scene{
                 this.addGameObjectToScene(go);
             }
         }
+        loadResources();
     }
+
 
     @Override
     public void update(float dt) {
+        //System.out.println("FPS " + (1.0f/dt));
+
         for(GameObject go: gameObjects){
             go.update(dt);
         }
