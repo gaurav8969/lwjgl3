@@ -19,12 +19,12 @@ public class Window {
     private static Scene currentScene;
 
     private Window(){
-        this.width = 800;
-        this.height = 640;
+        this.width = 1280;
+        this.height = 960;
         this.title = "Contra";
-        r = 1;
-        g = 1;
-        b = 1;
+        r = 0;
+        g = 0;
+        b = 0;
         a = 1;
     }
     public static Window get(){
@@ -39,6 +39,7 @@ public class Window {
             case 0:
                 currentScene = new LevelEditorScene();
                 currentScene.init();
+                currentScene.start();
                 break;
             case 1:
                 currentScene = new LevelScene();
@@ -49,6 +50,7 @@ public class Window {
     }
     public void run(){
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
+
         init();
         loop();
 
@@ -105,18 +107,16 @@ public class Window {
         // LWJGL detects the context that is current in the current thread,
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
-        float dt = -1.0f;
         float startTime = Time.getTime();
-        float endTime = Time.getTime();
-        GL.createCapabilities();
+        float endTime;
+        float dt = -1.0f;
 
-        // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-
+        glClearColor(r, g, b, a);
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(glfwWindow) ) {
-            glClearColor(r, g, b, a);
+            glfwPollEvents();
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             if (dt >= 0) {
@@ -125,16 +125,13 @@ public class Window {
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
 
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            glfwPollEvents();
-
-            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
-                System.out.println("Space key is pressed");
-            }
             endTime = Time.getTime();
             dt = endTime - startTime;
             startTime = endTime;
         }
+    }
+
+    public static Scene getScene(){
+        return get().currentScene;
     }
 }
