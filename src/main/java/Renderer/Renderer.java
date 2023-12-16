@@ -11,6 +11,7 @@ import java.util.List;
 
 public class Renderer {
     private final int MAX_BATCH_SIZE = 1000;
+    private final int MAX_TEXTURES_SIZE = 7;//8 slots, 7 textures, the first default-activated is for no textures
     private List<RenderBatch> batches;
 
     public Renderer(){
@@ -34,7 +35,7 @@ public class Renderer {
             }
         }
         if(!added){
-            RenderBatch newRenderBatch = new RenderBatch(MAX_BATCH_SIZE);
+            RenderBatch newRenderBatch = new RenderBatch(MAX_BATCH_SIZE,MAX_TEXTURES_SIZE);
             newRenderBatch.init();
             batches.add(newRenderBatch);
             newRenderBatch.addSprite(sprite);
