@@ -93,9 +93,9 @@ public class RenderBatch {
         this.sprites[index] = spr;
         this.numSprites++;
 
-        if (spr.texture != null) {
-            if (!textures.contains(spr.texture)) {
-                textures.add(spr.texture);
+        if (spr.sprite.texture != null) {
+            if (!textures.contains(spr.sprite.texture)) {
+                textures.add(spr.sprite.texture);
             }
         }
 
@@ -143,19 +143,19 @@ public class RenderBatch {
     }
 
     private void loadVertexProperties(int index) {
-        SpriteRenderer sprite = this.sprites[index];
+        SpriteRenderer spr = this.sprites[index];
 
         // Find offset within array (4 vertices per sprite)
         int offset = index * 4 * VERTEX_SIZE;
 
-        Vector4f color = sprite.colour;
-        Vector2f[] texCoords = sprite.texCoords;
+        Vector4f color = spr.colour;
+        Vector2f[] texCoords = spr.sprite.texCoords;
 
         //only happens once for each sprite
         int texId = 0;
-        if (sprite.texture != null) {
+        if (spr.sprite.texture != null) {
             for (int i = 0; i < textures.size(); i++) {
-                if (textures.get(i) == sprite.texture) {
+                if (textures.get(i) == spr.sprite.texture) {
                     texId = i + 1;
                     break;
                 }
@@ -174,7 +174,7 @@ public class RenderBatch {
                 yAdd = 1.0f;
             }
 
-            Transform tf = sprite.gameObject.getComponent(Transform.class);
+            Transform tf = spr.gameObject.getComponent(Transform.class);
             // Load position
             vertices[offset] = tf.position.x + (xAdd * tf.scale.x);
             vertices[offset + 1] = tf.position.y + (yAdd * tf.scale.y);

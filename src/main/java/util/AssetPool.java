@@ -2,6 +2,7 @@ package util;
 
 import Renderer.Shader;
 import Renderer.Texture;
+import components.Spritesheet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
 public class AssetPool {
     private static Map<String, Shader> shaders = new HashMap<>();
     private static Map<String, Texture> textures = new HashMap<>();
+    private static Map<String, Spritesheet> spritesheets = new HashMap<>();
 
     private AssetPool(){}
     public static Shader getShader(String resource){
@@ -30,5 +32,20 @@ public class AssetPool {
             AssetPool.textures.put(resource, texture);
             return texture;
         }
+    }
+    public static Spritesheet loadSpriteSheet(String resource, int numOfSprites,
+                            int spriteHeight, int spriteWidth, int spacing){
+        if(AssetPool.spritesheets.containsKey(resource)){
+            return spritesheets.get(resource);
+        }else{
+            Spritesheet spritesheet = new Spritesheet(AssetPool.getTexture(resource),numOfSprites,spriteHeight,
+                    spriteWidth,spacing);
+            AssetPool.spritesheets.put(resource, spritesheet);
+            return spritesheet;
+        }
+    }
+
+    public static Spritesheet getSpriteSheet(String resource){
+        return AssetPool.spritesheets.get(resource);
     }
 }

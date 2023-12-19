@@ -2,7 +2,9 @@ package contra;
 
 import Renderer.Shader;
 import Renderer.Texture;
+import components.Sprite;
 import components.SpriteRenderer;
+import components.Spritesheet;
 import components.Transform;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -24,22 +26,24 @@ public class LevelEditorScene extends Scene{
     //load big resources in the init fn, avoid lag spike mid-play
     private void loadResources(){
         AssetPool.getShader("assets/shaders/default.glsl");
+        AssetPool.loadSpriteSheet("assets/images/animatedSprite.png",24,144,144,0);
     }
     @Override
     public void init(){
+        loadResources();
         this.camera = new Camera(new Vector2f(-200, -300));
-        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(100,100),new
-                Vector2f(256,256)));
-        GameObject obj2 = new GameObject("Object 1", new Transform(new Vector2f(600,-200),
+        Spritesheet spritesheet = AssetPool.getSpriteSheet("assets/images/animatedSprite.png");
+
+        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(0,-300),new
+                Vector2f(800,800)));
+        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(600,-100),
                 new Vector2f(256,256)));
 
-        obj1.addComponent(new SpriteRenderer(AssetPool.getTexture("assets/images/ContraSheet1.png")));
-        obj2.addComponent(new SpriteRenderer(AssetPool.getTexture("assets/images/gojoRunning.png")));
+        obj1.addComponent(new SpriteRenderer(spritesheet.getSprite(1,1)));
+//        obj2.addComponent(new SpriteRenderer(spritesheet.getSprite(3,3)));
 
         this.addGameObjectToScene(obj1);
         this.addGameObjectToScene(obj2);
-
-        loadResources();
     }
 
     @Override

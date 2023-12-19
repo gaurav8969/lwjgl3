@@ -10,6 +10,7 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
     public String filepath;
+    public int width,height;
     private int texID;
 
     public Texture(String Filepath){
@@ -31,8 +32,12 @@ public class Texture {
         IntBuffer width = BufferUtils.createIntBuffer(1);
         IntBuffer height = BufferUtils.createIntBuffer(1);
         IntBuffer channels = BufferUtils.createIntBuffer(1);
+
         stbi_set_flip_vertically_on_load(true);
         ByteBuffer image = stbi_load(filepath,width,height,channels,0);
+
+        this.width = width.get(0);
+        this.height = height.get(0);
 
         if(image != null){
             if (channels.get(0) == 3) {

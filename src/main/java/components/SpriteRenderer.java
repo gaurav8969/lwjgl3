@@ -5,21 +5,32 @@ import contra.Component;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
+//contains sprites that are to be rendered
 public class SpriteRenderer extends Component {
 
     public Vector4f colour;
-    public Texture texture;
-    public Vector2f[] texCoords;
-
-    public SpriteRenderer(Vector4f color){
-        colour = color;
-        this.texture = null;
-        this.texCoords = getTexCoords();
+    public Sprite sprite;
+    public SpriteRenderer(Vector4f colour, Sprite sprite){
+        this.sprite = sprite;
+        this.colour = colour;
     }
-    public SpriteRenderer(Texture texture){
-        this.texture = texture;
-        this.texCoords = getTexCoords();
+
+    public SpriteRenderer(Vector4f colour){
+        this.colour = colour;
+        this.sprite = new Sprite(null);
+    }
+
+    public SpriteRenderer(Sprite sprite){
         this.colour = new Vector4f(1.0f,1.0f,1.0f,1.0f);
+        this.sprite = sprite;
+    }
+
+    public Texture getTexture(){
+        return sprite.texture;
+    }
+
+    public Vector2f[] getTextureCoords(){
+        return sprite.texCoords;
     }
 
     @Override
@@ -30,15 +41,4 @@ public class SpriteRenderer extends Component {
     public void update(float dt) {
     }
 
-    private Vector2f[] getTexCoords() {
-        class localTextureCoords{
-            static Vector2f[] texCoords = {
-                    new Vector2f(1, 1),
-                    new Vector2f(1, 0),
-                    new Vector2f(0, 0),
-                    new Vector2f(0, 1)
-            };
-        }
-        return localTextureCoords.texCoords;
-    }
 }
