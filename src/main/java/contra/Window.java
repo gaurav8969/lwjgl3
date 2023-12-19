@@ -22,9 +22,9 @@ public class Window {
         this.width = 1280;
         this.height = 960;
         this.title = "Contra";
-        r = 0;
-        g = 0;
-        b = 0;
+        r = 0.6f;
+        g = 0.2f;
+        b = 0.2f;
         a = 1;
     }
     public static Window get(){

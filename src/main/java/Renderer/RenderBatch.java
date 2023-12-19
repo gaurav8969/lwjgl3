@@ -19,6 +19,7 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 //render many sprites(quads) at once!
 public class RenderBatch {
+    boolean toRebuffer = true;
     private final int POS_SIZE = 2;
     private final int COLOR_SIZE = 4;
     private final int TEX_COORDS_SIZE = 2;
@@ -93,9 +94,9 @@ public class RenderBatch {
         this.sprites[index] = spr;
         this.numSprites++;
 
-        if (spr.sprite.texture != null) {
-            if (!textures.contains(spr.sprite.texture)) {
-                textures.add(spr.sprite.texture);
+        if (spr.getSprite().getTexture() != null) {
+            if (!textures.contains(spr.getSprite().getTexture())) {
+                textures.add(spr.getSprite().getTexture());
             }
         }
 
@@ -108,9 +109,21 @@ public class RenderBatch {
     }
 
     public void render() {
-        // For now, we will rebuffer all data every frame
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        for(int i = 0; i < numSprites; i++){
+            SpriteRenderer spr = sprites[i];
+            if(spr.isDirty()){
+                loadVertexProperties(i);
+                spr.makeClean();
+                toRebuffer = true;
+            }
+        }
+
+        if(toRebuffer){
+            // For now, we will rebuffer all data every frame
+            glBindBuffer(GL_ARRAY_BUFFER, vboID);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+            toRebuffer = false;
+        }
 
         // Use shader
         shader.use();
@@ -148,14 +161,14 @@ public class RenderBatch {
         // Find offset within array (4 vertices per sprite)
         int offset = index * 4 * VERTEX_SIZE;
 
-        Vector4f color = spr.colour;
-        Vector2f[] texCoords = spr.sprite.texCoords;
+        Vector4f color = spr.getColour();
+        Vector2f[] texCoords = spr.getSprite().getTexCoords();
 
         //only happens once for each sprite
         int texId = 0;
-        if (spr.sprite.texture != null) {
+        if (spr.getSprite().getTexture() != null) {
             for (int i = 0; i < textures.size(); i++) {
-                if (textures.get(i) == spr.sprite.texture) {
+                if (textures.get(i) == spr.getSprite().getTexture()) {
                     texId = i + 1;
                     break;
                 }

@@ -6,4 +6,7 @@ public class Time {
    public static float getTime(){
       return (float)((System.nanoTime() - timeStarted)*1E-9);
    }
+   public static void sleep(float milliSeconds) throws InterruptedException {
+      Thread.sleep((long)milliSeconds);
+   }
 }

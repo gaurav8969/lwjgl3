@@ -19,7 +19,6 @@ public class Spritesheet extends Component {
 
     public Spritesheet(Texture texture, int numOfSprites, int spriteHeight, int spriteWidth, int spacing) {
         this.texture = texture;
-        System.out.println("Spritesheet texture width is " + texture.width + " and height is " + texture.height);
         sprites = new ArrayList<>();
         int currentX = 0;
         int currentY = texture.height - spriteHeight;
@@ -45,7 +44,6 @@ public class Spritesheet extends Component {
 
             if (currentX >= texture.width) {
                 ++rowCount;
-                System.out.println("rowcount increased to " + rowCount );
                 currentY -= spriteHeight + spacing;
                 currentX = 0;
             }

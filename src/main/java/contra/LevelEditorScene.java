@@ -10,6 +10,7 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import util.AssetPool;
+import util.Time;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -34,20 +35,20 @@ public class LevelEditorScene extends Scene{
         this.camera = new Camera(new Vector2f(-200, -300));
         Spritesheet spritesheet = AssetPool.getSpriteSheet("assets/images/animatedSprite.png");
 
-        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(0,-300),new
-                Vector2f(800,800)));
-        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(600,-100),
+        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(0,0),new
+                Vector2f(256,256)));
+        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(300,0),
                 new Vector2f(256,256)));
 
-        obj1.addComponent(new SpriteRenderer(spritesheet.getSprite(1,1)));
-//        obj2.addComponent(new SpriteRenderer(spritesheet.getSprite(3,3)));
+        obj1.addComponent(new SpriteRenderer(spritesheet.getSprite(2,1)));
+        obj2.addComponent(new SpriteRenderer(spritesheet.getSprite(4,1)));
 
         this.addGameObjectToScene(obj1);
         this.addGameObjectToScene(obj2);
     }
 
     @Override
-    public void update(float dt) {
+    public void update(float dt){
         //System.out.println("FPS " + (1.0f/dt));
 
         for(GameObject go: gameObjects){
