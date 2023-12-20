@@ -1,6 +1,12 @@
 package contra;
 
+import imgui.ImGuiIO;
+import imgui.flag.ImGuiConfigFlags;
+import imgui.gl3.ImGuiImplGl3;
+import imgui.glfw.ImGuiImplGlfw;
+import imgui.internal.ImGui;
 import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import util.Time;
@@ -14,9 +20,14 @@ public class Window {
     private int width, height;
     private String title;
     private static Window window = null;
+    private String glslVersion = null;
     private long glfwWindow;
     private float r,g,b,a;
     private static Scene currentScene;
+    private ImGuiLayer imguiLayer;
+
+    private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
+    private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
     private Window(){
         this.width = 1280;
@@ -27,13 +38,23 @@ public class Window {
         b = 0.9f;
         a = 1;
     }
+    private void init(){
+        initWindow();
+        //starting the imgui systems
+        initImGui();
+        imGuiGlfw.init(glfwWindow, true);
+        imGuiGl3.init(glslVersion);
+        //
+        this.imguiLayer = new ImGuiLayer();
+
+    }
+
     public static Window get(){
         if(Window.window == null){
             Window.window = new Window();
         }
         return Window.window;
     }
-
     public static void changeScene(int newScene){
         switch(newScene){
             case 0:
@@ -48,6 +69,7 @@ public class Window {
                 break;
         }
     }
+
     public void run(){
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
@@ -62,7 +84,7 @@ public class Window {
         glfwTerminate();
         glfwSetErrorCallback(null).free();
     }
-    private void init() {
+    private void initWindow() {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
@@ -70,6 +92,8 @@ public class Window {
         // Initialize GLFW. Most GLFW functions will not work before doing this.
         if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
+
+        glslVersion = "#version 330";
 
         // Configure GLFW
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
@@ -85,8 +109,12 @@ public class Window {
         glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
-
         glfwSetKeyCallback(glfwWindow,KeyListener::keyCallback);
+        glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
+            Window.setWidth(newWidth);
+            Window.setHeight(newHeight);
+        });
+
         // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
         // Enable v-sync
@@ -102,6 +130,11 @@ public class Window {
         Window.changeScene(0);
     }
 
+    public void initImGui(){
+        ImGui.createContext();
+        ImGuiIO io = ImGui.getIO();
+        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
+    }
 
     private void loop() {
         // This line is critical for LWJGL's interoperation with GLFW's
@@ -121,6 +154,20 @@ public class Window {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+            imGuiGlfw.newFrame();
+            ImGui.newFrame();
+
+            imguiLayer.imgui();
+            ImGui.render();
+            imGuiGl3.renderDrawData(ImGui.getDrawData());
+
+            if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
+                final long backupWindowPtr = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
+                ImGui.updatePlatformWindows();
+                ImGui.renderPlatformWindowsDefault();
+                org.lwjgl.glfw.GLFW.glfwMakeContextCurrent(backupWindowPtr);
+            }
+
             if (dt >= 0) {
                 currentScene.update(dt);
             }
@@ -133,7 +180,25 @@ public class Window {
         }
     }
 
+
+
     public static Scene getScene(){
         return get().currentScene;
+    }
+
+    public static int getWidth() {
+        return get().width;
+    }
+
+    public static int getHeight() {
+        return get().height;
+    }
+
+    public static void setWidth(int newWidth) {
+        get().width = newWidth;
+    }
+
+    public static void setHeight(int newHeight) {
+        get().height = newHeight;
     }
 }
