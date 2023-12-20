@@ -34,14 +34,16 @@ public class LevelEditorScene extends Scene{
         loadResources();
         this.camera = new Camera(new Vector2f(-200, -300));
         Spritesheet spritesheet = AssetPool.getSpriteSheet("assets/images/animatedSprite.png");
+        Sprite red = new Sprite(AssetPool.getTexture("assets/images/red.png"));
+        Sprite green = new Sprite(AssetPool.getTexture("assets/images/green.png"));
 
         GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(0,0),new
                 Vector2f(256,256)));
-        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(300,0),
+        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(0,0),
                 new Vector2f(256,256)));
 
-        obj1.addComponent(new SpriteRenderer(spritesheet.getSprite(2,1)));
-        obj2.addComponent(new SpriteRenderer(spritesheet.getSprite(4,1)));
+        obj1.addComponent(new SpriteRenderer(spritesheet.getSprite(1,1)));
+        obj2.addComponent(new SpriteRenderer(spritesheet.getSprite(2,4)));
 
         this.addGameObjectToScene(obj1);
         this.addGameObjectToScene(obj2);

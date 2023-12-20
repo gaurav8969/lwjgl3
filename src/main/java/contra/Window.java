@@ -22,9 +22,9 @@ public class Window {
         this.width = 1280;
         this.height = 960;
         this.title = "Contra";
-        r = 0.6f;
-        g = 0.2f;
-        b = 0.2f;
+        r = 0.9f;
+        g = 0.9f;
+        b = 0.9f;
         a = 1;
     }
     public static Window get(){
@@ -92,10 +92,12 @@ public class Window {
         // Enable v-sync
         glfwSwapInterval(1);
 
+        GL.createCapabilities();
         // Make the window visible
         glfwShowWindow(glfwWindow);
 
-        GL.createCapabilities();
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
         Window.changeScene(0);
     }

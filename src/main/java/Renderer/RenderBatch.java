@@ -18,7 +18,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 //render many sprites(quads) at once!
-public class RenderBatch {
+public class RenderBatch implements Comparable<RenderBatch>{
     boolean toRebuffer = true;
     private final int POS_SIZE = 2;
     private final int COLOR_SIZE = 4;
@@ -35,6 +35,7 @@ public class RenderBatch {
     private SpriteRenderer[] sprites;
     private int numSprites;
     public boolean hasRoom;
+    public boolean hasTextureRoom;
     private float[] vertices;
     private int[] texSlots = {0, 1, 2, 3, 4, 5, 6, 7,8};
 
@@ -43,19 +44,21 @@ public class RenderBatch {
     private int maxBatchSize;
     private int maxTextureSize;
     private Shader shader;
+    private int zIndex;
 
-    public RenderBatch(int maxBatchSize, int maximumTexturesSize) {
+    public RenderBatch(int maxBatchSize, int maximumTexturesSize, int zIndex) {
         shader = AssetPool.getShader("assets/shaders/default.glsl");
         this.sprites = new SpriteRenderer[maxBatchSize];
-
         // 4 vertices quads
         vertices = new float[maxBatchSize * 4 * VERTEX_SIZE];
 
         this.numSprites = 0;
         this.hasRoom = true;
+        this.hasTextureRoom = true;
         this.textures = new ArrayList<>();
         this.maxTextureSize = maximumTexturesSize;
         this.maxBatchSize = maxBatchSize;
+        this.zIndex = zIndex;
     }
 
     public void init() {
@@ -103,9 +106,14 @@ public class RenderBatch {
         // Add properties to local vertices array
         loadVertexProperties(index);
 
-        if ((numSprites >= this.maxBatchSize) || (textures.size() > maxTextureSize)) {
+        if ((numSprites >= this.maxBatchSize)) {
             this.hasRoom = false;
         }
+
+        if(textures.size() >= maxTextureSize){
+            this.hasTextureRoom = false;
+        }
+
     }
 
     public void render() {
@@ -234,4 +242,18 @@ public class RenderBatch {
         elements[offsetArrayIndex + 4] = offset + 2;
         elements[offsetArrayIndex + 5] = offset + 1;
     }
+
+    public boolean hasTexture(Texture tex){
+        return textures.contains(tex);
+    }
+
+    public int zIndex(){
+        return this.zIndex;
+    }
+
+    @Override
+    public int compareTo(RenderBatch o) {
+        return Integer.compare(this.zIndex, o.zIndex());
+    }
+
 }

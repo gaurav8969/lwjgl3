@@ -4,7 +4,7 @@ import Renderer.Texture;
 import contra.Component;
 import org.joml.Vector2f;
 
-public class Sprite extends Component {
+public class Sprite{
 
     private Texture texture;
     private Vector2f[] texCoords;
@@ -16,14 +16,6 @@ public class Sprite extends Component {
     public Sprite(Texture texture, Vector2f[] texCoords){
         this.texture = texture;
         this.texCoords = texCoords;
-    }
-
-    @Override
-    public void init() {
-    }
-
-    @Override
-    public void update(float dt) {
     }
 
     private Vector2f[] loadTexCoords() {

@@ -10,7 +10,7 @@ import java.util.List;
 //contains sprites inside a spritesheet, the texture info is implementation details, end goal is to extract
 //it all as sprites stored in a list
 
-public class Spritesheet extends Component {
+public class Spritesheet{
     //no list, a single texture, since that is the point of spritesheets
     private Texture texture;
     private List<Sprite> sprites;
@@ -59,14 +59,6 @@ public class Spritesheet extends Component {
 
     public Sprite getSprite(int index){
         return sprites.get(index);
-    }
-
-    @Override
-    public void init() {
-    }
-
-    @Override
-    public void update(float dt) {
     }
 
 }

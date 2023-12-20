@@ -9,6 +9,7 @@ import org.joml.Vector4f;
 //contains sprites that are to be rendered
 public class SpriteRenderer extends Component {
 
+    int zIndex= 0;//layer it is on, higher values go on top, try to use [-2,+2] range, default 0
     private Vector4f colour;
     private Sprite sprite;
     private boolean isDirty = false;
@@ -16,19 +17,31 @@ public class SpriteRenderer extends Component {
     maintain a copy of it that we update, and if we do, we raise the dirty flag*/
     private Transform lastTransform;
 
-    public SpriteRenderer(Vector4f colour, Sprite sprite){
+    public SpriteRenderer(Sprite sprite, int zIndex,Vector4f colour){
         this.sprite = sprite;
         this.colour = colour;
-    }
-
-    public SpriteRenderer(Vector4f colour){
-        this.colour = colour;
-        this.sprite = new Sprite(null);
+        this.zIndex = zIndex;
+        this.isDirty = true;
     }
 
     public SpriteRenderer(Sprite sprite){
+        this.sprite = sprite;
+        this.colour = new Vector4f(1,1,1,1);
+        this.zIndex = 0;
+        this.isDirty = true;
+    }
+    public SpriteRenderer(Vector4f colour){
+        this.colour = colour;
+        this.sprite = new Sprite(null);
+        this.zIndex = 0;
+        this.isDirty = true;
+    }
+
+    public SpriteRenderer(Sprite sprite, int zIndex){
         this.colour = new Vector4f(1.0f,1.0f,1.0f,1.0f);
         this.sprite = sprite;
+        this.zIndex = zIndex;
+        this.isDirty = true;
     }
 
     @Override
@@ -66,19 +79,20 @@ public class SpriteRenderer extends Component {
         return sprite.getTexCoords();
     }
 
-    public Vector4f getColour(){
-        return this.colour;
-    }
-
-    public Sprite getSprite(){
-        return this.sprite;
-    }
-
     public boolean isDirty(){
         return this.isDirty;
     }
     public void makeClean(){
         this.isDirty= false;
+    }
+
+    public Vector4f getColour(){
+        return this.colour;
+    }
+
+    public int zIndex(){return zIndex;}
+    public Sprite getSprite(){
+        return this.sprite;
     }
 
 }

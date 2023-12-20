@@ -7,6 +7,8 @@ import components.SpriteRenderer;
 import contra.GameObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Renderer {
@@ -28,18 +30,25 @@ public class Renderer {
     public void addSprite(SpriteRenderer sprite){
         boolean added = false;
         for(RenderBatch batch: batches){
-            if(batch.hasRoom){
-                batch.addSprite(sprite);
-                added = true;
-                break;
+            if(batch.hasRoom && batch.zIndex() == sprite.zIndex()){
+                Texture tex = sprite.getTexture();
+                if(tex == null || batch.hasTexture(tex)|| batch.hasTextureRoom){
+                    batch.addSprite(sprite);
+                    added = true;
+                    break;
+                }
             }
         }
+
         if(!added){
-            RenderBatch newRenderBatch = new RenderBatch(MAX_BATCH_SIZE,MAX_TEXTURES_SIZE);
+            RenderBatch newRenderBatch = new RenderBatch(MAX_BATCH_SIZE,MAX_TEXTURES_SIZE, sprite.zIndex());
             newRenderBatch.init();
             batches.add(newRenderBatch);
             newRenderBatch.addSprite(sprite);
+            Collections.sort(batches);
         }
+
+
     }
 
     public void render(){
@@ -47,4 +56,5 @@ public class Renderer {
             batch.render();
         }
     }
+
 }
