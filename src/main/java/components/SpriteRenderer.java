@@ -3,6 +3,7 @@ package components;
 import Renderer.Texture;
 import contra.Component;
 import contra.GameObject;
+import imgui.ImGui;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -95,4 +96,14 @@ public class SpriteRenderer extends Component {
         return this.sprite;
     }
 
+    @Override
+    public void imGui(){
+        float[] imColour = {colour.x, colour.y, colour.z, colour.w};
+        //ImGui calls below must take place in context of an imgui window,
+        // i.e sandwiched by ImGui.begin() and ImGui.end() calls or program crashes
+        if(ImGui.colorPicker4("Colour picker: ", imColour)){
+            this.colour.set(imColour[0],imColour[1],imColour[2],imColour[3]);
+            isDirty = true;
+        }
+    }
 }

@@ -6,6 +6,7 @@ import components.Sprite;
 import components.SpriteRenderer;
 import components.Spritesheet;
 import components.Transform;
+import imgui.internal.ImGui;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
@@ -39,11 +40,13 @@ public class LevelEditorScene extends Scene{
 
         GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(0,0),new
                 Vector2f(256,256)));
-        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(0,0),
+        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(300,0),
                 new Vector2f(256,256)));
 
-        obj1.addComponent(new SpriteRenderer(spritesheet.getSprite(1,1)));
-        obj2.addComponent(new SpriteRenderer(spritesheet.getSprite(2,4)));
+        obj1.addComponent(new SpriteRenderer(new Vector4f(1,1,1,1)));
+        obj2.addComponent(new SpriteRenderer(new Vector4f(1,1,1,1)));
+
+        this.activeGameObject = obj2;
 
         this.addGameObjectToScene(obj1);
         this.addGameObjectToScene(obj2);
@@ -54,9 +57,18 @@ public class LevelEditorScene extends Scene{
         //System.out.println("FPS " + (1.0f/dt));
 
         for(GameObject go: gameObjects){
-            go.update(dt);
+            go.update(dt); //update all objects in scene but don't call imgui for all of them
+                          //It is only called for the active object
         }
 
         this.renderer.render();
     }
+
+    @Override
+    public void imGui(){
+        ImGui.begin("Level Editor");
+        ImGui.text("This level has been loaded and is currently running");
+        ImGui.end();
+    }
+
 }

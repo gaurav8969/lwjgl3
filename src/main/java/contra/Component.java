@@ -6,6 +6,9 @@ import java.util.Map;
 public abstract class Component {
     //parent entity
     public GameObject gameObject = null;
-    public abstract void init();
-    public abstract void update(float dt);
+    public void init(){}
+    public void update(float dt){}
+
+    public void imGui(){}
+
 }

@@ -1,7 +1,10 @@
 package contra;
 
+import imgui.ImFontAtlas;
+import imgui.ImFontConfig;
 import imgui.ImGuiIO;
 import imgui.flag.ImGuiConfigFlags;
+import imgui.flag.ImGuiFreeTypeBuilderFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.internal.ImGui;
@@ -26,8 +29,6 @@ public class Window {
     private static Scene currentScene;
     private ImGuiLayer imguiLayer;
 
-    private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
-    private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
     private Window(){
         this.width = 1280;
@@ -41,12 +42,9 @@ public class Window {
     private void init(){
         initWindow();
         //starting the imgui systems
-        initImGui();
-        imGuiGlfw.init(glfwWindow, true);
-        imGuiGl3.init(glslVersion);
-        //
-        this.imguiLayer = new ImGuiLayer();
-
+        //loading font and other configs etc.
+        imguiLayer = new ImGuiLayer();
+        imguiLayer.initImGui(glfwWindow,glslVersion);
     }
 
     public static Window get(){
@@ -55,6 +53,7 @@ public class Window {
         }
         return Window.window;
     }
+
     public static void changeScene(int newScene){
         switch(newScene){
             case 0:
@@ -84,6 +83,7 @@ public class Window {
         glfwTerminate();
         glfwSetErrorCallback(null).free();
     }
+
     private void initWindow() {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
@@ -130,12 +130,6 @@ public class Window {
         Window.changeScene(0);
     }
 
-    public void initImGui(){
-        ImGui.createContext();
-        ImGuiIO io = ImGui.getIO();
-        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
-    }
-
     private void loop() {
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
@@ -149,28 +143,17 @@ public class Window {
         glClearColor(r, g, b, a);
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
+
         while ( !glfwWindowShouldClose(glfwWindow) ) {
             glfwPollEvents();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            imGuiGlfw.newFrame();
-            ImGui.newFrame();
-
-            imguiLayer.imgui();
-            ImGui.render();
-            imGuiGl3.renderDrawData(ImGui.getDrawData());
-
-            if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
-                final long backupWindowPtr = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
-                ImGui.updatePlatformWindows();
-                ImGui.renderPlatformWindowsDefault();
-                org.lwjgl.glfw.GLFW.glfwMakeContextCurrent(backupWindowPtr);
-            }
-
             if (dt >= 0) {
                 currentScene.update(dt);
             }
+
+            imguiLayer.update(currentScene,dt);
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
 
@@ -179,8 +162,6 @@ public class Window {
             startTime = endTime;
         }
     }
-
-
 
     public static Scene getScene(){
         return get().currentScene;
@@ -201,4 +182,5 @@ public class Window {
     public static void setHeight(int newHeight) {
         get().height = newHeight;
     }
+
 }

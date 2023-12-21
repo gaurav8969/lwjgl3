@@ -43,12 +43,21 @@ public class GameObject {
         }
     }
 
+    public void imGui(){
+        for(Component c: components){
+            if(c != null) {
+                c.imGui();
+            }
+        }
+    }
+
     public void addComponent(Component c){
         short id = ComponentID.getUniqueID(c.getClass());
         componentsBitset.set(id);
         components[id] = c;
         c.gameObject = this;
     }
+
     public <T extends Component> boolean hasComponent(Class<T> componentClass){
         short id = ComponentID.getUniqueID(componentClass);
         return componentsBitset.get(id);
