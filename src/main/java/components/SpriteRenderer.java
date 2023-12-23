@@ -11,65 +11,40 @@ import org.joml.Vector4f;
 public class SpriteRenderer extends Component {
 
     int zIndex= 0;//layer it is on, higher values go on top, try to use [-2,+2] range, default 0
-    private Vector4f colour;
+    private Vector4f colour = new Vector4f(1,1,1,1);
     private Sprite sprite;
-    private boolean isDirty = false;
+    private boolean isDirty = true;
     /*no setter here since transform is actually stored and controlled in game object, we
     maintain a copy of it that we update, and if we do, we raise the dirty flag*/
     private Transform lastTransform;
 
-    public SpriteRenderer(Sprite sprite, int zIndex,Vector4f colour){
-        this.sprite = sprite;
-        this.colour = colour;
-        this.zIndex = zIndex;
-        this.isDirty = true;
-    }
-
-    public SpriteRenderer(Sprite sprite){
-        this.sprite = sprite;
-        this.colour = new Vector4f(1,1,1,1);
-        this.zIndex = 0;
-        this.isDirty = true;
-    }
-    public SpriteRenderer(Vector4f colour){
-        this.colour = colour;
-        this.sprite = new Sprite(null);
-        this.zIndex = 0;
-        this.isDirty = true;
-    }
-
-    public SpriteRenderer(Sprite sprite, int zIndex){
-        this.colour = new Vector4f(1.0f,1.0f,1.0f,1.0f);
-        this.sprite = sprite;
-        this.zIndex = zIndex;
-        this.isDirty = true;
-    }
-
     @Override
     public void init() {
         //must deep-copy since shallow copy is always up to date, rendering dirty flagging ineffective
-        lastTransform = this.gameObject.getComponent(Transform.class).copy(); //deep-copy allocation
+        lastTransform = this.gameObject.tf.copy(); //deep-copy allocation
     }
 
     @Override
     public void update(float dt) {
-        Transform tf = this.gameObject.getComponent(Transform.class);
+        Transform tf = this.gameObject.tf;
         if(!lastTransform.equals(tf)){
             tf.copyTo(lastTransform); //no copy(shallow or deep)
             isDirty = true;
         }
     }
 
-    public void setSprite(Sprite sprite){
+    public SpriteRenderer setSprite(Sprite sprite){
         this.sprite = sprite;
         this.isDirty = true;
+        return this;
     }
 
-    public void setColour(Vector4f colour){
+    public SpriteRenderer setColour(Vector4f colour){
         if( !this.colour.equals(colour)){
             this.colour.set(colour);
             this.isDirty = true;
         }
+        return this;
     }
 
     public Texture getTexture(){

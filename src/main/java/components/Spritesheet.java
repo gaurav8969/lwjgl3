@@ -39,7 +39,9 @@ public class Spritesheet{
                     new Vector2f(left, top)    //top left
             };
 
-            sprites.add(new Sprite(texture, texCoords));
+            Sprite sprite = new Sprite();
+            sprites.add(sprite.setTexture(texture).setTexCoords(texCoords)); //chaining setters, they return 'this'
+
             currentX += spriteWidth + spacing;
 
             if (currentX >= texture.width) {

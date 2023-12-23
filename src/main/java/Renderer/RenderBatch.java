@@ -195,7 +195,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
                 yAdd = 1.0f;
             }
 
-            Transform tf = spr.gameObject.getComponent(Transform.class);
+            Transform tf = spr.gameObject.tf;
             // Load position
             vertices[offset] = tf.position.x + (xAdd * tf.scale.x);
             vertices[offset + 1] = tf.position.y + (yAdd * tf.scale.y);

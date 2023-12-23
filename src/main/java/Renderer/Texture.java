@@ -9,37 +9,37 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
-    public String filepath;
-    public int width,height;
+    public String filepath = null;
+    public int width, height;
     private int texID;
 
-    public Texture(String Filepath){
-        filepath = Filepath;
+    public Texture init(String filepath) {
+        this.filepath = filepath;
         //gen texture on gpu
         texID = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D,texID);
+        glBindTexture(GL_TEXTURE_2D, texID);
 
         //set texture parameters
         //repeat image in both directions
 
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
         //when stretching the image, pixelate using nearest neighbour interpolation
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         IntBuffer width = BufferUtils.createIntBuffer(1);
         IntBuffer height = BufferUtils.createIntBuffer(1);
         IntBuffer channels = BufferUtils.createIntBuffer(1);
 
         stbi_set_flip_vertically_on_load(true);
-        ByteBuffer image = stbi_load(filepath,width,height,channels,0);
+        ByteBuffer image = stbi_load(filepath, width, height, channels, 0);
 
         this.width = width.get(0);
         this.height = height.get(0);
 
-        if(image != null){
+        if (image != null) {
             if (channels.get(0) == 3) {
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0),
                         0, GL_RGB, GL_UNSIGNED_BYTE, image);
@@ -49,10 +49,12 @@ public class Texture {
             } else {
                 assert false : "Error: (Texture) Unknown number of channesl '" + channels.get(0) + "'";
             }
-        }else{
-            assert false: "Error: (Texture) Could not load image '" + filepath + "'";
+        } else {
+            assert false : "Error: (Texture) Could not load image '" + filepath + "'";
         }
         stbi_image_free(image);
+
+        return this;
     }
 
     public void bind(){

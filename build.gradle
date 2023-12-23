@@ -24,6 +24,9 @@ repositories {
 }
 
 dependencies {
+    // GSON
+    implementation 'com.google.code.gson:gson:2.8.6'
+
     //imgui jar files
     implementation fileTree('libs'){include '*.jar'}
 

@@ -29,7 +29,6 @@ public class Window {
     private static Scene currentScene;
     private ImGuiLayer imguiLayer;
 
-
     private Window(){
         this.width = 1280;
         this.height = 960;
@@ -58,6 +57,7 @@ public class Window {
         switch(newScene){
             case 0:
                 currentScene = new LevelEditorScene();
+                currentScene.load();
                 currentScene.init();
                 currentScene.start();
                 break;
@@ -143,7 +143,6 @@ public class Window {
         glClearColor(r, g, b, a);
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-
         while ( !glfwWindowShouldClose(glfwWindow) ) {
             glfwPollEvents();
 
@@ -161,6 +160,7 @@ public class Window {
             dt = endTime - startTime;
             startTime = endTime;
         }
+        currentScene.saveExit();
     }
 
     public static Scene getScene(){

@@ -7,16 +7,7 @@ import org.joml.Vector2f;
 public class Sprite{
 
     private Texture texture;
-    private Vector2f[] texCoords;
-    public Sprite(Texture texture){
-        this.texture = texture;
-        this.texCoords = loadTexCoords();
-    }
-
-    public Sprite(Texture texture, Vector2f[] texCoords){
-        this.texture = texture;
-        this.texCoords = texCoords;
-    }
+    private Vector2f[] texCoords = loadTexCoords();;
 
     private Vector2f[] loadTexCoords() {
         class localTextureCoords{
@@ -33,8 +24,18 @@ public class Sprite{
     public Texture getTexture(){
         return this.texture;
     }
+
     public Vector2f[] getTexCoords(){
         return this.texCoords;
     }
 
+    public Sprite setTexture(Texture texture){
+        this.texture =  texture;
+        return this;
+    }
+
+    public Sprite setTexCoords(Vector2f[] texCoords){
+        this.texCoords = texCoords;
+        return this;
+    }
 }
