@@ -4,10 +4,7 @@ import Renderer.Shader;
 import Renderer.Texture;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import components.Sprite;
-import components.SpriteRenderer;
-import components.Spritesheet;
-import components.Transform;
+import components.*;
 import imgui.internal.ImGui;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -35,8 +32,8 @@ public class LevelEditorScene extends Scene{
     }
     @Override
     public void init(){
-        this.camera = new Camera(new Vector2f(-200, -300));
         loadResources();
+        this.camera = new Camera(new Vector2f(-200, -300));
         if(levelLoaded){
             activeGameObject = gameObjects.get(0);
            return;
