@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 import components.*;
 import imgui.internal.ImGui;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import util.AssetPool;
@@ -33,7 +34,7 @@ public class LevelEditorScene extends Scene{
     @Override
     public void init(){
         loadResources();
-        this.camera = new Camera(new Vector2f(-200, -300));
+        this.camera = new Camera(new Vector3f(-200, -300,0));
         if(levelLoaded){
             activeGameObject = gameObjects.get(0);
            return;
@@ -72,9 +73,25 @@ public class LevelEditorScene extends Scene{
 
     @Override
     public void imGui(){
-        ImGui.begin("Level Editor");
-        ImGui.text("This level has been loaded and is currently running");
+        ImGui.begin("Level Editor(Camera)");
+        Vector3f pos = camera.position;
+        float[] posFloat3f = {pos.x, pos.y, pos.z};
+        if(imgui.ImGui.dragFloat3("Position" + ": ", posFloat3f)){
+            pos.set(posFloat3f[0],posFloat3f[1],posFloat3f[2]);
+        }
+
+        Vector3f cameraFront = camera.cameraFront;
+        float[] frontFloat3f = {cameraFront.x, cameraFront.y, cameraFront.z};
+        if(imgui.ImGui.dragFloat3("Front" + ": ", frontFloat3f)){
+            cameraFront.set(frontFloat3f[0],frontFloat3f[1],frontFloat3f[2]);
+        }
+
+        Vector3f cameraUp = camera.cameraUp;
+        float[] upFloat3f = {cameraUp.x, cameraUp.y, cameraUp.z};
+        if(imgui.ImGui.dragFloat3("Up" + ": ", upFloat3f)){
+            cameraUp.set(upFloat3f[0],upFloat3f[1],upFloat3f[2]);
+        }
+
         ImGui.end();
     }
-
 }

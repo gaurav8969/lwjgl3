@@ -9,6 +9,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
+    //rewriter texture deserialization to work based on filepath instead of texID
     public String filepath = null;
     public int width, height;
     private int texID;

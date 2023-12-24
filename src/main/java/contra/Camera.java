@@ -4,11 +4,13 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-public class Camera {
+public class Camera{
     private Matrix4f projectionMatrix, viewMatrix;
-    public Vector2f position;
+    public Vector3f position;
+    public Vector3f cameraFront = new Vector3f(0.0f,0.0f,-1.0f);
+    public Vector3f cameraUp = new Vector3f(0.0f,1.0f,0.0f);
 
-    public Camera(Vector2f Position){
+    public Camera(Vector3f Position){
         this.position = Position;
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();
@@ -21,11 +23,10 @@ public class Camera {
     }
 
     public Matrix4f getViewMatrix(){
-        Vector3f cameraFront = new Vector3f(0.0f,0.0f,-1.0f);
-        Vector3f cameraUp = new Vector3f(0.0f,1.0f,0.0f);
+        cameraFront.set(position.x, position.y, cameraFront.z);
         this.viewMatrix.identity();
-        viewMatrix.lookAt(new Vector3f(position.x,position.y, 0.0f),
-                cameraFront.add(position.x, position.y,0.0f), cameraUp);
+        viewMatrix.lookAt(new Vector3f(position.x,position.y, position.z),
+                cameraFront, cameraUp);
         return this.viewMatrix;
     }
 
