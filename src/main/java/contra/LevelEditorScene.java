@@ -37,7 +37,7 @@ public class LevelEditorScene extends Scene{
         this.camera = new Camera(new Vector3f(-200, -300,0));
         if(levelLoaded){
             activeGameObject = gameObjects.get(0);
-           return;
+            return;
         }
 
         Sprite red = new Sprite();
