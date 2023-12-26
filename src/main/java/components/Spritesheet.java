@@ -40,10 +40,10 @@ public class Spritesheet{
             };
 
             Sprite sprite = new Sprite();
-            sprites.add(sprite.setTexture(texture).setTexCoords(texCoords)); //chaining setters, they return 'this'
+            //chaining setters, they return 'this'
+            sprites.add(sprite.setTexture(texture).setTexCoords(texCoords).setWidth(spriteWidth).setHeight(spriteHeight));
 
             currentX += spriteWidth + spacing;
-
             if (currentX >= texture.width) {
                 ++rowCount;
                 currentY -= spriteHeight + spacing;
@@ -61,6 +61,10 @@ public class Spritesheet{
 
     public Sprite getSprite(int index){
         return sprites.get(index);
+    }
+
+    public int size(){
+        return sprites.size();
     }
 
 }
