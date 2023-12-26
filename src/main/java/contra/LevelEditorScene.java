@@ -33,7 +33,7 @@ public class LevelEditorScene extends Scene{
     @Override
     public void init(){
         loadResources();
-        this.camera = new Camera(new Vector2f(-200, -300));
+        this.camera = new Camera(new Vector2f(0, 0));
         if(levelLoaded){
             activeGameObject = gameObjects.get(0);
            return;
@@ -43,11 +43,11 @@ public class LevelEditorScene extends Scene{
         Sprite green = new Sprite().setTexture(AssetPool.getTexture("assets/images/green.png"));
 
         GameObject obj1 = new GameObject();
-        obj1.setName("Object 1").setTransform(new Vector2f(0,0),new Vector2f(256,256));
+        obj1.setName("Object 1").setTransform(new Vector2f(0,100),new Vector2f(64,64));
 
         GameObject obj2 = new GameObject();
-        obj2.setName("Green").setTransform(new Vector2f(300,0),
-                new Vector2f(256,256));
+        obj2.setName("Green").setTransform(new Vector2f(0,200),
+                new Vector2f(64,64));
 
         obj1.addComponent(new SpriteRenderer().setSprite(red));
         obj2.addComponent(new SpriteRenderer().setSprite(green));

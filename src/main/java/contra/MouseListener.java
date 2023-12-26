@@ -1,5 +1,7 @@
 package contra;
 
+import org.joml.Vector4f;
+
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
@@ -33,6 +35,7 @@ public class MouseListener{
         getInstance().xPos = xpos;
         getInstance().yPos = ypos;
 
+    //pos callback is called if the mouse is moved, and so if any of the buttons is clicked as that happens, we've dragging
         getInstance().isDragging = getInstance().mouseButtonPressed[0] || getInstance().mouseButtonPressed[1]
                 || getInstance().mouseButtonPressed[2];
     }
@@ -60,15 +63,33 @@ public class MouseListener{
         getInstance().scrollY = 0;
         getInstance().lastX = getInstance().xPos;
         getInstance().lastY = getInstance().yPos;
-
     }
 
+    //get mouse click in screen coords
     public static float getX(){
         return (float)getInstance().xPos;
     }
 
     public static float getY(){
         return (float)getInstance().yPos;
+    }
+
+    //get mouse in click world coords
+    public static float getOrthoX(){
+        float normalizedX = (getX()/Window.getWidth()) * 2.0f - 1.0f;
+        Vector4f tmp = new Vector4f(normalizedX,0,0,1);
+        tmp.mul(Window.getScene().camera.getInverseProjectionMatrix()).
+                mul(Window.getScene().camera().getInverseViewMatrix());
+        return tmp.x; //x in world coords
+    }
+
+    public static float getOrthoY(){
+        //account for that OpenGL sees bottom-left as 0,0 & GLFW cursor callback sees top-left as 0,0
+        float normalizedY = (1- getY()/Window.getHeight()) * 2 - 1;
+        Vector4f tmp = new Vector4f(0,normalizedY,0,1);
+        tmp.mul(Window.getScene().camera.getInverseProjectionMatrix()).
+                mul(Window.getScene().camera().getInverseViewMatrix());
+        return tmp.y; //y in world coords
     }
 
     public static float getDx(){

@@ -47,8 +47,6 @@ public class Renderer {
             newRenderBatch.addSprite(sprite);
             Collections.sort(batches);
         }
-
-
     }
 
     public void render(){
