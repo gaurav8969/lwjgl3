@@ -29,14 +29,14 @@ public class RenderBatch implements Comparable<RenderBatch>{
     private final int COLOR_OFFSET = POS_OFFSET + POS_SIZE * Float.BYTES;
     private final int TEX_COORDS_OFFSET = COLOR_OFFSET + COLOR_SIZE * Float.BYTES;
     private final int TEX_ID_OFFSET = TEX_COORDS_OFFSET + TEX_COORDS_SIZE * Float.BYTES;
-    private final int VERTEX_SIZE = 9;
+    public final int VERTEX_SIZE = 9;
     private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
 
     private SpriteRenderer[] sprites;
-    private int numSprites;
+    public int numSprites;
     public boolean hasRoom;
     public boolean hasTextureRoom;
-    private float[] vertices;
+    public float[] vertices;
     private int[] texSlots = {0, 1, 2, 3, 4, 5, 6, 7,8};
 
     private List<Texture> textures;

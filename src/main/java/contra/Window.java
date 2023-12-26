@@ -30,8 +30,8 @@ public class Window {
     private ImGuiLayer imguiLayer;
 
     private Window(){
-        this.width = 1280;
-        this.height = 960;
+        this.width = 640;
+        this.height = 480;
         this.title = "Contra";
         r = 0.9f;
         g = 0.9f;

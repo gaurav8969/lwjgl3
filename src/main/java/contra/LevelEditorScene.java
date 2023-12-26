@@ -1,5 +1,6 @@
 package contra;
 
+import Renderer.RenderBatch;
 import Renderer.Shader;
 import Renderer.Texture;
 import com.google.gson.Gson;
@@ -34,7 +35,9 @@ public class LevelEditorScene extends Scene{
     @Override
     public void init(){
         loadResources();
-        this.camera = new Camera(new Vector3f(-200, -300,0));
+
+        this.camera = new Camera(new Vector3f(0, 0,0));
+
         if(levelLoaded){
             activeGameObject = gameObjects.get(0);
             return;
@@ -44,11 +47,11 @@ public class LevelEditorScene extends Scene{
         Sprite green = new Sprite().setTexture(AssetPool.getTexture("assets/images/green.png"));
 
         GameObject obj1 = new GameObject();
-        obj1.setName("Object 1").setTransform(new Vector2f(0,0),new Vector2f(256,256));
+        obj1.setName("Object 1").setTransform(new Vector2f(0,200),new Vector2f(64,64));
 
         GameObject obj2 = new GameObject();
-        obj2.setName("Green").setTransform(new Vector2f(300,0),
-                new Vector2f(256,256));
+        obj2.setName("Green").setTransform(new Vector2f(0,100), new Vector2f(64,64));
+
 
         obj1.addComponent(new SpriteRenderer().setSprite(red));
         obj2.addComponent(new SpriteRenderer().setSprite(green));
@@ -61,6 +64,7 @@ public class LevelEditorScene extends Scene{
 
     @Override
     public void update(float dt){
+        System.out.println("Mouse coords are- ("+MouseListener.getOrthoX()+ ","+ MouseListener.getOrthoY() + ")");
         //System.out.println("FPS " + (1.0f/dt));
 
         for(GameObject go: gameObjects){
@@ -92,6 +96,42 @@ public class LevelEditorScene extends Scene{
             cameraUp.set(upFloat3f[0],upFloat3f[1],upFloat3f[2]);
         }
 
+        RenderBatch batch  = this.renderer.batches.get(0);
+        for(int i = 0; i < batch.numSprites; i++){
+            int offset = (i*4 + 2)*batch.VERTEX_SIZE;
+            Vector4f vertexPos = new Vector4f(batch.vertices[offset],batch.vertices[offset+1],0,1.0f);
+            if(i == 0) {
+                if (ImGui.button("Sprite 1")) {
+                    vertexPos.mul(this.camera.viewMatrix);
+                    System.out.println("Sprite 1-");
+                    System.out.println("x- " + vertexPos.x);
+                    System.out.println("y- " + vertexPos.y);
+                    System.out.println("z- " + vertexPos.z);
+                    System.out.println("w- " + vertexPos.w);
+                }
+            }
+
+            if (i == 1) {
+                if (ImGui.button(("Sprite 2"))) {
+                    vertexPos.mul(this.camera.viewMatrix);
+                    System.out.println("Sprite 2-");
+                    System.out.println("x- " + vertexPos.x);
+                    System.out.println("y- " + vertexPos.y);
+                    System.out.println("z- " + vertexPos.z);
+                    System.out.println("w- " + vertexPos.w);
+                }
+            }
+        }
+
+        if(ImGui.button("Camera Pos(In View Coords)")){
+            Vector4f vertexPos = new Vector4f(camera.position, 1.0f);
+            vertexPos.mul(this.camera.viewMatrix);
+            System.out.println("Coords of an object at camera's pos in view coords-");
+            System.out.println("x- " + vertexPos.x);
+            System.out.println("y- " + vertexPos.y);
+            System.out.println("z- " + vertexPos.z);
+            System.out.println("w- " + vertexPos.w);
+        }
         ImGui.end();
     }
 }

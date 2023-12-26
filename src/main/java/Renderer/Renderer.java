@@ -14,7 +14,7 @@ import java.util.List;
 public class Renderer {
     private final int MAX_BATCH_SIZE = 1000;
     private final int MAX_TEXTURES_SIZE = 7;//8 slots, 7 textures, the first default-activated is for no textures
-    private List<RenderBatch> batches;
+    public List<RenderBatch> batches;
 
     public Renderer(){
         this.batches = new ArrayList<>();
@@ -47,8 +47,6 @@ public class Renderer {
             newRenderBatch.addSprite(sprite);
             Collections.sort(batches);
         }
-
-
     }
 
     public void render(){
