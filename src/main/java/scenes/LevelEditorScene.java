@@ -1,26 +1,19 @@
-package contra;
+package scenes;
 
-import Renderer.Shader;
-import Renderer.Texture;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import components.*;
+import contra.Camera;
+import contra.GameObject;
+import contra.MouseListener;
+import contra.Prefabs;
 import imgui.ImVec2;
 import imgui.internal.ImGui;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
+import scenes.Scene;
 import util.AssetPool;
-import util.Time;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
-public class LevelEditorScene extends Scene{
+public class LevelEditorScene extends Scene {
     private Spritesheet sprites;
     public LevelEditorScene() {}
 
@@ -28,14 +21,17 @@ public class LevelEditorScene extends Scene{
     @Override
     public void loadResources(){
         AssetPool.getShader("assets/shaders/default.glsl");
-        sprites = AssetPool.loadSpriteSheet("assets/images/animatedSprite.png",24,144,144,0);
+        AssetPool.loadSpriteSheet("assets/images/textureSpriteSheet.png",8,126,126,0);
         AssetPool.getTexture("assets/images/red.png");
         AssetPool.getTexture("assets/images/green.png");
     }
+
     @Override
     public void init(){
         loadResources();
+        this.mouseControls = new MouseControls();
         this.camera = new Camera(new Vector2f(0, 0));
+        sprites = AssetPool.loadSpriteSheet("assets/images/textureSpriteSheet.png",8,126,126,0);
         if(levelLoaded){
             activeGameObject = gameObjects.get(0);
            return;
@@ -63,6 +59,7 @@ public class LevelEditorScene extends Scene{
     @Override
     public void update(float dt){
         //System.out.println("FPS " + (1.0f/dt));
+        this.mouseControls.update();
         for(GameObject go: gameObjects){
             go.update(dt); //update all objects in scene but don't call imgui for all of them
                           //It is only called for the active object
@@ -93,7 +90,8 @@ public class LevelEditorScene extends Scene{
             ImGui.pushID(i);
             if(ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y,
                     texCoords[0].x, texCoords[2].y)){
-                System.out.println("Button " + i + " clicked!" );
+                GameObject go = Prefabs.generateSpriteObject(sprite,spriteWidth, spriteHeight);
+                this.mouseControls.pickUp(go);
             }
             ImGui.popID();
 
@@ -107,5 +105,4 @@ public class LevelEditorScene extends Scene{
         }
         ImGui.end();
     }
-
 }

@@ -1,11 +1,14 @@
 package contra;
 
+import components.Component;
+import components.ComponentID;
 import components.Transform;
 import org.joml.Vector2f;
 
-import java.util.BitSet;
-
 public class GameObject {
+    //starts at zero every game load
+    public static int IDCounter = 0;
+    private int uniqueID = -1;
     private String name;
     private int componentsSize = 16;
     //array instead of actual bitset since it causes serialization issues with gson, jackson works after certain module imports
@@ -14,7 +17,12 @@ public class GameObject {
     public Component[] components = new Component[componentsSize];
     public Transform tf = new Transform();
 
-    void init(){
+    public GameObject(){
+        //counter starts at zero and gets incremented everytime constructor is called
+        uniqueID = IDCounter++;
+    }
+
+    public void init(){
         for (Component c : components) {
             if (c != null) {
                 c.init();
@@ -22,7 +30,7 @@ public class GameObject {
         }
     }
 
-    void update(float dt){
+    public void update(float dt){
         for(Component c: components){
             if(c != null) {
                 c.update(dt);
@@ -40,6 +48,7 @@ public class GameObject {
 
     public GameObject addComponent(Component c){
         if(c != null) {
+            c.generateID();
             short id = ComponentID.getUniqueID(c.getClass());
             componentsBitset[id] = true;
             components[id] = c;
@@ -69,6 +78,21 @@ public class GameObject {
         }
     }
 
+    public int generateID(){
+        if(uniqueID == -1){
+            uniqueID = IDCounter++;
+        }
+        return uniqueID;
+    }
+
+    public int getID(){
+        return uniqueID;
+    }
+
+    public void setMaxID(int maxID){
+        IDCounter = maxID;
+    }
+
     public GameObject setName(String string){
         this.name = string;
         return this;
@@ -86,4 +110,21 @@ public class GameObject {
         return this;
     }
 
+    public GameObject setPosition(Vector2f position){
+        this.tf.position = position;
+        return this;
+    }
+
+    public GameObject setSize(Vector2f size){
+        this.tf.scale = size;
+        return this;
+    }
+
+    public Component[] getComponents(){
+        return components;
+    }
+
+    public static void loadCounter(int maxID){
+        IDCounter = maxID;
+    }
 }

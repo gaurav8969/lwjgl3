@@ -1,5 +1,6 @@
-package contra;
+package components;
 
+import contra.GameObject;
 import imgui.ImGui;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -12,7 +13,8 @@ import java.util.Map;
 public abstract class Component {
     //parent entity, transient to avoid infinitely recursive serialization of game objects
     public transient GameObject gameObject = null;
-
+    private static int IDCounter = 0;
+    private int uniqueID = -1;
     public void init(){}
 
     public void update(float dt){}
@@ -77,4 +79,22 @@ public abstract class Component {
         }
     }
 
+    public int generateID(){
+        if(uniqueID == -1){
+            uniqueID = IDCounter++;
+        }
+        return uniqueID;
+    }
+
+    public int getID(){
+        return uniqueID;
+    }
+
+    public void setMaxID(int maxID){
+        IDCounter = maxID;
+    }
+
+    public static void loadCounter(int maxID){
+        IDCounter = maxID;
+    }
 }

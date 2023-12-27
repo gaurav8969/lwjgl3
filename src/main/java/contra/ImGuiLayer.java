@@ -7,6 +7,7 @@ import imgui.flag.ImGuiFreeTypeBuilderFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.internal.ImGui;
+import scenes.Scene;
 
 import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;

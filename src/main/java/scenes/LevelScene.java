@@ -1,4 +1,4 @@
-package contra;
+package scenes;
 
 public class LevelScene extends Scene {
     @Override

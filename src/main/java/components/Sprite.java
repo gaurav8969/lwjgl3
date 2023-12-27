@@ -1,7 +1,6 @@
 package components;
 
 import Renderer.Texture;
-import contra.Component;
 import org.joml.Vector2f;
 
 public class Sprite{

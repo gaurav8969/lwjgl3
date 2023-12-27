@@ -8,7 +8,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 public class MouseListener{
     private static MouseListener instance = null;
     private double scrollX,scrollY,lastY,lastX,xPos,yPos;
-    private boolean mouseButtonPressed[] = new boolean[3];
+    private boolean mouseButtonPressed[] = new boolean[9];
     private boolean isDragging;
 
     private MouseListener(){
@@ -43,6 +43,7 @@ public class MouseListener{
     public static void mouseButtonCallback(long window, int button,int action,int mods){
         if (action == GLFW_PRESS){
             if(button < getInstance().mouseButtonPressed.length) {
+                //stays true till next release action
                 getInstance().mouseButtonPressed[button] = true;
             }
         }else if(action == GLFW_RELEASE){
@@ -78,7 +79,7 @@ public class MouseListener{
     public static float getOrthoX(){
         float normalizedX = (getX()/Window.getWidth()) * 2.0f - 1.0f;
         Vector4f tmp = new Vector4f(normalizedX,0,0,1);
-        tmp.mul(Window.getScene().camera.getInverseProjectionMatrix()).
+        tmp.mul(Window.getScene().camera().getInverseProjectionMatrix()).
                 mul(Window.getScene().camera().getInverseViewMatrix());
         return tmp.x; //x in world coords
     }
@@ -87,7 +88,7 @@ public class MouseListener{
         //account for that OpenGL sees bottom-left as 0,0 & GLFW cursor callback sees top-left as 0,0
         float normalizedY = (1- getY()/Window.getHeight()) * 2 - 1;
         Vector4f tmp = new Vector4f(0,normalizedY,0,1);
-        tmp.mul(Window.getScene().camera.getInverseProjectionMatrix()).
+        tmp.mul(Window.getScene().camera().getInverseProjectionMatrix()).
                 mul(Window.getScene().camera().getInverseViewMatrix());
         return tmp.y; //y in world coords
     }

@@ -1,11 +1,18 @@
-package contra;
+package scenes;
 
 import Renderer.Renderer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import components.Component;
+import components.ComponentDeserializer;
+import components.MouseControls;
+import contra.Camera;
+import contra.GameObject;
+import contra.GameObjectDeserializer;
+import contra.MouseListener;
 import imgui.internal.ImGui;
 
-import java.io.FileNotFoundException;
+import javax.swing.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,6 +27,7 @@ public  abstract class Scene {
     protected List<GameObject> gameObjects = new ArrayList<>();
     protected GameObject activeGameObject = null;
     protected boolean levelLoaded = false; //if the level has been loaded from a json
+    protected MouseControls mouseControls;
     public Scene(){
     }
 
@@ -66,9 +74,24 @@ public  abstract class Scene {
 
         if(!inputFile.equals("")){
             GameObject[] objs = gson.fromJson(inputFile, GameObject[].class);
+            int goIDMax = -1;
+            int componentIDMax = -1;
             for(GameObject go: objs){
+                Component[] components = go.getComponents();
+                for(Component c : components){
+                    if(c != null && c.getID() > componentIDMax){
+                        componentIDMax = c.getID();
+                    }
+                }
+                if(go.getID() > goIDMax){
+                    goIDMax = go.getID();
+                }
+
                 this.gameObjects.add(go);
             }
+
+            GameObject.loadCounter(++goIDMax);
+            Component.loadCounter(++componentIDMax);
             this.levelLoaded = true;
         }
     }

@@ -1,17 +1,11 @@
 package contra;
 
-import imgui.ImFontAtlas;
-import imgui.ImFontConfig;
-import imgui.ImGuiIO;
-import imgui.flag.ImGuiConfigFlags;
-import imgui.flag.ImGuiFreeTypeBuilderFlags;
-import imgui.gl3.ImGuiImplGl3;
-import imgui.glfw.ImGuiImplGlfw;
-import imgui.internal.ImGui;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import scenes.LevelEditorScene;
+import scenes.LevelScene;
+import scenes.Scene;
 import util.Time;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -31,7 +25,7 @@ public class Window {
 
     private Window(){
         this.width = 1280;
-        this.height = 960;
+        this.height = 1280;
         this.title = "Contra";
         r = 0.9f;
         g = 0.9f;
@@ -161,6 +155,7 @@ public class Window {
             startTime = endTime;
         }
         currentScene.saveExit();
+        System.out.println("Gameobject counter is- " + GameObject.IDCounter);
     }
 
     public static Scene getScene(){

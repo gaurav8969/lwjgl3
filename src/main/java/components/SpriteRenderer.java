@@ -1,8 +1,6 @@
 package components;
 
 import Renderer.Texture;
-import contra.Component;
-import contra.GameObject;
 import imgui.ImGui;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -67,6 +65,12 @@ public class SpriteRenderer extends Component {
     }
 
     public int zIndex(){return zIndex;}
+
+    public SpriteRenderer setZIndex(int zIndex){
+        this.zIndex = zIndex;
+        return this;
+    }
+
     public Sprite getSprite(){
         return this.sprite;
     }

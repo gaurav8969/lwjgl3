@@ -1,6 +1,5 @@
 package components;
 
-import contra.Component;
 import org.joml.Vector2f;
 
 public class Transform {
