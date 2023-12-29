@@ -77,7 +77,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
-        // Enable the buffer attribute pointers
+        //VAO is set like this, we can't "fill it up" like the vertices array
         glVertexAttribPointer(0, POS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, POS_OFFSET);
         glEnableVertexAttribArray(0);
 
@@ -89,31 +89,6 @@ public class RenderBatch implements Comparable<RenderBatch>{
 
         glVertexAttribPointer(3, TEX_ID_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_ID_OFFSET);
         glEnableVertexAttribArray(3);
-    }
-
-    public void addSprite(SpriteRenderer spr) {
-        //Get index and add renderObject
-        int index = this.numSprites;
-        this.sprites[index] = spr;
-        this.numSprites++;
-
-        if (spr.getSprite().getTexture() != null) {
-            if (!textures.contains(spr.getSprite().getTexture())) {
-                textures.add(spr.getSprite().getTexture());
-            }
-        }
-
-        // Add properties to local vertices array
-        loadVertexProperties(index);
-
-        if ((numSprites >= this.maxBatchSize)) {
-            this.hasRoom = false;
-        }
-
-        if(textures.size() >= maxTextureSize){
-            this.hasTextureRoom = false;
-        }
-
     }
 
     public void render() {
@@ -161,6 +136,31 @@ public class RenderBatch implements Comparable<RenderBatch>{
             textures.get(i).unbind();
         }
         shader.detach();
+    }
+
+    public void addSprite(SpriteRenderer spr) {
+        //Get index and add renderObject
+        int index = this.numSprites;
+        this.sprites[index] = spr;
+        this.numSprites++;
+
+        if (spr.getSprite().getTexture() != null) {
+            if (!textures.contains(spr.getSprite().getTexture())) {
+                textures.add(spr.getSprite().getTexture());
+            }
+        }
+
+        // Add properties to local vertices array
+        loadVertexProperties(index);
+
+        if ((numSprites >= this.maxBatchSize)) {
+            this.hasRoom = false;
+        }
+
+        if(textures.size() >= maxTextureSize){
+            this.hasTextureRoom = false;
+        }
+
     }
 
     private void loadVertexProperties(int index) {

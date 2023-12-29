@@ -1,6 +1,7 @@
 package scenes;
 
 import Renderer.Renderer;
+import Renderer.DebugDraw;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import components.Component;
@@ -22,6 +23,7 @@ import java.util.List;
 
 public  abstract class Scene {
     protected Renderer renderer = new Renderer();
+    protected DebugDraw debugDraw = new DebugDraw();
     protected Camera camera;
     boolean isRunning = false;
     protected List<GameObject> gameObjects = new ArrayList<>();
@@ -120,4 +122,5 @@ public  abstract class Scene {
     public Camera camera() {
         return this.camera;
     }
+    public DebugDraw debugDraw(){return debugDraw;}
 }

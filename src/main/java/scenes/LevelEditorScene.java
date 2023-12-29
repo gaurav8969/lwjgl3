@@ -1,5 +1,6 @@
 package scenes;
 
+import Renderer.DebugDraw;
 import components.*;
 import contra.Camera;
 import contra.GameObject;
@@ -11,6 +12,8 @@ import org.joml.Vector2f;
 import scenes.Scene;
 import util.AssetPool;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class LevelEditorScene extends Scene {
@@ -32,6 +35,7 @@ public class LevelEditorScene extends Scene {
         this.mouseControls = new MouseControls();
         this.camera = new Camera(new Vector2f(0, 0));
         sprites = AssetPool.loadSpriteSheet("assets/images/textureSpriteSheet.png",8,126,126,0);
+        debugDraw.addLine2D(new Vector2f(0,0), new Vector2f(100,100),120);
         if(levelLoaded){
             activeGameObject = gameObjects.get(0);
            return;
@@ -55,10 +59,14 @@ public class LevelEditorScene extends Scene {
         this.addGameObjectToScene(obj1);
         this.addGameObjectToScene(obj2);
     }
-
+    float t = 0;
     @Override
     public void update(float dt){
-        //System.out.println("FPS " + (1.0f/dt));
+        Vector2f to = new Vector2f(200 + (float)(sin(t)*100), 200 + (float)(cos(t)*100));
+        debugDraw.addLine2D(new Vector2f(200,200),to,1);
+        t +=0.05f;
+
+        System.out.println("FPS " + (1.0/dt));
         this.mouseControls.update();
         for(GameObject go: gameObjects){
             go.update(dt); //update all objects in scene but don't call imgui for all of them

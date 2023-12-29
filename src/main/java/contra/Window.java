@@ -141,8 +141,9 @@ public class Window {
             glfwPollEvents();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
+            currentScene.debugDraw().beginFrame();
             if (dt >= 0) {
+                currentScene.debugDraw().draw();
                 currentScene.update(dt);
             }
 
@@ -155,7 +156,6 @@ public class Window {
             startTime = endTime;
         }
         currentScene.saveExit();
-        System.out.println("Gameobject counter is- " + GameObject.IDCounter);
     }
 
     public static Scene getScene(){

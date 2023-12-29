@@ -11,8 +11,8 @@ public class GameObject {
     private int uniqueID = -1;
     private String name;
     private int componentsSize = 16;
-    //array instead of actual bitset since it causes serialization issues with gson, jackson works after certain module imports
-    //alternatively could write custom type-adapter for bitsets with gson
+    //array instead of actual bitset since it causes serialization issues with gson, jackson works after
+    // certain module imports alternatively could write custom type-adapter for bitsets with gson
     public boolean[] componentsBitset = new boolean[componentsSize];
     public Component[] components = new Component[componentsSize];
     public Transform tf = new Transform();
