@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import components.Component;
 import components.ComponentDeserializer;
+import components.Gridlines;
 import components.MouseControls;
 import contra.Camera;
 import contra.GameObject;
@@ -30,6 +31,7 @@ public  abstract class Scene {
     protected GameObject activeGameObject = null;
     protected boolean levelLoaded = false; //if the level has been loaded from a json
     protected MouseControls mouseControls;
+    protected Gridlines gridlines = new Gridlines();
     public Scene(){
     }
 
@@ -123,4 +125,6 @@ public  abstract class Scene {
         return this.camera;
     }
     public DebugDraw debugDraw(){return debugDraw;}
+
+    public Gridlines gridInstance(){return gridlines;}
 }

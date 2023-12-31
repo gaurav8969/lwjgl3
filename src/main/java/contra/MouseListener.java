@@ -1,5 +1,6 @@
 package contra;
 
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
@@ -77,7 +78,8 @@ public class MouseListener{
 
     //get mouse in click world coords
     public static float getOrthoX(){
-        float normalizedX = (getX()/Window.getWidth()) * 2.0f - 1.0f;
+        Vector2f projectionSize = Window.getScene().camera().projectionSize();
+        float normalizedX = (getX()/projectionSize.x) * 2.0f - 1.0f;
         Vector4f tmp = new Vector4f(normalizedX,0,0,1);
         tmp.mul(Window.getScene().camera().getInverseProjectionMatrix()).
                 mul(Window.getScene().camera().getInverseViewMatrix());
@@ -85,8 +87,10 @@ public class MouseListener{
     }
 
     public static float getOrthoY(){
+        Vector2f projectionSize = Window.getScene().camera().projectionSize();
         //account for that OpenGL sees bottom-left as 0,0 & GLFW cursor callback sees top-left as 0,0
-        float normalizedY = (1- getY()/Window.getHeight()) * 2 - 1;
+        float actualY = getY() + projectionSize.y - Window.getHeight();
+        float normalizedY = (1.0f- actualY/projectionSize.y) * 2.0f - 1.0f;
         Vector4f tmp = new Vector4f(0,normalizedY,0,1);
         tmp.mul(Window.getScene().camera().getInverseProjectionMatrix()).
                 mul(Window.getScene().camera().getInverseViewMatrix());

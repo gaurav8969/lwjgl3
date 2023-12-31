@@ -15,9 +15,13 @@ public class MouseControls{
 
     public void update(){
         if(holdingObject != null) {
-            float orthoX = MouseListener.getOrthoX() - spriteWidth;
-            float orthoY = MouseListener.getOrthoY();
-            holdingObject.setPosition(new Vector2f(orthoX, orthoY));
+            Vector2f orthoPos = new Vector2f(MouseListener.getOrthoX() - spriteWidth, MouseListener.getOrthoY());
+            Vector2f gridPos = Window.getScene().gridInstance().getGridPos(orthoPos);
+            if(Window.getScene().gridInstance().shouldDraw()){
+                holdingObject.setPosition(gridPos);
+            }else{
+                holdingObject.setPosition(orthoPos);
+            }
 
             if(MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)){
                 drop();

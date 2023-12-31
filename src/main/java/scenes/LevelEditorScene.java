@@ -2,13 +2,11 @@ package scenes;
 
 import Renderer.DebugDraw;
 import components.*;
-import contra.Camera;
-import contra.GameObject;
-import contra.MouseListener;
-import contra.Prefabs;
+import contra.*;
 import imgui.ImVec2;
 import imgui.internal.ImGui;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import scenes.Scene;
 import util.AssetPool;
 
@@ -24,7 +22,7 @@ public class LevelEditorScene extends Scene {
     @Override
     public void loadResources(){
         AssetPool.getShader("assets/shaders/default.glsl");
-        AssetPool.loadSpriteSheet("assets/images/textureSpriteSheet.png",8,126,126,0);
+        AssetPool.loadSpriteSheet("assets/images/texture.png",8,126,126,0);
         AssetPool.getTexture("assets/images/red.png");
         AssetPool.getTexture("assets/images/green.png");
     }
@@ -34,8 +32,7 @@ public class LevelEditorScene extends Scene {
         loadResources();
         this.mouseControls = new MouseControls();
         this.camera = new Camera(new Vector2f(0, 0));
-        sprites = AssetPool.loadSpriteSheet("assets/images/textureSpriteSheet.png",8,126,126,0);
-        debugDraw.addLine2D(new Vector2f(0,0), new Vector2f(100,100),120);
+        sprites = AssetPool.loadSpriteSheet("assets/images/texture.png",8,126,126,0);
         if(levelLoaded){
             activeGameObject = gameObjects.get(0);
            return;
@@ -59,14 +56,10 @@ public class LevelEditorScene extends Scene {
         this.addGameObjectToScene(obj1);
         this.addGameObjectToScene(obj2);
     }
-    float t = 0;
+
     @Override
     public void update(float dt){
-        Vector2f to = new Vector2f(200 + (float)(sin(t)*100), 200 + (float)(cos(t)*100));
-        debugDraw.addLine2D(new Vector2f(200,200),to,1);
-        t +=0.05f;
-
-        System.out.println("FPS " + (1.0/dt));
+       //System.out.println("FPS " + (1.0/dt));
         this.mouseControls.update();
         for(GameObject go: gameObjects){
             go.update(dt); //update all objects in scene but don't call imgui for all of them
@@ -98,7 +91,7 @@ public class LevelEditorScene extends Scene {
             ImGui.pushID(i);
             if(ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y,
                     texCoords[0].x, texCoords[2].y)){
-                GameObject go = Prefabs.generateSpriteObject(sprite,spriteWidth, spriteHeight);
+                GameObject go = Prefabs.generateSpriteObject(sprite,128, 128);
                 this.mouseControls.pickUp(go);
             }
             ImGui.popID();
@@ -111,6 +104,19 @@ public class LevelEditorScene extends Scene {
                 ImGui.sameLine();
             }
         }
+
+        Vector2f cameraPos = camera.position();
+
+        float[] imFloat2f = {cameraPos.x, cameraPos.y};
+        if(imgui.ImGui.dragFloat2("Camera Pos" + ": ", imFloat2f)){
+            cameraPos.set(imFloat2f[0],imFloat2f[1]);
+        }
+
+        if (ImGui.checkbox("Grid", true))
+        {
+            gridlines.toggleGrid();
+        }
+
         ImGui.end();
     }
 }

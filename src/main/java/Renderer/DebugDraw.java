@@ -71,8 +71,6 @@ public class DebugDraw {
                 for(int index = 0; index < VERTEX_SIZE * 2 ; index++){
                     vertices[offset + index] = 0;
                 }
-                glBindBuffer(GL_ARRAY_BUFFER, vboID);
-                glBufferSubData(GL_ARRAY_BUFFER, 0, Arrays.copyOfRange(vertices, 0, lines.size() * 6 * 2));
                 lines.remove(i);
                 i--;
             }
@@ -107,7 +105,7 @@ public class DebugDraw {
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, Arrays.copyOfRange(vertices, 0, lines.size() * 6 * 2));
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
 
         // Use shader
         shader.use();

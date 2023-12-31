@@ -3,10 +3,12 @@ package contra;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class Camera {
     private Matrix4f projectionMatrix, viewMatrix, inverseProjection, inverseView;
-    public Vector2f position;
+    private Vector2f position;
+    private Vector2f projectionSize = new Vector2f(32.0f*30.0f,32*30.0f);
 
     public Camera(Vector2f Position){
         this.position = Position;
@@ -21,7 +23,7 @@ public class Camera {
 
     public void adjustProjection(){
         projectionMatrix.identity();
-        projectionMatrix.ortho(0.0f,32.0f * 40.0f,0.0f,32.0f * 40.0f, 0.0f, 100.0f);
+        projectionMatrix.ortho(0,projectionSize.x,0,projectionSize.y, 0.0f, 100.0f);
         projectionMatrix.invert(inverseProjection);
     }
 
@@ -45,5 +47,13 @@ public class Camera {
 
     public Matrix4f getInverseProjectionMatrix(){
         return this.inverseProjection;
+    }
+
+    public Vector2f position(){
+        return this.position;
+    }
+
+    public Vector2f projectionSize(){
+        return this.projectionSize;
     }
 }

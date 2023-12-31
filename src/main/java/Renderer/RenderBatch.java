@@ -172,7 +172,6 @@ public class RenderBatch implements Comparable<RenderBatch>{
         Vector4f color = spr.getColour();
         Vector2f[] texCoords = spr.getSprite().getTexCoords();
 
-        //only happens once for each sprite
         int texId = 0;
         if (spr.getSprite().getTexture() != null) {
             for (int i = 0; i < textures.size(); i++) {

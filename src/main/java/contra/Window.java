@@ -24,8 +24,8 @@ public class Window {
     private ImGuiLayer imguiLayer;
 
     private Window(){
-        this.width = 1280;
-        this.height = 1280;
+        this.width = 960;
+        this.height = 960;
         this.title = "Contra";
         r = 0.9f;
         g = 0.9f;
@@ -143,6 +143,7 @@ public class Window {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             currentScene.debugDraw().beginFrame();
             if (dt >= 0) {
+                getScene().gridInstance().update(dt);
                 currentScene.debugDraw().draw();
                 currentScene.update(dt);
             }
