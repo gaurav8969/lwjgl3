@@ -144,8 +144,8 @@ public class Window {
             currentScene.debugDraw().beginFrame();
             if (dt >= 0) {
                 getScene().gridInstance().update(dt);
-                currentScene.debugDraw().draw();
                 currentScene.update(dt);
+                currentScene.debugDraw().draw();
             }
 
             imguiLayer.update(currentScene,dt);

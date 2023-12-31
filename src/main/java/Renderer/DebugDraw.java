@@ -4,6 +4,7 @@ import contra.Window;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import util.AssetPool;
+import util.JMath;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -116,7 +117,7 @@ public class DebugDraw {
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
 
-        glDrawArrays(GL_LINES,0,numLines*6*2);
+        glDrawArrays(GL_LINES,0,numLines*2);
 
         glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(0);
@@ -140,6 +141,60 @@ public class DebugDraw {
     public void addLine2D(Vector2f from,Vector2f to, Vector3f colour, int lifetime) {
         if(lines.size() >= maxNumOfLines) return;
         lines.add(new Line2D(from,to,colour,lifetime));
+    }
+
+    public void addBox2D(Vector2f centre, Vector2f dimensions){
+        addBox2D(centre, dimensions, new Vector3f(0,1,0), 120);
+    }
+
+    public void addBox2D(Vector2f centre, Vector2f dimensions, int lifetime){
+        addBox2D(centre, dimensions, new Vector3f(1,0,0), lifetime);
+    }
+
+    public void addBox2D(Vector2f centre, Vector2f dimensions, Vector3f colour, int lifetime){
+        Vector2f min = new Vector2f(centre).sub(new Vector2f(dimensions).mul(0.5f));
+        Vector2f max = new Vector2f(centre).add(new Vector2f(dimensions).mul(0.5f));
+
+        Vector2f[] vertices= {
+                //clock-wise
+                new Vector2f(min.x,min.y),   new Vector2f(min.x, max.y),
+                new Vector2f(max.x, max.y),  new Vector2f(max.x, min.y)
+        };
+
+        addLine2D(vertices[0],vertices[1], colour, lifetime);
+        addLine2D(vertices[1],vertices[2], colour, lifetime);
+        addLine2D(vertices[2],vertices[3], colour, lifetime);
+        addLine2D(vertices[3],vertices[0], colour, lifetime);
+    }
+
+    public void addCircle2D(Vector2f centre, float radius){
+        addCircle2D(centre,radius,120,new Vector3f(0,0,1));
+    }
+    public void addCircle2D(Vector2f centre, float radius, int lifetime){
+        addCircle2D(centre,radius,lifetime, new Vector3f(0,0,1));
+    }
+
+    public void addCircle2D(Vector2f centre, float radius, Vector3f colour){
+        addCircle2D(centre,radius,120,colour);
+    }
+
+    public void addCircle2D(Vector2f centre, float radius, int lifetime, Vector3f colour){
+        Vector2f[] points = new Vector2f[20];
+        int size = points.length;
+        float increment = 360.0f/size;
+
+        float angle= 0.0f; // in degrees
+        for(int i = 0; i < size; i++){
+            Vector2f point = new Vector2f(centre.x + radius,centre.y); //point on circle, (radius,0) is the 'first'
+            JMath.rotate(point,angle,centre);
+            points[i] = point;
+            angle += increment;
+
+            if(i > 0) {
+                addLine2D(points[i - 1], points[i], colour,lifetime);
+            }
+        }
+        addLine2D(points[size-1], points[0], colour,lifetime);
     }
 
 }

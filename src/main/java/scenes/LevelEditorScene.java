@@ -59,6 +59,9 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void update(float dt){
+        debugDraw.addBox2D(new Vector2f(100,550),new Vector2f(200,100),1);
+        debugDraw.addCircle2D(new Vector2f(450,550),50,1);
+        debugDraw.addCircle2D(new Vector2f(450,350),60,1);
        //System.out.println("FPS " + (1.0/dt));
         this.mouseControls.update();
         for(GameObject go: gameObjects){
