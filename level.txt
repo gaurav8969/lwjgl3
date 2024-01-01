@@ -1,0 +1,302 @@
+[
+  {
+    "uniqueID": 0,
+    "name": "Object 1",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texCoords": [
+              {
+                "x": 1.0,
+                "y": 1.0
+              },
+              {
+                "x": 1.0,
+                "y": 0.0
+              },
+              {
+                "x": 0.0,
+                "y": 0.0
+              },
+              {
+                "x": 0.0,
+                "y": 1.0
+              }
+            ],
+            "width": 0.0,
+            "height": 0.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 0.0,
+              "y": 100.0
+            },
+            "scale": {
+              "x": 64.0,
+              "y": 64.0
+            }
+          },
+          "uniqueID": 0
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 0.0,
+        "y": 100.0
+      },
+      "scale": {
+        "x": 64.0,
+        "y": 64.0
+      }
+    }
+  },
+  {
+    "uniqueID": 1,
+    "name": "Green",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/green.png",
+              "width": 256,
+              "height": 256,
+              "texID": 3
+            },
+            "texCoords": [
+              {
+                "x": 1.0,
+                "y": 1.0
+              },
+              {
+                "x": 1.0,
+                "y": 0.0
+              },
+              {
+                "x": 0.0,
+                "y": 0.0
+              },
+              {
+                "x": 0.0,
+                "y": 1.0
+              }
+            ],
+            "width": 0.0,
+            "height": 0.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 0.0,
+              "y": 200.0
+            },
+            "scale": {
+              "x": 64.0,
+              "y": 64.0
+            }
+          },
+          "uniqueID": 1
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 0.0,
+        "y": 200.0
+      },
+      "scale": {
+        "x": 64.0,
+        "y": 64.0
+      }
+    }
+  },
+  {
+    "uniqueID": 2,
+    "name": "Sprite_Object_Gen_2",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252,
+              "texID": 1
+            },
+            "texCoords": [
+              {
+                "x": 0.25,
+                "y": 0.5
+              },
+              {
+                "x": 0.25,
+                "y": 0.0
+              },
+              {
+                "x": 0.0,
+                "y": 0.0
+              },
+              {
+                "x": 0.0,
+                "y": 0.5
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 128.0,
+              "y": 320.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 2
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 128.0,
+        "y": 320.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  }
+]

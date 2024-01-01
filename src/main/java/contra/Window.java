@@ -142,12 +142,12 @@ public class Window {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             currentScene.debugDraw().beginFrame();
+            getScene().gridInstance().update(dt);
             if (dt >= 0) {
-                getScene().gridInstance().update(dt);
                 currentScene.update(dt);
-                currentScene.debugDraw().draw();
             }
-
+            currentScene.debugDraw().draw();
+            currentScene.renderer().render();
             imguiLayer.update(currentScene,dt);
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers

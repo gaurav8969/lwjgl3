@@ -126,5 +126,6 @@ public  abstract class Scene {
     }
     public DebugDraw debugDraw(){return debugDraw;}
 
+    public Renderer renderer(){return this.renderer;}
     public Gridlines gridInstance(){return gridlines;}
 }

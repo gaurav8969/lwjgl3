@@ -68,7 +68,6 @@ public class LevelEditorScene extends Scene {
             go.update(dt); //update all objects in scene but don't call imgui for all of them
                           //It is only called for the active object
         }
-        this.renderer.render();
     }
 
     @Override
