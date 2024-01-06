@@ -1,4 +1,3 @@
-/*
 package Renderer;
 
 import static org.lwjgl.opengl.GL30.*;
@@ -43,4 +42,4 @@ public class Framebuffer {
     public int getTextureID() {
         return this.texture.getTexID();
     }
-}*/
+}

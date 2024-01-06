@@ -25,6 +25,15 @@ public class LevelEditorScene extends Scene {
         AssetPool.loadSpriteSheet("assets/images/texture.png",8,126,126,0);
         AssetPool.getTexture("assets/images/red.png");
         AssetPool.getTexture("assets/images/green.png");
+
+        //scrape the deserialized texture duplicates with old ids and replace with latest ones
+        for(GameObject go: gameObjects){
+            if(go.getComponent(SpriteRenderer.class).getTexture() != null){
+                SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
+                //texID is transient so textures won't work without this step
+                spr.setTexture(AssetPool.getTexture(spr.getTexture().filepath));
+            }
+        }
     }
 
     @Override
@@ -34,8 +43,10 @@ public class LevelEditorScene extends Scene {
         this.camera = new Camera(new Vector2f(0, 0));
         sprites = AssetPool.loadSpriteSheet("assets/images/texture.png",8,126,126,0);
         if(levelLoaded){
-            activeGameObject = gameObjects.get(0);
-           return;
+            if(!gameObjects.isEmpty()) {
+                activeGameObject = gameObjects.get(0);
+            }
+            return;
         }
 
         Sprite red = new Sprite();

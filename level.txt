@@ -132,8 +132,7 @@
             "texture": {
               "filepath": "assets/images/green.png",
               "width": 256,
-              "height": 256,
-              "texID": 3
+              "height": 256
             },
             "texCoords": [
               {
@@ -234,25 +233,24 @@
             "texture": {
               "filepath": "assets/images/texture.png",
               "width": 504,
-              "height": 252,
-              "texID": 1
+              "height": 252
             },
             "texCoords": [
               {
                 "x": 0.25,
-                "y": 0.5
+                "y": 1.0
               },
               {
                 "x": 0.25,
-                "y": 0.0
-              },
-              {
-                "x": 0.0,
-                "y": 0.0
+                "y": 0.5
               },
               {
                 "x": 0.0,
                 "y": 0.5
+              },
+              {
+                "x": 0.0,
+                "y": 1.0
               }
             ],
             "width": 126.0,
@@ -261,8 +259,8 @@
           "isDirty": false,
           "lastTransform": {
             "position": {
-              "x": 128.0,
-              "y": 320.0
+              "x": 640.0,
+              "y": 384.0
             },
             "scale": {
               "x": 128.0,
@@ -290,8 +288,1523 @@
     ],
     "tf": {
       "position": {
+        "x": 640.0,
+        "y": 384.0
+      },
+      "scale": {
         "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 3,
+    "name": "Sprite_Object_Gen_3",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.5,
+                "y": 1.0
+              },
+              {
+                "x": 0.5,
+                "y": 0.5
+              },
+              {
+                "x": 0.25,
+                "y": 0.5
+              },
+              {
+                "x": 0.25,
+                "y": 1.0
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 640.0,
+              "y": 256.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 3
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 640.0,
+        "y": 256.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 4,
+    "name": "Sprite_Object_Gen_4",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.25,
+                "y": 1.0
+              },
+              {
+                "x": 0.25,
+                "y": 0.5
+              },
+              {
+                "x": 0.0,
+                "y": 0.5
+              },
+              {
+                "x": 0.0,
+                "y": 1.0
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 544.0,
+              "y": 768.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 4
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 544.0,
+        "y": 768.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 5,
+    "name": "Sprite_Object_Gen_5",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.5,
+                "y": 1.0
+              },
+              {
+                "x": 0.5,
+                "y": 0.5
+              },
+              {
+                "x": 0.25,
+                "y": 0.5
+              },
+              {
+                "x": 0.25,
+                "y": 1.0
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 544.0,
+              "y": 640.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 5
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 544.0,
+        "y": 640.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 6,
+    "name": "Sprite_Object_Gen_6",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.75,
+                "y": 1.0
+              },
+              {
+                "x": 0.75,
+                "y": 0.5
+              },
+              {
+                "x": 0.5,
+                "y": 0.5
+              },
+              {
+                "x": 0.5,
+                "y": 1.0
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 160.0,
+              "y": 320.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 6
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 160.0,
         "y": 320.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 7,
+    "name": "Sprite_Object_Gen_7",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.5,
+                "y": 1.0
+              },
+              {
+                "x": 0.5,
+                "y": 0.5
+              },
+              {
+                "x": 0.25,
+                "y": 0.5
+              },
+              {
+                "x": 0.25,
+                "y": 1.0
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 160.0,
+              "y": 64.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 7
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 160.0,
+        "y": 64.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 8,
+    "name": "Sprite_Object_Gen_8",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.25,
+                "y": 1.0
+              },
+              {
+                "x": 0.25,
+                "y": 0.5
+              },
+              {
+                "x": 0.0,
+                "y": 0.5
+              },
+              {
+                "x": 0.0,
+                "y": 1.0
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 160.0,
+              "y": 192.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 8
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 160.0,
+        "y": 192.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 9,
+    "name": "Sprite_Object_Gen_9",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.25,
+                "y": 1.0
+              },
+              {
+                "x": 0.25,
+                "y": 0.5
+              },
+              {
+                "x": 0.0,
+                "y": 0.5
+              },
+              {
+                "x": 0.0,
+                "y": 1.0
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 224.0,
+              "y": 768.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 9
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 224.0,
+        "y": 768.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 10,
+    "name": "Sprite_Object_Gen_10",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.25,
+                "y": 1.0
+              },
+              {
+                "x": 0.25,
+                "y": 0.5
+              },
+              {
+                "x": 0.0,
+                "y": 0.5
+              },
+              {
+                "x": 0.0,
+                "y": 1.0
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 672.0,
+              "y": 768.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 10
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 672.0,
+        "y": 768.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 11,
+    "name": "Sprite_Object_Gen_11",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.5,
+                "y": 1.0
+              },
+              {
+                "x": 0.5,
+                "y": 0.5
+              },
+              {
+                "x": 0.25,
+                "y": 0.5
+              },
+              {
+                "x": 0.25,
+                "y": 1.0
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 640.0,
+              "y": 256.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 11
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 640.0,
+        "y": 256.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 12,
+    "name": "Sprite_Object_Gen_12",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.5,
+                "y": 0.5
+              },
+              {
+                "x": 0.5,
+                "y": 0.0
+              },
+              {
+                "x": 0.25,
+                "y": 0.0
+              },
+              {
+                "x": 0.25,
+                "y": 0.5
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 640.0,
+              "y": 256.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 12
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 640.0,
+        "y": 256.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 13,
+    "name": "Sprite_Object_Gen_13",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.25,
+                "y": 0.5
+              },
+              {
+                "x": 0.25,
+                "y": 0.0
+              },
+              {
+                "x": 0.0,
+                "y": 0.0
+              },
+              {
+                "x": 0.0,
+                "y": 0.5
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 640.0,
+              "y": 512.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 13
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 640.0,
+        "y": 512.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 14,
+    "name": "Sprite_Object_Gen_14",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.5,
+                "y": 0.5
+              },
+              {
+                "x": 0.5,
+                "y": 0.0
+              },
+              {
+                "x": 0.25,
+                "y": 0.0
+              },
+              {
+                "x": 0.25,
+                "y": 0.5
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 544.0,
+              "y": 640.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 14
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 544.0,
+        "y": 640.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 15,
+    "name": "Sprite_Object_Gen_15",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.5,
+                "y": 1.0
+              },
+              {
+                "x": 0.5,
+                "y": 0.5
+              },
+              {
+                "x": 0.25,
+                "y": 0.5
+              },
+              {
+                "x": 0.25,
+                "y": 1.0
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 672.0,
+              "y": 640.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 15
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 672.0,
+        "y": 640.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 16,
+    "name": "Sprite_Object_Gen_16",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 1.0,
+                "y": 0.5
+              },
+              {
+                "x": 1.0,
+                "y": 0.0
+              },
+              {
+                "x": 0.75,
+                "y": 0.0
+              },
+              {
+                "x": 0.75,
+                "y": 0.5
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 640.0,
+              "y": 128.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 16
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 640.0,
+        "y": 128.0
+      },
+      "scale": {
+        "x": 128.0,
+        "y": 128.0
+      }
+    }
+  },
+  {
+    "uniqueID": 17,
+    "name": "Sprite_Object_Gen_17",
+    "componentsSize": 16,
+    "componentsBitset": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "zIndex": 0,
+          "colour": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "sprite": {
+            "texture": {
+              "filepath": "assets/images/texture.png",
+              "width": 504,
+              "height": 252
+            },
+            "texCoords": [
+              {
+                "x": 0.25,
+                "y": 1.0
+              },
+              {
+                "x": 0.25,
+                "y": 0.5
+              },
+              {
+                "x": 0.0,
+                "y": 0.5
+              },
+              {
+                "x": 0.0,
+                "y": 1.0
+              }
+            ],
+            "width": 126.0,
+            "height": 126.0
+          },
+          "isDirty": false,
+          "lastTransform": {
+            "position": {
+              "x": 640.0,
+              "y": 384.0
+            },
+            "scale": {
+              "x": 128.0,
+              "y": 128.0
+            }
+          },
+          "uniqueID": 17
+        }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "tf": {
+      "position": {
+        "x": 640.0,
+        "y": 384.0
       },
       "scale": {
         "x": 128.0,

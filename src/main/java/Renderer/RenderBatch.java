@@ -37,7 +37,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
     public boolean hasRoom;
     public boolean hasTextureRoom;
     private float[] vertices;
-    private int[] texSlots = {0, 1, 2, 3, 4, 5, 6, 7,8};
+    private int[] texSlots = {0, 1, 2, 3, 4, 5, 6, 7};
 
     private List<Texture> textures;
     private int vaoID, vboID;
@@ -89,6 +89,8 @@ public class RenderBatch implements Comparable<RenderBatch>{
 
         glVertexAttribPointer(3, TEX_ID_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_ID_OFFSET);
         glEnableVertexAttribArray(3);
+
+        shader.uploadIntArray("uTextures", texSlots);
     }
 
     public void render() {
@@ -116,7 +118,6 @@ public class RenderBatch implements Comparable<RenderBatch>{
             glActiveTexture(GL_TEXTURE0 + i + 1);
             textures.get(i).bind();
         }
-        shader.uploadIntArray("uTextures", texSlots);
 
         glBindVertexArray(vaoID);
         glEnableVertexAttribArray(0);
@@ -175,7 +176,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
         int texId = 0;
         if (spr.getSprite().getTexture() != null) {
             for (int i = 0; i < textures.size(); i++) {
-                if (textures.get(i) == spr.getSprite().getTexture()) {
+                if (textures.get(i) == spr.getSprite().getTexture()){
                     texId = i + 1;
                     break;
                 }

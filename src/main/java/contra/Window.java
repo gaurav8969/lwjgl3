@@ -1,5 +1,6 @@
 package contra;
 
+import Renderer.Framebuffer;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -22,6 +23,7 @@ public class Window {
     private float r,g,b,a;
     private static Scene currentScene;
     private ImGuiLayer imguiLayer;
+    private Framebuffer framebuffer;
 
     private Window(){
         this.width = 960;
@@ -121,6 +123,8 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
+        //this.framebuffer = new Framebuffer(1920,1080);
+
         Window.changeScene(0);
     }
 
@@ -141,13 +145,18 @@ public class Window {
             glfwPollEvents();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
             currentScene.debugDraw().beginFrame();
             getScene().gridInstance().update(dt);
             if (dt >= 0) {
                 currentScene.update(dt);
             }
+
+            //framebuffer.bind();
             currentScene.debugDraw().draw();
             currentScene.renderer().render();
+            //framebuffer.unbind();
+
             imguiLayer.update(currentScene,dt);
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers

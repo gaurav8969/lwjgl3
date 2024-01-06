@@ -9,9 +9,28 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
-    public String filepath = null;
+    public String filepath;
     public int width, height;
-    private int texID;
+    transient private int texID;
+
+    public Texture(){
+        this.width = -1;
+        this.height = -1;
+        this.texID = -1;
+
+    }
+    public Texture(int width, int height){
+        this.filepath = "Generated";
+        this.width = width;
+        this.height = height;
+
+        // Generate texture on GPU
+        texID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texID);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height,
+                0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    }
 
     public Texture init(String filepath) {
         this.filepath = filepath;
@@ -55,6 +74,15 @@ public class Texture {
         stbi_image_free(image);
 
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == null) return false;
+        if(!(o instanceof  Texture))return false;
+        Texture tex = (Texture)o;
+        return this.width == tex.width && this.height == tex.height &&
+                this.texID == tex.texID && (this.filepath.equals(tex.filepath));
     }
 
     public void bind(){

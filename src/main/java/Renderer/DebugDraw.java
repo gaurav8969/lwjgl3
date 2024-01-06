@@ -95,7 +95,7 @@ public class DebugDraw {
 
                 vertices[offset] = position.x;
                 vertices[offset + 1] = position.y;
-                vertices[offset + 2] = -10.0f;
+                vertices[offset + 2] = +10.0f;
 
                 vertices[offset + 3] = colour.x;
                 vertices[offset + 4] = colour.y;
