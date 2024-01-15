@@ -123,8 +123,8 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-        //this.framebuffer = new Framebuffer(1920,1080);
-
+        this.framebuffer = new Framebuffer(1920,1080);
+        glViewport(0,0,1920,1080);
         Window.changeScene(0);
     }
 
@@ -144,6 +144,7 @@ public class Window {
         while ( !glfwWindowShouldClose(glfwWindow) ) {
             glfwPollEvents();
 
+            framebuffer.bind();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             currentScene.debugDraw().beginFrame();
@@ -151,11 +152,9 @@ public class Window {
             if (dt >= 0) {
                 currentScene.update(dt);
             }
-
-            //framebuffer.bind();
             currentScene.debugDraw().draw();
             currentScene.renderer().render();
-            //framebuffer.unbind();
+            framebuffer.unbind();
 
             imguiLayer.update(currentScene,dt);
 
@@ -188,4 +187,11 @@ public class Window {
         get().height = newHeight;
     }
 
+    public static Framebuffer getFramebuffer(){
+        return get().framebuffer;
+    }
+
+    public static float getTargetAspectRatio(){
+        return 16.0f/9.0f;
+    }
 }

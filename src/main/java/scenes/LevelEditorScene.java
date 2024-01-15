@@ -22,7 +22,7 @@ public class LevelEditorScene extends Scene {
     @Override
     public void loadResources(){
         AssetPool.getShader("assets/shaders/default.glsl");
-        AssetPool.loadSpriteSheet("assets/images/texture.png",8,126,126,0);
+        AssetPool.loadSpriteSheet("assets/images/blocks.png",84,16,16,0);
         AssetPool.getTexture("assets/images/red.png");
         AssetPool.getTexture("assets/images/green.png");
 
@@ -41,7 +41,7 @@ public class LevelEditorScene extends Scene {
         loadResources();
         this.mouseControls = new MouseControls();
         this.camera = new Camera(new Vector2f(0, 0));
-        sprites = AssetPool.loadSpriteSheet("assets/images/texture.png",8,126,126,0);
+        sprites = AssetPool.loadSpriteSheet("assets/images/blocks.png",84,16,16,0);
         if(levelLoaded){
             if(!gameObjects.isEmpty()) {
                 activeGameObject = gameObjects.get(0);
@@ -96,15 +96,15 @@ public class LevelEditorScene extends Scene {
         float windowX2 = windowPos.x + windowSize.x;
         for(int i = 0; i < sprites.size(); i++){
             Sprite sprite = sprites.getSprite(i);
-            float spriteWidth = sprite.getWidth();
-            float spriteHeight = sprite.getHeight();
+            float spriteWidth = 4*sprite.getWidth();
+            float spriteHeight = 4*sprite.getHeight();
             int id = sprite.texID();
             Vector2f[] texCoords = sprite.getTexCoords();
 
             ImGui.pushID(i);
             if(ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y,
                     texCoords[0].x, texCoords[2].y)){
-                GameObject go = Prefabs.generateSpriteObject(sprite,128, 128);
+                GameObject go = Prefabs.generateSpriteObject(sprite,64, 64);
                 this.mouseControls.pickUp(go);
             }
             ImGui.popID();
