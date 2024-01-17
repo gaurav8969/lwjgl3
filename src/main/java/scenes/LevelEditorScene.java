@@ -48,31 +48,10 @@ public class LevelEditorScene extends Scene {
             }
             return;
         }
-
-        Sprite red = new Sprite();
-        Sprite green = new Sprite().setTexture(AssetPool.getTexture("assets/images/green.png"));
-
-        GameObject obj1 = new GameObject();
-        obj1.setName("Object 1").setTransform(new Vector2f(0,100),new Vector2f(64,64));
-
-        GameObject obj2 = new GameObject();
-        obj2.setName("Green").setTransform(new Vector2f(0,200),
-                new Vector2f(64,64));
-
-        obj1.addComponent(new SpriteRenderer().setSprite(red));
-        obj2.addComponent(new SpriteRenderer().setSprite(green));
-
-        this.activeGameObject = obj1;
-
-        this.addGameObjectToScene(obj1);
-        this.addGameObjectToScene(obj2);
     }
 
     @Override
     public void update(float dt){
-        debugDraw.addBox2D(new Vector2f(100,550),new Vector2f(200,100),1);
-        debugDraw.addCircle2D(new Vector2f(450,550),50,1);
-        debugDraw.addCircle2D(new Vector2f(450,350),60,1);
        //System.out.println("FPS " + (1.0/dt));
         this.mouseControls.update();
         for(GameObject go: gameObjects){
@@ -102,6 +81,7 @@ public class LevelEditorScene extends Scene {
             Vector2f[] texCoords = sprite.getTexCoords();
 
             ImGui.pushID(i);
+            //imgui needs tex coords top left to bottom right
             if(ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y,
                     texCoords[0].x, texCoords[2].y)){
                 GameObject go = Prefabs.generateSpriteObject(sprite,64, 64);

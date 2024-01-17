@@ -40,6 +40,7 @@ public class ImGuiLayer {
         fontAtlas.setFlags(ImGuiFreeTypeBuilderFlags.LightHinting);
         fontAtlas.build();
 
+        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
         io.setConfigFlags(ImGuiConfigFlags.DockingEnable);
 
         imGuiGlfw.init(glfwWindow, true);
@@ -55,6 +56,13 @@ public class ImGuiLayer {
         ImGui.end();
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());
+
+        if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
+            final long backupWindowPtr = glfwGetCurrentContext();
+            ImGui.updatePlatformWindows();
+            ImGui.renderPlatformWindowsDefault();
+            glfwMakeContextCurrent(backupWindowPtr);
+        }
     }
 
     private void setupDockSpace(){
