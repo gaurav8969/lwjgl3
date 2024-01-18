@@ -41,9 +41,6 @@ public class LevelEditorScene extends Scene {
         this.camera = new Camera(new Vector2f(0, 0));
         sprites = AssetPool.loadSpriteSheet("assets/images/blocks.png",84,16,16,0);
         if(levelLoaded){
-            if(!gameObjects.isEmpty()) {
-                activeGameObject = gameObjects.get(0);
-            }
             return;
         }
     }

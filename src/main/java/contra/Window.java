@@ -42,8 +42,8 @@ public class Window {
         initWindow();
         //starting the imgui systems
         //loading font and other configs etc.
-        imguiLayer = new ImGuiLayer();
-        imguiLayer.initImGui(glfwWindow,glslVersion);
+        imguiLayer = new ImGuiLayer(pickingTexture,glfwWindow, glslVersion);
+        imguiLayer.initImGui();
     }
 
     public static Window get(){
@@ -153,7 +153,7 @@ public class Window {
         while ( !glfwWindowShouldClose(glfwWindow) ) {
             glfwPollEvents();
 
-            //glDisable(GL_BLEND);
+            glDisable(GL_BLEND);
             pickingTexture.enableWriting();
 
             glViewport(0,0,1920,1080);
@@ -163,14 +163,8 @@ public class Window {
             Renderer.bindShader(pickingShader);
             currentScene.render();
 
-            if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
-                int x = (int)MouseListener.getScreenX();
-                int y = (int)MouseListener.getScreenY();
-                System.out.println(pickingTexture.readPixel(x, y));
-            }
-
             pickingTexture.disableWriting();
-            //glEnable(GL_BLEND);
+            glEnable(GL_BLEND);
 
             framebuffer.bind();
 

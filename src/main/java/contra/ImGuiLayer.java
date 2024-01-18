@@ -1,5 +1,7 @@
 package  contra;
+import Renderer.PickingTexture;
 import editor.GameViewWindow;
+import editor.PropertiesWindow;
 import imgui.ImFontAtlas;
 import imgui.ImFontConfig;
 import imgui.ImGuiIO;
@@ -14,9 +16,20 @@ import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 
 public class ImGuiLayer {
-    public ImGuiImplGlfw imGuiGlfw;
-    public ImGuiImplGl3 imGuiGl3;
-    public void initImGui(long glfwWindow, String glslVersion){
+    private GameViewWindow gameViewWindow;
+    private PropertiesWindow propertiesWindow;
+    private ImGuiImplGlfw imGuiGlfw;
+    private ImGuiImplGl3 imGuiGl3;
+    private long glfwWindow;
+    private String glslVersion;
+
+    public ImGuiLayer(PickingTexture pickingTexture, long glfwWindow, String glslVersion){
+        this.gameViewWindow = new GameViewWindow();
+        this.propertiesWindow = new PropertiesWindow(pickingTexture);
+        this.glfwWindow = glfwWindow;
+        this.glslVersion = glslVersion;
+    }
+    public void initImGui(){
         imGuiGlfw =  new ImGuiImplGlfw();
         imGuiGl3 = new ImGuiImplGl3();
         imgui.internal.ImGui.createContext(); //create imgui context
@@ -51,8 +64,12 @@ public class ImGuiLayer {
         imGuiGlfw.newFrame();
         ImGui.newFrame();
         setupDockSpace();
-        currentScene.sceneImgui();
-        GameViewWindow.imgui();
+        currentScene.imGui();
+
+        gameViewWindow.imgui();
+        propertiesWindow.update(currentScene, dt);
+        propertiesWindow.imgui();
+
         ImGui.end();
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());

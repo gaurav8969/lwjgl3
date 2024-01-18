@@ -37,7 +37,7 @@ uniform sampler2D uTextures[8];
 out vec3 colour;
 
 void main(){
-    vec4 texColour = vec4(1,1,1,1);
+    vec4 texColour;
     if(fTexID > 0){
         int id = int(fTexID);
         switch (id) {
