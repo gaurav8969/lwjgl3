@@ -23,8 +23,6 @@ public class LevelEditorScene extends Scene {
     public void loadResources(){
         AssetPool.getShader("assets/shaders/default.glsl");
         AssetPool.loadSpriteSheet("assets/images/blocks.png",84,16,16,0);
-        AssetPool.getTexture("assets/images/red.png");
-        AssetPool.getTexture("assets/images/green.png");
 
         //scrape the deserialized texture duplicates with old ids and replace with latest ones
         for(GameObject go: gameObjects){

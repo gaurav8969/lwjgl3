@@ -1,6 +1,9 @@
 package contra;
 
 import Renderer.Framebuffer;
+import Renderer.PickingTexture;
+import Renderer.Shader;
+import util.AssetPool;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -8,7 +11,7 @@ import scenes.LevelEditorScene;
 import scenes.LevelScene;
 import scenes.Scene;
 import util.Time;
-
+import Renderer.Renderer;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -24,15 +27,16 @@ public class Window {
     private static Scene currentScene;
     private ImGuiLayer imguiLayer;
     private Framebuffer framebuffer;
+    private PickingTexture pickingTexture;
 
     private Window(){
         this.width = 960;
         this.height = 960;
         this.title = "Contra";
-        r = 0.9f;
-        g = 0.9f;
-        b = 0.9f;
-        a = 1;
+        r = 1.0f;
+        g = 1.0f;
+        b = 1.0f;
+        a = 1.0f;
     }
     private void init(){
         initWindow();
@@ -124,6 +128,7 @@ public class Window {
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
         this.framebuffer = new Framebuffer(1920,1080);
+        this.pickingTexture = new PickingTexture(1920,1080);
         glViewport(0,0,1920,1080);
         Window.changeScene(0);
     }
@@ -139,21 +144,47 @@ public class Window {
         float dt = -1.0f;
 
         glClearColor(r, g, b, a);
+
+        Shader defaultShader = AssetPool.getShader("assets/shaders/default.glsl");
+        Shader pickingShader = AssetPool.getShader("assets/shaders/pickingShader.glsl");
+
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(glfwWindow) ) {
             glfwPollEvents();
 
+            //glDisable(GL_BLEND);
+            pickingTexture.enableWriting();
+
+            glViewport(0,0,1920,1080);
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            Renderer.bindShader(pickingShader);
+            currentScene.render();
+
+            if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
+                int x = (int)MouseListener.getScreenX();
+                int y = (int)MouseListener.getScreenY();
+                System.out.println(pickingTexture.readPixel(x, y));
+            }
+
+            pickingTexture.disableWriting();
+            //glEnable(GL_BLEND);
+
             framebuffer.bind();
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             currentScene.debugDraw().beginFrame();
+            glClearColor(r,g,b,a);
+            glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
+
             getScene().gridInstance().update(dt);
             if (dt >= 0) {
+                currentScene.debugDraw().draw();
+                Renderer.bindShader(defaultShader);
                 currentScene.update(dt);
+                currentScene.renderer().render();
             }
-            currentScene.debugDraw().draw();
-            currentScene.renderer().render();
             framebuffer.unbind();
 
             imguiLayer.update(currentScene,dt);

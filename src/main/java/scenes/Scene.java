@@ -45,6 +45,7 @@ public  abstract class Scene {
         isRunning = true;
     }
     public abstract void update(float dt);
+    public void render(){this.renderer.render();}
 
     public void saveExit(){
         Gson gson = new GsonBuilder()

@@ -5,6 +5,7 @@ package Renderer;
 
 import components.SpriteRenderer;
 import contra.GameObject;
+import util.AssetPool;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,11 +16,11 @@ public class Renderer {
     private final int MAX_BATCH_SIZE = 1000;
     private final int MAX_TEXTURES_SIZE = 7;//8 slots, 7 textures, the first default-activated is for no textures
     private List<RenderBatch> batches;
+    private static Shader currentShader = AssetPool.getShader("assets/shaders/pickingShader.glsl");
 
     public Renderer(){
         this.batches = new ArrayList<>();
     }
-
     public  void add(GameObject go){
         SpriteRenderer sprite = go.getComponent(SpriteRenderer.class);
         if(sprite != null) {
@@ -50,9 +51,17 @@ public class Renderer {
     }
 
     public void render(){
+        currentShader.use();
         for(RenderBatch batch: batches){
             batch.render();
         }
     }
 
+    public static void bindShader(Shader shader){
+        currentShader = shader;
+    }
+
+    public static Shader getBoundShader(){
+        return currentShader;
+    }
 }

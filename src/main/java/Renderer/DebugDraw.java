@@ -127,11 +127,11 @@ public class DebugDraw {
     }
 
     public void addLine2D(Vector2f from, Vector2f to) {
-        addLine2D(from,to, new Vector3f(0,1,0),240 );
+        addLine2D(from,to, new Vector3f(0,0,0),240 );
     }
 
     public void addLine2D(Vector2f from, Vector2f to, int lifetime) {
-        addLine2D(from,to,new Vector3f(0,1,0),lifetime);
+        addLine2D(from,to,new Vector3f(0,0,0),lifetime);
     }
 
     public void addLine2D(Vector2f from, Vector2f to, Vector3f colour) {

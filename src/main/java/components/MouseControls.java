@@ -15,7 +15,7 @@ public class MouseControls{
 
     public void update(){
         if(holdingObject != null) {
-            Vector2f orthoPos = new Vector2f(MouseListener.getOrthoX() - spriteWidth, MouseListener.getOrthoY());
+            Vector2f orthoPos = new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY());
             Vector2f gridPos = Window.getScene().gridInstance().getGridPos(orthoPos);
             if(Window.getScene().gridInstance().shouldDraw()){
                 holdingObject.setPosition(gridPos);
