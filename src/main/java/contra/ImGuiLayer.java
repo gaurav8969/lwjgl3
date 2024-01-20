@@ -33,7 +33,7 @@ public class ImGuiLayer {
         imGuiGlfw =  new ImGuiImplGlfw();
         imGuiGl3 = new ImGuiImplGl3();
         imgui.internal.ImGui.createContext(); //create imgui context
-        ImGuiIO io = imgui.internal.ImGui.getIO(); //control it through this io object
+        ImGuiIO io = imgui.internal.ImGui.getIO(); //control input-output
 
         io.setIniFilename("imgui.ini");
         final ImFontAtlas fontAtlas = io.getFonts();
