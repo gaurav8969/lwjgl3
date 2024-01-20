@@ -16,7 +16,6 @@ public class PropertiesWindow {
     private int entityID;
     private ImVec2 topLeft;
     private ImVec2 windowSize;
-    private float scrollX, scrollY;
 
     public PropertiesWindow(PickingTexture pickingTexture){
         this.pickingTexture = pickingTexture;
@@ -45,8 +44,8 @@ public class PropertiesWindow {
             ImGui.getWindowSize(windowSize);
             ImGui.setCursorPos(0,0);
             ImGui.getCursorScreenPos(topLeft);
-            scrollX = ImGui.getScrollX();
-            scrollY = ImGui.getScrollY();
+            topLeft.x += ImGui.getScrollX();
+            topLeft.y += ImGui.getScrollY();
 
             activeGameObject.imGui();
             ImGui.end();
@@ -69,8 +68,9 @@ public class PropertiesWindow {
         float rightX = topLeft.x + windowSize.x;
         float topY = topLeft.y + windowSize.y;
 
-        float xClick = MouseListener.getX()-scrollX;
-        float yClick = MouseListener.getY()-scrollY;
+        float xClick = MouseListener.getX();
+        float yClick = MouseListener.getY();
+
         boolean isInside =  xClick >= leftX && xClick <= rightX &&
                 yClick >= bottomY && yClick <= topY;
         return isInside;
