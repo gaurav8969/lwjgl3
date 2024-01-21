@@ -3,6 +3,7 @@ package scenes;
 import Renderer.DebugDraw;
 import components.*;
 import contra.*;
+import editor.EditorCamera;
 import imgui.ImVec2;
 import imgui.internal.ImGui;
 import org.joml.Vector2f;
@@ -16,6 +17,7 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class LevelEditorScene extends Scene {
     private Spritesheet sprites;
+    private EditorCamera editorCamera;
     public LevelEditorScene() {}
 
     //load big resources in the init fn, avoid lag spike mid-play
@@ -37,9 +39,10 @@ public class LevelEditorScene extends Scene {
     @Override
     public void init(){
         loadResources();
+        sprites = AssetPool.loadSpriteSheet("assets/images/blocks.png",84,16,16,0);
         this.mouseControls = new MouseControls();
         this.camera = new Camera(new Vector2f(0, 0));
-        sprites = AssetPool.loadSpriteSheet("assets/images/blocks.png",84,16,16,0);
+        this.editorCamera = new EditorCamera(camera);
         if(levelLoaded){
             return;
         }
@@ -48,6 +51,7 @@ public class LevelEditorScene extends Scene {
     @Override
     public void update(float dt){
        //System.out.println("FPS " + (1.0/dt));
+        editorCamera.update(dt);
         this.mouseControls.update();
         for(GameObject go: gameObjects){
             go.update(dt); //update all objects in scene but don't call imgui for all of them
@@ -91,13 +95,6 @@ public class LevelEditorScene extends Scene {
             if(i + 1 < sprites.size() && nextButtonX2 < windowX2 ){
                 ImGui.sameLine();
             }
-        }
-
-        Vector2f cameraPos = camera.position();
-
-        float[] imFloat2f = {cameraPos.x, cameraPos.y};
-        if(imgui.ImGui.dragFloat2("Camera Pos" + ": ", imFloat2f)){
-            cameraPos.set(imFloat2f[0],imFloat2f[1]);
         }
 
         if (ImGui.checkbox("Grid", true))

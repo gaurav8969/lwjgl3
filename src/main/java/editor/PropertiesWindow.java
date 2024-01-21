@@ -26,12 +26,13 @@ public class PropertiesWindow {
     public void update(Scene currentScene, float dt){
         ImGuiIO io = imgui.internal.ImGui.getIO();
         //we search for the objects in the current scene
-        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
+        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && !MouseListener.isDragging()) {
             int x = (int)MouseListener.getScreenX();
             int y = (int)MouseListener.getScreenY();
             if(!clickIsInsidePropertiesPanel()){
                 entityID = pickingTexture.readPixel(x, y);
                 GameObject go = currentScene.getGameObject(entityID);
+                if(activeGameObject == null){MouseListener.setConsumed(false);}
                 activeGameObject = go;
             }
         }
@@ -41,8 +42,10 @@ public class PropertiesWindow {
         if(activeGameObject != null){
             ImGui.begin("Properties");
 
-            ImGui.getWindowSize(windowSize);
             ImGui.setCursorPos(0,0);
+
+            ImGui.getWindowSize(windowSize);
+
             ImGui.getCursorScreenPos(topLeft);
             topLeft.x += ImGui.getScrollX();
             topLeft.y += ImGui.getScrollY();
@@ -53,6 +56,7 @@ public class PropertiesWindow {
     }
 
     boolean clickIsInsidePropertiesPanel(){
+        MouseListener.setConsumed(true);
         //no properties panel if active g.o. is null
         if(activeGameObject == null){
             return false;
@@ -63,6 +67,7 @@ public class PropertiesWindow {
             }
         }
 
+        //+y is downwards so topleft is bottom in y-axis
         float leftX = topLeft.x;
         float bottomY = topLeft.y;
         float rightX = topLeft.x + windowSize.x;

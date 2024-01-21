@@ -14,6 +14,7 @@ public class MouseListener{
     private boolean isDragging;
     private Vector2f gameViewportPos = new Vector2f();
     private Vector2f gameViewportSize = new Vector2f();
+    private boolean consumed = false;
 
     private MouseListener(){
         this.scrollX = 0.0;
@@ -69,11 +70,16 @@ public class MouseListener{
         getInstance().lastY = getInstance().yPos;
     }
 
+    public static void resetScroll(){
+        getInstance().scrollX = 0;
+        getInstance().scrollY = 0;
+    }
+
     //get mouse click in screen coords
+
     public static float getX(){
         return (float)getInstance().xPos;
     }
-
     public static float getY(){
         return (float)getInstance().yPos;
     }
@@ -133,6 +139,7 @@ public class MouseListener{
     }
 
     //get mouse clicks in world coords
+
     public static float getOrthoY() {
         float currentY = getY() - getInstance().gameViewportPos.y;
         currentY = -((currentY / getInstance().gameViewportSize.y) * 2.0f - 1.0f);
@@ -146,12 +153,19 @@ public class MouseListener{
 
         return currentY;
     }
-
     public static void setGameViewportPos(Vector2f gameViewportPos) {
         getInstance().gameViewportPos.set(gameViewportPos);
     }
 
     public static void setGameViewportSize(Vector2f gameViewportSize) {
         getInstance().gameViewportSize.set(gameViewportSize);
+    }
+
+    public static boolean isConsumed() {
+        return getInstance().consumed;
+    }
+
+    public static void setConsumed(boolean consumed) {
+        getInstance().consumed = consumed;
     }
 }

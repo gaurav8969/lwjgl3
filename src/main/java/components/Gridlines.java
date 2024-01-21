@@ -1,6 +1,7 @@
 package components;
 
 import Renderer.DebugDraw;
+import contra.Camera;
 import contra.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -15,12 +16,14 @@ public class Gridlines extends Component {
     @Override
     public void update(float dt){
         if(toDraw) {
-            cameraPos = Window.getScene().camera().position();
+            Camera camera = Window.getScene().camera();
+            cameraPos = camera.position();
+            float zoom = camera.getZoom();
             //frustum used in projection
-            Vector2f projectionSize = Window.getScene().camera().projectionSize();
+            Vector2f projectionSize = camera.projectionSize();
             //+2 to account for corners which are rounded off due to integer division
-            int verticalLines = (int) (projectionSize.x)/Settings.GRID_WIDTH + 2;
-            int horizontalLines = (int) (projectionSize.y)/Settings.GRID_HEIGHT + 2;
+            int verticalLines = (int) (zoom* projectionSize.x)/Settings.GRID_WIDTH + 2;
+            int horizontalLines = (int) (zoom* projectionSize.y)/Settings.GRID_HEIGHT + 2;
 
             Vector2f cameraGridPos = getGridPos(cameraPos);
             //to account for missing corner lines
@@ -31,7 +34,7 @@ public class Gridlines extends Component {
                 if (x < verticalLines) {
                     float xLine = cameraGridPos.x + x * Settings.GRID_WIDTH;
                     Window.getScene().debugDraw().addLine2D(new Vector2f(xLine, cameraGridPos.y),
-                            new Vector2f(xLine, cameraPos.y + projectionSize.y), 1);
+                            new Vector2f(xLine, cameraPos.y + zoom* projectionSize.y), 1);
                     x++;
                 }
 
@@ -39,7 +42,7 @@ public class Gridlines extends Component {
                     float yLine = cameraGridPos.y + y* Settings.GRID_HEIGHT;
                     y++;
                     Window.getScene().debugDraw().addLine2D(new Vector2f(cameraGridPos.x, yLine),
-                            new Vector2f(cameraPos.x + projectionSize.x, yLine), 1);
+                            new Vector2f(cameraPos.x + zoom* projectionSize.x, yLine), 1);
                 }
             }
         }
