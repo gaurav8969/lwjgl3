@@ -1,19 +1,15 @@
-package components;
+package editor;
 
-import Renderer.DebugDraw;
+import components.Component;
 import contra.Camera;
 import contra.Window;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 import util.Settings;
-
-import java.util.Set;
 
 public class Gridlines extends Component {
     private boolean toDraw = true;
     private Vector2f cameraPos;
 
-    @Override
     public void update(float dt){
         if(toDraw) {
             Camera camera = Window.getScene().camera();
@@ -22,7 +18,7 @@ public class Gridlines extends Component {
             //frustum used in projection
             Vector2f projectionSize = camera.projectionSize();
             //+2 to account for corners which are rounded off due to integer division
-            int verticalLines = (int) (zoom* projectionSize.x)/Settings.GRID_WIDTH + 2;
+            int verticalLines = (int) (zoom* projectionSize.x)/ Settings.GRID_WIDTH + 2;
             int horizontalLines = (int) (zoom* projectionSize.y)/Settings.GRID_HEIGHT + 2;
 
             Vector2f cameraGridPos = getGridPos(cameraPos);

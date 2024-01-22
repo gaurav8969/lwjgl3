@@ -9,6 +9,7 @@ import org.joml.Vector2f;
 
 public class GameViewWindow{
     private float leftX, bottomY;
+    private static boolean focused = false;
     public void imgui(){
         ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 
@@ -30,6 +31,7 @@ public class GameViewWindow{
         MouseListener.setGameViewportPos(new Vector2f(topLeft.x, topLeft.y));
         MouseListener.setGameViewportSize(new Vector2f(windowSize.x, windowSize.y));
 
+        focused = ImGui.isWindowFocused();
         ImGui.end();
     }
 
@@ -56,4 +58,6 @@ public class GameViewWindow{
 
         return new ImVec2(viewportX + ImGui.getCursorPosX(),viewportY + ImGui.getCursorPosY());
     }
+
+    public static boolean isFocused(){return focused;}
 }

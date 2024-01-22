@@ -14,7 +14,6 @@ public class MouseListener{
     private boolean isDragging;
     private Vector2f gameViewportPos = new Vector2f();
     private Vector2f gameViewportSize = new Vector2f();
-    private boolean consumed = false;
 
     private MouseListener(){
         this.scrollX = 0.0;
@@ -161,11 +160,4 @@ public class MouseListener{
         getInstance().gameViewportSize.set(gameViewportSize);
     }
 
-    public static boolean isConsumed() {
-        return getInstance().consumed;
-    }
-
-    public static void setConsumed(boolean consumed) {
-        getInstance().consumed = consumed;
-    }
 }

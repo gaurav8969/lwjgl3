@@ -34,12 +34,12 @@ public class AssetPool {
         }
     }
     public static Spritesheet loadSpriteSheet(String resource, int numOfSprites,
-                            int spriteHeight, int spriteWidth, int spacing){
+                            int spriteWidth, int spriteHeight, int spacing){
         if(AssetPool.spritesheets.containsKey(resource)){
             return spritesheets.get(resource);
         }else{
-            Spritesheet spritesheet = new Spritesheet(AssetPool.getTexture(resource),numOfSprites,spriteHeight,
-                    spriteWidth,spacing);
+            Spritesheet spritesheet = new Spritesheet(AssetPool.getTexture(resource),numOfSprites,spriteWidth,
+                    spriteHeight,spacing);
             AssetPool.spritesheets.put(resource, spritesheet);
             return spritesheet;
         }

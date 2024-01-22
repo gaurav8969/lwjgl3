@@ -6,6 +6,7 @@ import components.Transform;
 import org.joml.Vector2f;
 
 public class GameObject {
+    private boolean serializable = true;
     //starts at zero every game load
     public static int IDCounter = 0;
     private int uniqueID = -1;
@@ -126,5 +127,17 @@ public class GameObject {
 
     public static void loadCounter(int maxID){
         IDCounter = maxID;
+    }
+
+    public boolean isSerializable(){
+        return this.serializable;
+    }
+
+    public void makeSerializable(){
+        this.serializable = true;
+    }
+
+    public void makeUnserializable(){
+        this.serializable = false;
     }
 }

@@ -1,5 +1,6 @@
 package editor;
 
+import components.Component;
 import contra.Camera;
 import contra.KeyListener;
 import contra.MouseListener;
@@ -7,7 +8,7 @@ import org.joml.Vector2f;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_DECIMAL;
 
-public class EditorCamera {
+public class EditorCamera extends Component {
     private Vector2f dragStart, dragEnd, currentPos, newPosition; //current and new camera position i.e
     private float dragSensitivity = 80.0f;
     private float scrollSensitivity = 0.2f;
@@ -29,16 +30,17 @@ public class EditorCamera {
     }
 
     public void update(float dt){
+        float screenX = MouseListener.getScreenX();
+        float screenY = MouseListener.getScreenY();
+
+        //click is outside the viewport
+        if(screenX < 0 || screenX > 1920 || screenY < 0 || screenY > 1080 || !GameViewWindow.isFocused()){
+            MouseListener.endFrame(); //reset scroll if any
+            return;
+        }
+
         if(!wasDragging && MouseListener.isDragging()){//dragging started this frame
             //some other window is clicked on
-            if(MouseListener.isConsumed()){return;}
-
-            float x = MouseListener.getScreenX();
-            float y = MouseListener.getScreenY();
-
-            //click is outside the viewport
-            if(x > 1920 || y > 1080){return;}
-
             wasDragging = true;
             dragStart.set(MouseListener.getOrthoX(), MouseListener.getOrthoY());
         }else if(wasDragging){ //dragging stopped
@@ -77,13 +79,13 @@ public class EditorCamera {
                 zoomAddValue = -zoomAddValue;
             }
             camera.addZoom(zoomAddValue);
-            if(Math.abs(1 - camera.getZoom()) < 0.001f){
+            if((Math.abs(1 - camera.getZoom()) < 0.001f) || posLerpTime > 0.4f){
                 camera.setZoom(1.0f);
             }
 
             camera.position().lerp(new Vector2f(), posLerpTime);
 
-            if(Math.abs(camera.position().x) < 5.0f && Math.abs(camera.position().y) < 5.0f){
+            if((Math.abs(camera.position().x) < 5.0f && Math.abs(camera.position().y) < 5.0f) || posLerpTime > 0.4f ){
                 camera.position().set(0.0f);
             }
 

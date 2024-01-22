@@ -26,15 +26,12 @@ public class PropertiesWindow {
     public void update(Scene currentScene, float dt){
         ImGuiIO io = imgui.internal.ImGui.getIO();
         //we search for the objects in the current scene
-        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && !MouseListener.isDragging()) {
+        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && GameViewWindow.isFocused() && !MouseListener.isDragging()) {
             int x = (int)MouseListener.getScreenX();
             int y = (int)MouseListener.getScreenY();
-            if(!clickIsInsidePropertiesPanel()){
-                entityID = pickingTexture.readPixel(x, y);
-                GameObject go = currentScene.getGameObject(entityID);
-                if(activeGameObject == null){MouseListener.setConsumed(false);}
-                activeGameObject = go;
-            }
+            entityID = pickingTexture.readPixel(x, y);
+            GameObject go = currentScene.getGameObject(entityID);
+            activeGameObject = go;
         }
     }
 
@@ -53,31 +50,5 @@ public class PropertiesWindow {
             activeGameObject.imGui();
             ImGui.end();
         }
-    }
-
-    boolean clickIsInsidePropertiesPanel(){
-        MouseListener.setConsumed(true);
-        //no properties panel if active g.o. is null
-        if(activeGameObject == null){
-            return false;
-        }else{
-            //for clicking inside properties panel and dragging the cursor out, e.g when selecting corner colours
-            if (MouseListener.isDragging()) {
-                return true;
-            }
-        }
-
-        //+y is downwards so topleft is bottom in y-axis
-        float leftX = topLeft.x;
-        float bottomY = topLeft.y;
-        float rightX = topLeft.x + windowSize.x;
-        float topY = topLeft.y + windowSize.y;
-
-        float xClick = MouseListener.getX();
-        float yClick = MouseListener.getY();
-
-        boolean isInside =  xClick >= leftX && xClick <= rightX &&
-                yClick >= bottomY && yClick <= topY;
-        return isInside;
     }
 }

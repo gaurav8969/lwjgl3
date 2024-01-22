@@ -1,7 +1,11 @@
 package scenes;
 
 import Renderer.DebugDraw;
-import components.*;
+import components.Sprite;
+import components.SpriteRenderer;
+import components.Spritesheet;
+import editor.Gridlines;
+import editor.MouseControls;
 import contra.*;
 import editor.EditorCamera;
 import imgui.ImVec2;
@@ -16,8 +20,8 @@ import static java.lang.Math.sin;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class LevelEditorScene extends Scene {
+    private GameObject editorContext;
     private Spritesheet sprites;
-    private EditorCamera editorCamera;
     public LevelEditorScene() {}
 
     //load big resources in the init fn, avoid lag spike mid-play
@@ -25,6 +29,7 @@ public class LevelEditorScene extends Scene {
     public void loadResources(){
         AssetPool.getShader("assets/shaders/default.glsl");
         AssetPool.loadSpriteSheet("assets/images/blocks.png",84,16,16,0);
+        AssetPool.loadSpriteSheet("assets/images/gizmos.png", 2, 24, 48,0);
 
         //scrape the deserialized texture duplicates with old ids and replace with latest ones
         for(GameObject go: gameObjects){
@@ -40,9 +45,15 @@ public class LevelEditorScene extends Scene {
     public void init(){
         loadResources();
         sprites = AssetPool.loadSpriteSheet("assets/images/blocks.png",84,16,16,0);
-        this.mouseControls = new MouseControls();
         this.camera = new Camera(new Vector2f(0, 0));
-        this.editorCamera = new EditorCamera(camera);
+
+        editorContext = new GameObject();
+        Gridlines gridInstance = new Gridlines();
+        MouseControls mouseControls = new MouseControls(gridInstance);
+        EditorCamera editorCamera = new EditorCamera(camera);
+
+        editorContext.addComponent(gridInstance).addComponent(mouseControls).addComponent(editorCamera);
+
         if(levelLoaded){
             return;
         }
@@ -51,8 +62,7 @@ public class LevelEditorScene extends Scene {
     @Override
     public void update(float dt){
        //System.out.println("FPS " + (1.0/dt));
-        editorCamera.update(dt);
-        this.mouseControls.update();
+        editorContext.update(dt);
         for(GameObject go: gameObjects){
             go.update(dt); //update all objects in scene but don't call imgui for all of them
                           //It is only called for the active object
@@ -84,7 +94,7 @@ public class LevelEditorScene extends Scene {
             if(ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y,
                     texCoords[0].x, texCoords[2].y)){
                 GameObject go = Prefabs.generateSpriteObject(sprite,64, 64);
-                this.mouseControls.pickUp(go);
+                editorContext.getComponent(MouseControls.class).pickUp(go);
             }
             ImGui.popID();
 
@@ -97,10 +107,7 @@ public class LevelEditorScene extends Scene {
             }
         }
 
-        if (ImGui.checkbox("Grid", true))
-        {
-            gridlines.toggleGrid();
-        }
+        if (ImGui.checkbox("Grid", true)) {editorContext.getComponent(Gridlines.class).toggleGrid();}
 
         ImGui.end();
     }

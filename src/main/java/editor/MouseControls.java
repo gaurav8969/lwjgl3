@@ -1,5 +1,7 @@
-package components;
+package editor;
 
+import components.Component;
+import components.SpriteRenderer;
 import contra.GameObject;
 import contra.MouseListener;
 import contra.Window;
@@ -9,15 +11,19 @@ import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
 //class for managing level editor mouse magic
 //Not part of any specific game objects
-public class MouseControls{
+public class MouseControls extends Component {
     private GameObject holdingObject = null;
     private float spriteWidth, spriteHeight;
+    private Gridlines gridInstance;
 
-    public void update(){
+    public MouseControls(Gridlines gridInstance){
+        this.gridInstance = gridInstance;
+    }
+    public void update(float dt){
         if(holdingObject != null) {
             Vector2f orthoPos = new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY());
-            Vector2f gridPos = Window.getScene().gridInstance().getGridPos(orthoPos);
-            if(Window.getScene().gridInstance().shouldDraw()){
+            Vector2f gridPos = gridInstance.getGridPos(orthoPos);
+            if(gridInstance.shouldDraw()){
                 holdingObject.setPosition(gridPos);
             }else{
                 holdingObject.setPosition(orthoPos);
@@ -41,3 +47,4 @@ public class MouseControls{
     }
 
 }
+

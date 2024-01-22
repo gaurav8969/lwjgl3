@@ -172,7 +172,6 @@ public class Window {
             glClearColor(r,g,b,a);
             glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
 
-            getScene().gridInstance().update(dt);
             if (dt >= 0) {
                 currentScene.debugDraw().draw();
                 Renderer.bindShader(defaultShader);

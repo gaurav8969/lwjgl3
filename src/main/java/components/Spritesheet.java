@@ -16,7 +16,7 @@ public class Spritesheet{
 
     private int rows,columns;
 
-    public Spritesheet(Texture texture, int numOfSprites, int spriteHeight, int spriteWidth, int spacing) {
+    public Spritesheet(Texture texture, int numOfSprites, int spriteWidth,int spriteHeight, int spacing) {
         this.texture = texture;
         sprites = new ArrayList<>();
         int currentX = 0;
