@@ -12,6 +12,7 @@ import scenes.LevelScene;
 import scenes.Scene;
 import util.Time;
 import Renderer.Renderer;
+import editor.ImGuiLayer;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -39,52 +40,6 @@ public class Window {
         a = 1.0f;
     }
     private void init(){
-        initWindow();
-        //starting the imgui systems
-        //loading font and other configs etc.
-        imguiLayer = new ImGuiLayer(pickingTexture,glfwWindow, glslVersion);
-        imguiLayer.initImGui();
-    }
-
-    public static Window get(){
-        if(Window.window == null){
-            Window.window = new Window();
-        }
-        return Window.window;
-    }
-
-    public static void changeScene(int newScene){
-        switch(newScene){
-            case 0:
-                currentScene = new LevelEditorScene();
-                currentScene.load();
-                currentScene.init();
-                currentScene.start();
-                break;
-            case 1:
-                currentScene = new LevelScene();
-            default:
-                assert false: "Unknown Scene'" + newScene + "'";
-                break;
-        }
-    }
-
-    public void run(){
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
-
-        init();
-        loop();
-
-        //free the memory
-        glfwFreeCallbacks(glfwWindow);
-        glfwDestroyWindow(glfwWindow);
-
-        //terminate GLFW and free the error callback
-        glfwTerminate();
-        glfwSetErrorCallback(null).free();
-    }
-
-    private void initWindow() {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
@@ -130,7 +85,49 @@ public class Window {
         this.framebuffer = new Framebuffer(1920,1080);
         this.pickingTexture = new PickingTexture(1920,1080);
         glViewport(0,0,1920,1080);
+
+        imguiLayer = new ImGuiLayer(pickingTexture,glfwWindow, glslVersion);
+        imguiLayer.initImGui();
+
         Window.changeScene(0);
+    }
+
+    public static Window get(){
+        if(Window.window == null){
+            Window.window = new Window();
+        }
+        return Window.window;
+    }
+
+    public static void changeScene(int newScene){
+        switch(newScene){
+            case 0:
+                currentScene = new LevelEditorScene();
+                currentScene.load();
+                currentScene.init();
+                currentScene.start();
+                break;
+            case 1:
+                currentScene = new LevelScene();
+            default:
+                assert false: "Unknown Scene'" + newScene + "'";
+                break;
+        }
+    }
+
+    public void run(){
+        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
+
+        init();
+        loop();
+
+        //free the memory
+        glfwFreeCallbacks(glfwWindow);
+        glfwDestroyWindow(glfwWindow);
+
+        //terminate GLFW and free the error callback
+        glfwTerminate();
+        glfwSetErrorCallback(null).free();
     }
 
     private void loop() {
@@ -194,6 +191,8 @@ public class Window {
     public static Scene getScene(){
         return get().currentScene;
     }
+
+    public static ImGuiLayer getImGuilayer(){return get().imguiLayer;}
 
     public static int getWidth() {
         return get().width;

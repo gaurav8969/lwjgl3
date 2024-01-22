@@ -4,10 +4,8 @@ import Renderer.DebugDraw;
 import components.Sprite;
 import components.SpriteRenderer;
 import components.Spritesheet;
-import editor.Gridlines;
-import editor.MouseControls;
+import editor.*;
 import contra.*;
-import editor.EditorCamera;
 import imgui.ImVec2;
 import imgui.internal.ImGui;
 import org.joml.Vector2f;
@@ -17,6 +15,7 @@ import util.AssetPool;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
+import static org.lwjgl.opengl.GL13.glCompressedTexImage1D;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class LevelEditorScene extends Scene {
@@ -30,6 +29,7 @@ public class LevelEditorScene extends Scene {
         AssetPool.getShader("assets/shaders/default.glsl");
         AssetPool.loadSpriteSheet("assets/images/blocks.png",84,16,16,0);
         AssetPool.loadSpriteSheet("assets/images/gizmos.png", 2, 24, 48,0);
+        AssetPool.loadSpriteSheet("assets/images/redBeans.png", 16, 64, 64,0);
 
         //scrape the deserialized texture duplicates with old ids and replace with latest ones
         for(GameObject go: gameObjects){
@@ -51,8 +51,9 @@ public class LevelEditorScene extends Scene {
         Gridlines gridInstance = new Gridlines();
         MouseControls mouseControls = new MouseControls(gridInstance);
         EditorCamera editorCamera = new EditorCamera(camera);
-
-        editorContext.addComponent(gridInstance).addComponent(mouseControls).addComponent(editorCamera);
+        TranslateGizmo gizmo = new TranslateGizmo(Window.getImGuilayer().getPropertiesWindow());
+        //do not add to the scene
+        editorContext.addComponent(gridInstance).addComponent(mouseControls).addComponent(editorCamera).addComponent(gizmo);
 
         if(levelLoaded){
             return;

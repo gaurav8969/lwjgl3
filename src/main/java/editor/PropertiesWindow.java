@@ -8,6 +8,8 @@ import imgui.ImGuiIO;
 import imgui.ImVec2;
 import scenes.Scene;
 
+import javax.sound.midi.Soundbank;
+
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
 public class PropertiesWindow {
@@ -26,6 +28,7 @@ public class PropertiesWindow {
     public void update(Scene currentScene, float dt){
         ImGuiIO io = imgui.internal.ImGui.getIO();
         //we search for the objects in the current scene
+
         if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && GameViewWindow.isFocused() && !MouseListener.isDragging()) {
             int x = (int)MouseListener.getScreenX();
             int y = (int)MouseListener.getScreenY();
@@ -38,7 +41,6 @@ public class PropertiesWindow {
     public void imgui(){
         if(activeGameObject != null){
             ImGui.begin("Properties");
-
             ImGui.setCursorPos(0,0);
 
             ImGui.getWindowSize(windowSize);
@@ -50,5 +52,9 @@ public class PropertiesWindow {
             activeGameObject.imGui();
             ImGui.end();
         }
+    }
+
+    public GameObject getActiveGameObject(){
+        return activeGameObject;
     }
 }

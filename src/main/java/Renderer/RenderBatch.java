@@ -3,8 +3,8 @@ package Renderer;
 import components.SpriteRenderer;
 import components.Transform;
 import contra.Window;
-import org.joml.Vector2f;
-import org.joml.Vector4f;
+import org.joml.*;
+import org.joml.Math;
 import util.AssetPool;
 
 import java.util.ArrayList;
@@ -190,6 +190,13 @@ public class RenderBatch implements Comparable<RenderBatch>{
             }
         }
 
+        Transform tf = spr.gameObject.tf;
+
+        Matrix4f transformationMatrix = new Matrix4f().identity();
+        transformationMatrix.translate(tf.position.x, tf.position.y, 0.0f);
+        transformationMatrix.rotate(Math.toRadians(tf.rotation),0,0,1f);
+        transformationMatrix.scale(tf.scale.x, tf.scale.y, 1f);
+
         // Add vertices with the appropriate properties
         float xAdd = 1.0f;
         float yAdd = 1.0f;
@@ -202,10 +209,11 @@ public class RenderBatch implements Comparable<RenderBatch>{
                 yAdd = 1.0f;
             }
 
-            Transform tf = spr.gameObject.tf;
+            Vector4f position = new Vector4f(xAdd, yAdd, 0,1);
+            position.mul(transformationMatrix);
             // Load position
-            vertices[offset] = tf.position.x + (xAdd * tf.scale.x);
-            vertices[offset + 1] = tf.position.y + (yAdd * tf.scale.y);
+            vertices[offset] = position.x;
+            vertices[offset + 1] = position.y;
 
             // Load color
             vertices[offset + 2] = color.x;

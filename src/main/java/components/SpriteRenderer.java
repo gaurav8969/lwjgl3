@@ -7,7 +7,6 @@ import org.joml.Vector4f;
 
 //contains sprites that are to be rendered
 public class SpriteRenderer extends Component {
-
     int zIndex= 0;//layer it is on, higher values go on top, try to use [-2,+2] range, default 0
     private Vector4f colour = new Vector4f(1,1,1,1);
     private Sprite sprite;

@@ -13,6 +13,8 @@ import imgui.internal.ImGui;
 import imgui.type.ImBoolean;
 import scenes.Scene;
 
+import javax.sound.sampled.Port;
+
 import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 
@@ -100,20 +102,7 @@ public class ImGuiLayer {
         ImGui.dockSpace(ImGui.getID("Dockspace"));
     }
 
-    //queries if a certain point in glfw window (absolute)space is inside a given imgui window
-    public static boolean clickedInside(ImVec2 topLeft, ImVec2 windowSize){
-
-        //+y is downwards so topleft is bottom in y-axis
-        float leftX = topLeft.x;
-        float bottomY = topLeft.y;
-        float rightX = topLeft.x + windowSize.x;
-        float topY = topLeft.y + windowSize.y;
-
-        float xClick = MouseListener.getX();
-        float yClick = MouseListener.getY();
-
-        boolean isInside =  xClick >= leftX && xClick <= rightX &&
-                yClick >= bottomY && yClick <= topY;
-        return isInside;
+    public PropertiesWindow getPropertiesWindow(){
+        return propertiesWindow;
     }
 }

@@ -6,11 +6,9 @@ import org.joml.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 
-//contains sprites inside a spritesheet, the texture info is implementation details, end goal is to extract
-//it all as sprites stored in a list
+//extracts sprites from a spritesheet
 
 public class Spritesheet{
-    //no list, a single texture, since that is the point of spritesheets
     private Texture texture;
     private List<Sprite> sprites;
 
@@ -39,7 +37,7 @@ public class Spritesheet{
             };
 
             Sprite sprite = new Sprite();
-            //chaining setters, they return 'this'
+            //chaining setters'
             sprites.add(sprite.setTexture(texture).setTexCoords(texCoords).setWidth(spriteWidth).setHeight(spriteHeight));
 
             currentX += spriteWidth + spacing;
@@ -54,6 +52,7 @@ public class Spritesheet{
         columns = numOfSprites/rows;
     }
 
+    //rows and columns start from
     public Sprite getSprite(int row, int column){
         return sprites.get((row-1)*this.columns + column-1);
     }

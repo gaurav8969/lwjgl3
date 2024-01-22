@@ -108,6 +108,7 @@ public class GameObject {
     public GameObject setTransform(Transform tf){
         this.tf.position = tf.position;
         this.tf.scale = tf.scale;
+        this.tf.rotation = tf.rotation;
         return this;
     }
 
@@ -118,6 +119,11 @@ public class GameObject {
 
     public GameObject setSize(Vector2f size){
         this.tf.scale = size;
+        return this;
+    }
+
+    public GameObject setRotation(float rotation){
+        this.tf.rotation = rotation;
         return this;
     }
 

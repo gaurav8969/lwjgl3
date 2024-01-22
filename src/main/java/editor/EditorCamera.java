@@ -18,18 +18,19 @@ public class EditorCamera extends Component {
     private float zoomLerpTime;
     private float posLerpTime;
 
-
     public EditorCamera(Camera camera){
         this.camera = camera;
         this.wasDragging = false;
         this.currentPos = camera.position();
-        this.newPosition = new Vector2f();
+        this.newPosition = new Vector2f().set(currentPos);
         this.dragStart = new Vector2f();
         this.dragEnd = new Vector2f();
         this.toReset = false;
     }
 
     public void update(float dt){
+        toReset(dt); //check and perform reset if needed
+
         float screenX = MouseListener.getScreenX();
         float screenY = MouseListener.getScreenY();
 
@@ -66,7 +67,9 @@ public class EditorCamera extends Component {
             camera.addZoom(addValue);
             MouseListener.resetScroll();
         }
+    }
 
+    private void toReset(float dt){
         if (KeyListener.isKeyPressed(GLFW_KEY_KP_DECIMAL)) {
             toReset = true;
         }

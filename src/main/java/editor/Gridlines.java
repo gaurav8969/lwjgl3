@@ -8,12 +8,11 @@ import util.Settings;
 
 public class Gridlines extends Component {
     private boolean toDraw = true;
-    private Vector2f cameraPos;
 
     public void update(float dt){
         if(toDraw) {
             Camera camera = Window.getScene().camera();
-            cameraPos = camera.position();
+            Vector2f cameraPos = camera.position();
             float zoom = camera.getZoom();
             //frustum used in projection
             Vector2f projectionSize = camera.projectionSize();
