@@ -36,7 +36,6 @@ public class EditorCamera extends Component {
 
         //click is outside the viewport
         if(screenX < 0 || screenX > 1920 || screenY < 0 || screenY > 1080 || !GameViewWindow.isFocused()){
-            MouseListener.endFrame(); //reset scroll if any
             return;
         }
 
@@ -65,7 +64,6 @@ public class EditorCamera extends Component {
                     1/camera.getZoom());
             addValue *= -Math.signum(scrollY);
             camera.addZoom(addValue);
-            MouseListener.resetScroll();
         }
     }
 

@@ -211,6 +211,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
 
             Vector4f position = new Vector4f(xAdd, yAdd, 0,1);
             position.mul(transformationMatrix);
+
             // Load position
             vertices[offset] = position.x;
             vertices[offset + 1] = position.y;

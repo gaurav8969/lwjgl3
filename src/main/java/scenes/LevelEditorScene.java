@@ -28,8 +28,7 @@ public class LevelEditorScene extends Scene {
     public void loadResources(){
         AssetPool.getShader("assets/shaders/default.glsl");
         AssetPool.loadSpriteSheet("assets/images/blocks.png",84,16,16,0);
-        AssetPool.loadSpriteSheet("assets/images/gizmos.png", 2, 24, 48,0);
-        AssetPool.loadSpriteSheet("assets/images/redBeans.png", 16, 64, 64,0);
+        AssetPool.loadSpriteSheet("assets/images/gizmos.png", 3, 24, 48,0);
 
         //scrape the deserialized texture duplicates with old ids and replace with latest ones
         for(GameObject go: gameObjects){
@@ -51,7 +50,7 @@ public class LevelEditorScene extends Scene {
         Gridlines gridInstance = new Gridlines();
         MouseControls mouseControls = new MouseControls(gridInstance);
         EditorCamera editorCamera = new EditorCamera(camera);
-        TranslateGizmo gizmo = new TranslateGizmo(Window.getImGuilayer().getPropertiesWindow());
+        GizmoSystem gizmo = new GizmoSystem();
         //do not add to the scene
         editorContext.addComponent(gridInstance).addComponent(mouseControls).addComponent(editorCamera).addComponent(gizmo);
 

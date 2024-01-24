@@ -9,7 +9,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 public class MouseListener{
     private static MouseListener instance = null;
-    private double scrollX,scrollY,lastY,lastX,xPos,yPos;
+    private double scrollX,scrollY,lastY,lastX,xPos,yPos,worldX, worldY, lastWorldX, lastWorldY;
     private boolean mouseButtonPressed[] = new boolean[9];
     private boolean isDragging;
     private Vector2f gameViewportPos = new Vector2f();
@@ -32,13 +32,14 @@ public class MouseListener{
     }
 
     public static void mousePosCallback(long window, double xpos, double ypos){
-        getInstance().lastX = getInstance().xPos;
-        getInstance().lastY = getInstance().yPos;
-
         getInstance().xPos = xpos;
         getInstance().yPos = ypos;
 
-    //pos callback is called if the mouse is moved, and so if any of the buttons is clicked as that happens, we've dragging
+        //calc. and update latest world coords
+        calcWorldX();
+        calcWorldY();
+
+        //pos callback called if mouse moves, simultaneous button clicking is dragging
         getInstance().isDragging = getInstance().mouseButtonPressed[0] || getInstance().mouseButtonPressed[1]
                 || getInstance().mouseButtonPressed[2];
     }
@@ -67,18 +68,15 @@ public class MouseListener{
         getInstance().scrollY = 0;
         getInstance().lastX = getInstance().xPos;
         getInstance().lastY = getInstance().yPos;
-    }
-
-    public static void resetScroll(){
-        getInstance().scrollX = 0;
-        getInstance().scrollY = 0;
+        getInstance().lastWorldX = getInstance().worldX;
+        getInstance().lastWorldY = getInstance().worldY;
     }
 
     //get mouse click in screen coords
-
     public static float getX(){
         return (float)getInstance().xPos;
     }
+
     public static float getY(){
         return (float)getInstance().yPos;
     }
@@ -89,6 +87,14 @@ public class MouseListener{
 
     public static float getDy(){
         return (float)(getInstance().lastY-getInstance().yPos);
+    }
+
+    public static float getWorldDx(){
+        return (float)(getInstance().worldX - getInstance().lastWorldX);
+    }
+
+    public static float getWorldDy(){
+        return (float)(getInstance().worldY - getInstance().lastWorldY);
     }
 
     public static float getScrollX(){
@@ -124,6 +130,15 @@ public class MouseListener{
     }
 
     public static float getOrthoX() {
+        return (float)getInstance().worldX;
+    }
+
+    //get mouse clicks in world coords
+    public static float getOrthoY() {
+        return (float)getInstance().worldY;
+    }
+
+    private static void calcWorldX(){
         float currentX = getX() - getInstance().gameViewportPos.x;
         currentX = (currentX / getInstance().gameViewportSize.x) * 2.0f - 1.0f;
         Vector4f tmp = new Vector4f(currentX, 0, 0, 1);
@@ -134,12 +149,10 @@ public class MouseListener{
         tmp.mul(viewProjection);
         currentX = tmp.x;
 
-        return currentX;
+        getInstance().worldX = currentX;
     }
 
-    //get mouse clicks in world coords
-
-    public static float getOrthoY() {
+    private static void calcWorldY(){
         float currentY = getY() - getInstance().gameViewportPos.y;
         currentY = -((currentY / getInstance().gameViewportSize.y) * 2.0f - 1.0f);
         Vector4f tmp = new Vector4f(0, currentY, 0, 1);
@@ -150,8 +163,9 @@ public class MouseListener{
         tmp.mul(viewProjection);
         currentY = tmp.y;
 
-        return currentY;
+        getInstance().worldY = currentY;
     }
+
     public static void setGameViewportPos(Vector2f gameViewportPos) {
         getInstance().gameViewportPos.set(gameViewportPos);
     }
@@ -159,5 +173,4 @@ public class MouseListener{
     public static void setGameViewportSize(Vector2f gameViewportSize) {
         getInstance().gameViewportSize.set(gameViewportSize);
     }
-
 }

@@ -1,8 +1,9 @@
 package components;
 
+import contra.GameObject;
 import org.joml.Vector2f;
 
-public class Transform {
+public class Transform{
     public Vector2f position;
     public Vector2f scale;
     public float rotation = 0.0f;
@@ -11,7 +12,18 @@ public class Transform {
         this.position = new Vector2f();
         this.scale = new Vector2f(64f,64f);
     }
-    public Transform setTransform(Vector2f position, Vector2f scale, float rotation){
+
+    public Transform setPosition(Vector2f position){
+        this.position = position;
+        return this;
+    }
+    public Transform set(Vector2f position, Vector2f scale){
+        this.position = position;
+        this.scale = scale;
+        return this;
+    }
+
+    public Transform set(Vector2f position, Vector2f scale, float rotation){
         this.position = position;
         this.scale = scale;
         this.rotation = rotation;
@@ -32,7 +44,7 @@ public class Transform {
     }
 
     public Transform copy(){
-        return new Transform().setTransform(new Vector2f(this.position),new Vector2f(this.scale),this.rotation);
+        return new Transform().set(new Vector2f(this.position),new Vector2f(this.scale),this.rotation);
     }
 
     public void copyTo(Transform to){

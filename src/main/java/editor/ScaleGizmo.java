@@ -1,18 +1,15 @@
 package editor;
 
-import Renderer.Texture;
-import components.*;
+import components.Sprite;
+import components.SpriteRenderer;
 import contra.GameObject;
 import contra.MouseListener;
-import contra.Window;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-import util.AssetPool;
 
-public class TranslateGizmo extends Gizmo {
-    public TranslateGizmo(Sprite gizmoSprite, GizmoSystem gizmoSystem){
-        super(gizmoSprite,gizmoSystem);
+public class ScaleGizmo extends Gizmo{
+    private float scalingConstant = 0.3f;
+    public ScaleGizmo(Sprite gizmoSprite, GizmoSystem gizmoSystem){
+        super(gizmoSprite, gizmoSystem);
     }
 
     @Override
@@ -25,19 +22,16 @@ public class TranslateGizmo extends Gizmo {
 
             if(MouseListener.isDragging()){
                 GameObject attachedGameObject = gizmoSystem.attachedGameObject;
-
                 if(activeGameObject.getID() == xaxis.getID()){
                     xaxis.getComponent(SpriteRenderer.class).setColour(xaxisHoverColour);
                     float dragX = MouseListener.getWorldDx();
-                    attachedGameObject.tf.position.x += dragX;
-                    gizmoSystem.changePosition(dragX, 0);
+                    attachedGameObject.tf.scale.x += scalingConstant*dragX;
                 }
 
                 if(activeGameObject.getID() == yaxis.getID()){
                     yaxis.getComponent(SpriteRenderer.class).setColour(yaxisHoverColour);
                     float dragY = MouseListener.getWorldDy();
-                    attachedGameObject.tf.position.y += dragY;
-                    gizmoSystem.changePosition(0,dragY);
+                    attachedGameObject.tf.scale.y += scalingConstant*dragY;
                 }
             }else{
                 makeVisible();

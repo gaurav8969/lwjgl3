@@ -180,6 +180,7 @@ public class Window {
             imguiLayer.update(currentScene,dt);
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
+            MouseListener.endFrame(); //so camera controls and picking are not messed up
 
             endTime = Time.getTime();
             dt = endTime - startTime;
@@ -215,6 +216,6 @@ public class Window {
     }
 
     public static float getTargetAspectRatio(){
-        return 16.0f/9.0f;
+        return 1f;
     }
 }
