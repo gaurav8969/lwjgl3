@@ -44,13 +44,11 @@ public class GameObject {
         for(Component c: components){
             if(c != null) {
                 String name = c.getClass().getSimpleName();
-                if(name.equals("Transform")) {
-                    ImGui.setNextItemOpen(true);
-                    if(ImGui.collapsingHeader("Transform")){
-                    }
+                if(name.equals("Transform")){
+                    ImGui.collapsingHeader("");
                 }
 
-                if (ImGui.collapsingHeader(name)){
+                if (ImGui.collapsingHeader(c.getClass().getSimpleName())){
                     c.imGui();
                 }
             }

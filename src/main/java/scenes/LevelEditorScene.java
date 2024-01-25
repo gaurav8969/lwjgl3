@@ -73,6 +73,7 @@ public class LevelEditorScene extends Scene {
     public void imGui(){
         ImGui.begin("Level Editor");
 
+        editorContext.imGui();
         ImVec2 windowPos = new ImVec2();
         ImGui.getWindowPos(windowPos);
         ImVec2 windowSize = new ImVec2();
