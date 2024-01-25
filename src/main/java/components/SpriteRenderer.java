@@ -1,13 +1,14 @@
 package components;
 
 import Renderer.Texture;
+import editor.CImgui;
 import imgui.ImGui;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 //contains sprites that are to be rendered
 public class SpriteRenderer extends Component {
-    int zIndex= 0;//layer it is on, higher values go on top, try to use [-2,+2] range, default 0
+    private int zIndex= 0;//layer it is on, higher values go on top, try to use [-2,+2] range, default 0
     private Vector4f colour = new Vector4f(1,1,1,1);
     private Sprite sprite;
     private boolean isDirty = true;
@@ -80,11 +81,7 @@ public class SpriteRenderer extends Component {
 
     @Override
     public void imGui(){
-        float[] imColour = {colour.x, colour.y, colour.z, colour.w};
-        //ImGui calls below must take place in context of an imgui window,
-        // i.e sandwiched by ImGui.begin() and ImGui.end() calls or program crashes
-        if(ImGui.colorPicker4("Colour picker: ", imColour)){
-            this.colour.set(imColour[0],imColour[1],imColour[2],imColour[3]);
+        if(CImgui.colorPicker4("Colour picker: ", this.colour)){
             isDirty = true;
         }
     }

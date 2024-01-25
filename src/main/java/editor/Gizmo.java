@@ -24,10 +24,10 @@ public class Gizmo extends Component {
 
     public Gizmo(Sprite gizmoSprite, GizmoSystem gizmoSystem){
         this.gizmoSystem = gizmoSystem;
-        xaxis = new GameObject().setName("xaxis").setSize(new Vector2f(24,48));
-        yaxis = new GameObject().setName("yaxis").setSize(new Vector2f(24,48));
-        xaxis.addComponent(new SpriteRenderer().setSprite(gizmoSprite).setZIndex(2)).setRotation(90);
-        yaxis.addComponent(new SpriteRenderer().setSprite(gizmoSprite).setZIndex(2)).setRotation(180);
+        xaxis = Window.getScene().createGameObject("xaxis").setSize(new Vector2f(24,48));
+        yaxis = Window.getScene().createGameObject("yaxis").setSize(new Vector2f(24,48));
+        xaxis.addComponent(new SpriteRenderer().setSprite(gizmoSprite).setZIndex(100)).setRotation(90);
+        yaxis.addComponent(new SpriteRenderer().setSprite(gizmoSprite).setZIndex(100)).setRotation(180);
         xaxis.makeUnserializable();
         yaxis.makeUnserializable();
         Window.getScene().addGameObjectToScene(xaxis);

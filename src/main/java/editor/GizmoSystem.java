@@ -30,6 +30,7 @@ public class GizmoSystem extends Component {
         translateGizmo = new TranslateGizmo(translateSprite, this);
 
         activeGizmo = translateGizmo;
+        scaleGizmo.makeTransparent();
     }
 
     @Override
@@ -74,4 +75,7 @@ public class GizmoSystem extends Component {
         translateGizmo.setPosition(position);
         scaleGizmo.setPosition(position);
     }
+
+    @Override
+    public void imGui(){}
 }

@@ -2,11 +2,11 @@
   {
     "serializable": true,
     "uniqueID": 0,
-    "name": "Sprite_Object_Gen_3",
+    "name": "Sprite_Object_Gen_5",
     "componentsSize": 16,
     "componentsBitset": [
       true,
-      false,
+      true,
       false,
       false,
       false,
@@ -24,109 +24,20 @@
     ],
     "components": [
       {
-        "type": "components.SpriteRenderer",
+        "type": "components.Transform",
         "properties": {
-          "zIndex": 0,
-          "colour": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0,
-            "w": 1.0
+          "scale": {
+            "x": 64.0,
+            "y": 64.0
           },
-          "sprite": {
-            "texture": {
-              "filepath": "assets/images/blocks.png",
-              "width": 112,
-              "height": 192
-            },
-            "texCoords": [
-              {
-                "x": 1.0,
-                "y": 1.0
-              },
-              {
-                "x": 1.0,
-                "y": 0.9166667
-              },
-              {
-                "x": 0.85714287,
-                "y": 0.9166667
-              },
-              {
-                "x": 0.85714287,
-                "y": 1.0
-              }
-            ],
-            "width": 16.0,
-            "height": 16.0
+          "rotation": 0.0,
+          "position": {
+            "x": 447.406,
+            "y": 159.806
           },
-          "isDirty": false,
-          "lastTransform": {
-            "position": {
-              "x": 318.8655,
-              "y": 258.11264
-            },
-            "scale": {
-              "x": 64.9009,
-              "y": 62.14414
-            },
-            "rotation": 0.0
-          },
-          "uniqueID": 6
+          "uniqueID": 12
         }
       },
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null
-    ],
-    "tf": {
-      "position": {
-        "x": 318.8655,
-        "y": 258.11264
-      },
-      "scale": {
-        "x": 64.9009,
-        "y": 62.14414
-      },
-      "rotation": 0.0
-    }
-  },
-  {
-    "serializable": true,
-    "uniqueID": 1,
-    "name": "Sprite_Object_Gen_4",
-    "componentsSize": 16,
-    "componentsBitset": [
-      true,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false
-    ],
-    "components": [
       {
         "type": "components.SpriteRenderer",
         "properties": {
@@ -146,19 +57,19 @@
             "texCoords": [
               {
                 "x": 0.2857143,
-                "y": 1.0
+                "y": 0.75
               },
               {
                 "x": 0.2857143,
-                "y": 0.9166667
+                "y": 0.6666667
               },
               {
                 "x": 0.14285715,
-                "y": 0.9166667
+                "y": 0.6666667
               },
               {
                 "x": 0.14285715,
-                "y": 1.0
+                "y": 0.75
               }
             ],
             "width": 16.0,
@@ -166,15 +77,16 @@
           },
           "isDirty": false,
           "lastTransform": {
-            "position": {
-              "x": 512.11487,
-              "y": 479.7403
-            },
             "scale": {
               "x": 64.0,
-              "y": 62.798717
+              "y": 64.0
             },
-            "rotation": 0.0
+            "rotation": 0.0,
+            "position": {
+              "x": 447.406,
+              "y": 159.806
+            },
+            "uniqueID": -1
           },
           "uniqueID": 13
         }
@@ -192,227 +104,7 @@
       null,
       null,
       null,
-      null,
       null
-    ],
-    "tf": {
-      "position": {
-        "x": 512.11487,
-        "y": 479.7403
-      },
-      "scale": {
-        "x": 64.0,
-        "y": 62.798717
-      },
-      "rotation": 0.0
-    }
-  },
-  {
-    "serializable": true,
-    "uniqueID": 2,
-    "name": "Sprite_Object_Gen_5",
-    "componentsSize": 16,
-    "componentsBitset": [
-      true,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false
-    ],
-    "components": [
-      {
-        "type": "components.SpriteRenderer",
-        "properties": {
-          "zIndex": 0,
-          "colour": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0,
-            "w": 1.0
-          },
-          "sprite": {
-            "texture": {
-              "filepath": "assets/images/blocks.png",
-              "width": 112,
-              "height": 192
-            },
-            "texCoords": [
-              {
-                "x": 0.2857143,
-                "y": 1.0
-              },
-              {
-                "x": 0.2857143,
-                "y": 0.9166667
-              },
-              {
-                "x": 0.14285715,
-                "y": 0.9166667
-              },
-              {
-                "x": 0.14285715,
-                "y": 1.0
-              }
-            ],
-            "width": 16.0,
-            "height": 16.0
-          },
-          "isDirty": false,
-          "lastTransform": {
-            "position": {
-              "x": 576.0,
-              "y": 393.52197
-            },
-            "scale": {
-              "x": 64.0,
-              "y": 64.30028
-            },
-            "rotation": 0.0
-          },
-          "uniqueID": 20
-        }
-      },
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null
-    ],
-    "tf": {
-      "position": {
-        "x": 576.0,
-        "y": 393.52197
-      },
-      "scale": {
-        "x": 64.0,
-        "y": 64.30028
-      },
-      "rotation": 0.0
-    }
-  },
-  {
-    "serializable": true,
-    "uniqueID": 3,
-    "name": "Sprite_Object_Gen_6",
-    "componentsSize": 16,
-    "componentsBitset": [
-      true,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false
-    ],
-    "components": [
-      {
-        "type": "components.SpriteRenderer",
-        "properties": {
-          "zIndex": 0,
-          "colour": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0,
-            "w": 1.0
-          },
-          "sprite": {
-            "texture": {
-              "filepath": "assets/images/blocks.png",
-              "width": 112,
-              "height": 192
-            },
-            "texCoords": [
-              {
-                "x": 0.2857143,
-                "y": 1.0
-              },
-              {
-                "x": 0.2857143,
-                "y": 0.9166667
-              },
-              {
-                "x": 0.14285715,
-                "y": 0.9166667
-              },
-              {
-                "x": 0.14285715,
-                "y": 1.0
-              }
-            ],
-            "width": 16.0,
-            "height": 16.0
-          },
-          "isDirty": false,
-          "lastTransform": {
-            "position": {
-              "x": 640.0,
-              "y": 320.0
-            },
-            "scale": {
-              "x": 63.699776,
-              "y": 63.08188
-            },
-            "rotation": 0.0
-          },
-          "uniqueID": 21
-        }
-      },
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null
-    ],
-    "tf": {
-      "position": {
-        "x": 640.0,
-        "y": 320.0
-      },
-      "scale": {
-        "x": 63.699776,
-        "y": 63.08188
-      },
-      "rotation": 0.0
-    }
+    ]
   }
 ]

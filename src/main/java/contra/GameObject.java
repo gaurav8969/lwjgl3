@@ -3,6 +3,8 @@ package contra;
 import components.Component;
 import components.ComponentID;
 import components.Transform;
+import imgui.ImGui;
+import imgui.type.ImBoolean;
 import org.joml.Vector2f;
 
 public class GameObject {
@@ -12,11 +14,10 @@ public class GameObject {
     private int uniqueID = -1;
     private String name;
     private int componentsSize = 16;
-    //array instead of actual bitset since it causes serialization issues with gson, jackson works after
-    // certain module imports alternatively could write custom type-adapter for bitsets with gson
+    //array instead of actual bitset since it causes serialization issues with gson
     public boolean[] componentsBitset = new boolean[componentsSize];
     public Component[] components = new Component[componentsSize];
-    public Transform tf = new Transform();
+    public transient Transform tf;
 
     public GameObject(){
         //counter starts at zero and gets incremented everytime constructor is called
@@ -42,7 +43,16 @@ public class GameObject {
     public void imGui(){
         for(Component c: components){
             if(c != null) {
-                c.imGui();
+                String name = c.getClass().getSimpleName();
+                if(name.equals("Transform")) {
+                    ImGui.setNextItemOpen(true);
+                    if(ImGui.collapsingHeader("Transform")){
+                    }
+                }
+
+                if (ImGui.collapsingHeader(name)){
+                    c.imGui();
+                }
             }
         }
     }
