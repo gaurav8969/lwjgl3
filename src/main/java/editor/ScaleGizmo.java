@@ -23,13 +23,13 @@ public class ScaleGizmo extends Gizmo{
             if(MouseListener.isDragging()){
                 GameObject attachedGameObject = gizmoSystem.attachedGameObject;
                 if(activeGameObject.getID() == xaxis.getID()){
-                    xaxis.getComponent(SpriteRenderer.class).setColour(xaxisHoverColour);
+                    xaxis.getComponent(SpriteRenderer.class).setColour(gizmoSystem.xaxisHoverColour);
                     float dragX = MouseListener.getWorldDx();
                     attachedGameObject.tf.scale.x += scalingConstant*dragX;
                 }
 
                 if(activeGameObject.getID() == yaxis.getID()){
-                    yaxis.getComponent(SpriteRenderer.class).setColour(yaxisHoverColour);
+                    yaxis.getComponent(SpriteRenderer.class).setColour(gizmoSystem.yaxisHoverColour);
                     float dragY = MouseListener.getWorldDy();
                     attachedGameObject.tf.scale.y += scalingConstant*dragY;
                 }

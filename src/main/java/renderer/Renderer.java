@@ -1,4 +1,4 @@
-package Renderer;
+package renderer;
 
 //renders and manages groups of batches, batches are an implementation detail, it is the renderer that
 //acts as a simpleton manager and cranks out the renders in the end
@@ -8,7 +8,6 @@ import contra.GameObject;
 import util.AssetPool;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

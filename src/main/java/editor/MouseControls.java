@@ -46,5 +46,8 @@ public class MouseControls extends Component {
         this.holdingObject = null;
     }
 
+    @Override
+    public void imGui(){}
+
 }
 

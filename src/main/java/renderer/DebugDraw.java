@@ -1,4 +1,4 @@
-package Renderer;
+package renderer;
 
 import contra.Window;
 import org.joml.Vector2f;
@@ -7,7 +7,6 @@ import util.AssetPool;
 import util.JMath;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL15.*;

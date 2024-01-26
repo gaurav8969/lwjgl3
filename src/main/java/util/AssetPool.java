@@ -1,7 +1,7 @@
 package util;
 
-import Renderer.Shader;
-import Renderer.Texture;
+import renderer.Shader;
+import renderer.Texture;
 import components.Spritesheet;
 
 import java.util.HashMap;

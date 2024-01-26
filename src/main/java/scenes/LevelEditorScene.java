@@ -1,6 +1,5 @@
 package scenes;
 
-import Renderer.DebugDraw;
 import components.Sprite;
 import components.SpriteRenderer;
 import components.Spritesheet;
@@ -9,12 +8,8 @@ import contra.*;
 import imgui.ImVec2;
 import imgui.internal.ImGui;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
-import scenes.Scene;
 import util.AssetPool;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 import static org.lwjgl.opengl.GL13.glCompressedTexImage1D;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
@@ -107,8 +102,6 @@ public class LevelEditorScene extends Scene {
                 ImGui.sameLine();
             }
         }
-
-        if (ImGui.checkbox("Grid", true)) {editorContext.getComponent(Gridlines.class).toggleGrid();}
 
         ImGui.end();
     }

@@ -1,6 +1,6 @@
 package components;
 
-import Renderer.Texture;
+import renderer.Texture;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;

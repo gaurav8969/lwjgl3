@@ -1,14 +1,12 @@
 package editor;
 
-import Renderer.PickingTexture;
+import renderer.PickingTexture;
 import contra.GameObject;
 import contra.MouseListener;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.ImVec2;
 import scenes.Scene;
-
-import javax.sound.midi.Soundbank;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 

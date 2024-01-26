@@ -1,8 +1,8 @@
 package contra;
 
-import Renderer.Framebuffer;
-import Renderer.PickingTexture;
-import Renderer.Shader;
+import renderer.Framebuffer;
+import renderer.PickingTexture;
+import renderer.Shader;
 import util.AssetPool;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -11,7 +11,7 @@ import scenes.LevelEditorScene;
 import scenes.LevelScene;
 import scenes.Scene;
 import util.Time;
-import Renderer.Renderer;
+import renderer.Renderer;
 import editor.ImGuiLayer;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;

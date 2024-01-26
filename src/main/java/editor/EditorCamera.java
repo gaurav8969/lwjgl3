@@ -98,4 +98,7 @@ public class EditorCamera extends Component {
             }
         }
     }
+
+    @Override
+    public void imGui(){}
 }

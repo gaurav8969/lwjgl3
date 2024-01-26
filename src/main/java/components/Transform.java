@@ -60,6 +60,6 @@ public class Transform extends Component{
     public void imGui() {
         CImgui.drawVec2Control("Position", this.position);
         CImgui.drawVec2Control("Scale", this.scale, 64.0f);
-        CImgui.dragFloat("Rotation", this.rotation);
+        this.rotation = CImgui.dragFloat("Rotation", this.rotation);
     }
 }

@@ -1,16 +1,13 @@
-package Renderer;
+package renderer;
 
 import components.SpriteRenderer;
 import components.Transform;
 import contra.Window;
 import org.joml.*;
 import org.joml.Math;
-import util.AssetPool;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;

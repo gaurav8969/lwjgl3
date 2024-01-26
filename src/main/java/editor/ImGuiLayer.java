@@ -1,19 +1,15 @@
 package editor;
-import Renderer.PickingTexture;
-import contra.MouseListener;
+import renderer.PickingTexture;
 import contra.Window;
 import imgui.ImFontAtlas;
 import imgui.ImFontConfig;
 import imgui.ImGuiIO;
-import imgui.ImVec2;
 import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.internal.ImGui;
 import imgui.type.ImBoolean;
 import scenes.Scene;
-
-import javax.sound.sampled.Port;
 
 import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;

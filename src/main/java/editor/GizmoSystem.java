@@ -7,6 +7,7 @@ import contra.KeyListener;
 import contra.MouseListener;
 import contra.Window;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import util.AssetPool;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
@@ -21,6 +22,13 @@ public class GizmoSystem extends Component {
     PropertiesWindow propertiesWindow;
     protected GameObject activeGameObject;
     protected GameObject attachedGameObject;
+    protected Vector2f gizmoSize = new Vector2f(26,52);
+    protected Vector2f xAxisOffset = new Vector2f(66.5f,-4.1f);
+    protected Vector2f yAxisOffset = new Vector2f(21.8f ,64f);
+    protected Vector4f xaxisColour = new Vector4f(1f,0f,0f,1f);
+    protected Vector4f yaxisColour = new Vector4f(0,1f,0f,1f);
+    protected Vector4f xaxisHoverColour = new Vector4f(0.5f, 0f,0f,1f);
+    protected Vector4f yaxisHoverColour = new Vector4f(0f, 0.7f,0f,1f);
 
     public GizmoSystem(){
         translateSprite = AssetPool.getSpriteSheet("assets/images/gizmos.png").getSprite(1);
@@ -77,5 +85,13 @@ public class GizmoSystem extends Component {
     }
 
     @Override
-    public void imGui(){}
+    public void imGui(){
+        CImgui.drawVec2Control("Gizmo Size", gizmoSize);
+        CImgui.drawVec2Control("X-Axis offset", xAxisOffset);
+        CImgui.drawVec2Control("Y-Axis offset", yAxisOffset);
+        CImgui.colorPicker4("X-Axis Colour", xaxisColour);
+        CImgui.colorPicker4("X-Axis Hover Colour", xaxisHoverColour);
+        CImgui.colorPicker4("Y-Axis Colour", yaxisColour);
+        CImgui.colorPicker4("Y-Axis Hover Colour", yaxisHoverColour);
+    }
 }

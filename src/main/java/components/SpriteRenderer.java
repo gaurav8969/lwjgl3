@@ -1,8 +1,7 @@
 package components;
 
-import Renderer.Texture;
+import renderer.Texture;
 import editor.CImgui;
-import imgui.ImGui;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
