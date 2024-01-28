@@ -4,12 +4,14 @@ import components.Component;
 import contra.Camera;
 import contra.Window;
 import org.joml.Vector2f;
+import renderer.DebugDraw;
 import util.Settings;
 
 public class Gridlines extends Component {
     private boolean toDraw = true;
 
-    public void update(float dt){
+    @Override
+    public void editorUpdate(float dt){
         if(toDraw) {
             Camera camera = Window.getScene().camera();
             Vector2f cameraPos = camera.position();
@@ -28,7 +30,7 @@ public class Gridlines extends Component {
             while (x < verticalLines || y < horizontalLines) {
                 if (x < verticalLines) {
                     float xLine = cameraGridPos.x + x * Settings.GRID_WIDTH;
-                    Window.getScene().debugDraw().addLine2D(new Vector2f(xLine, cameraGridPos.y),
+                    DebugDraw.addLine2D(new Vector2f(xLine, cameraGridPos.y),
                             new Vector2f(xLine, cameraPos.y + zoom* projectionSize.y), 1);
                     x++;
                 }
@@ -36,7 +38,7 @@ public class Gridlines extends Component {
                 if (y < horizontalLines) {
                     float yLine = cameraGridPos.y + y* Settings.GRID_HEIGHT;
                     y++;
-                    Window.getScene().debugDraw().addLine2D(new Vector2f(cameraGridPos.x, yLine),
+                    DebugDraw.addLine2D(new Vector2f(cameraGridPos.x, yLine),
                             new Vector2f(cameraPos.x + zoom* projectionSize.x, yLine), 1);
                 }
             }

@@ -21,8 +21,18 @@ public class SpriteRenderer extends Component {
         lastTransform = this.gameObject.tf.copy(); //deep-copy allocation
     }
 
+    //sprite to be marked dirty if its transform changes, in both editor and realtime play
     @Override
     public void update(float dt) {
+        Transform tf = this.gameObject.tf;
+        if(!lastTransform.equals(tf)){
+            tf.copyTo(lastTransform); //no copy(shallow or deep)
+            isDirty = true;
+        }
+    }
+
+    @Override
+    public void editorUpdate(float dt) {
         Transform tf = this.gameObject.tf;
         if(!lastTransform.equals(tf)){
             tf.copyTo(lastTransform); //no copy(shallow or deep)
@@ -55,6 +65,8 @@ public class SpriteRenderer extends Component {
     public boolean isDirty(){
         return this.isDirty;
     }
+
+    public void setDirty(){this.isDirty = true;}
     public void makeClean(){
         this.isDirty= false;
     }

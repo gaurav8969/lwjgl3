@@ -10,7 +10,7 @@ public class TranslateGizmo extends Gizmo {
     }
 
     @Override
-    public void update(float dt){
+    public void editorUpdate(float dt){
         GameObject activeGameObject = gizmoSystem.activeGameObject;
         if(activeGameObject != null){
             if(!gizmoSystem.isGizmo(activeGameObject)){

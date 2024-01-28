@@ -2,6 +2,7 @@ package renderer;
 
 import components.SpriteRenderer;
 import components.Transform;
+import contra.GameObject;
 import contra.Window;
 import org.joml.*;
 import org.joml.Math;
@@ -141,6 +142,21 @@ public class RenderBatch implements Comparable<RenderBatch>{
             textures.get(i).unbind();
         }
         shader.detach();
+    }
+
+    public boolean destroyIfExists(GameObject go){
+        SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
+        for(int i = 0; i < numSprites; i++){
+            if(sprites[i] == spr){
+                for(int j = i; j < numSprites; j++){
+                    sprites[j] = sprites[j + 1];
+                    sprites[j].setDirty(); //reload vertices and rebuffer(offloading)
+                }
+                numSprites--;
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addSprite(SpriteRenderer spr) {

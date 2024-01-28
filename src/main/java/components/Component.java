@@ -21,6 +21,8 @@ public abstract class Component {
 
     public void update(float dt){}
 
+    public void editorUpdate(float dt){}
+
     /*base imGui for component class, advisable to write override for each component to only affect
     relevant fields, avoiding reflection overhead*/
     public void imGui(){
@@ -88,6 +90,8 @@ public abstract class Component {
     public void setMaxID(int maxID){
         IDCounter = maxID;
     }
+
+    public void destroy(){}
 
     public static void loadCounter(int maxID){
         IDCounter = maxID;

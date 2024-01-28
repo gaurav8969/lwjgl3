@@ -1,14 +1,18 @@
 package contra;
 
+import observers.EventSystem;
+import observers.Observer;
+import observers.events.Event;
+import observers.events.EventType;
 import renderer.Framebuffer;
 import renderer.PickingTexture;
 import renderer.Shader;
+import scenes.SceneInitializer;
 import util.AssetPool;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import scenes.LevelEditorScene;
-import scenes.LevelScene;
 import scenes.Scene;
 import util.Time;
 import renderer.Renderer;
@@ -18,26 +22,24 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class Window {
+public class Window implements Observer {
     private int width, height;
     private String title;
     private static Window window = null;
     private String glslVersion = null;
     private long glfwWindow;
-    private float r,g,b,a;
     private static Scene currentScene;
     private ImGuiLayer imguiLayer;
     private Framebuffer framebuffer;
     private PickingTexture pickingTexture;
+    private boolean runTimePlaying = false;
+
 
     private Window(){
         this.width = 960;
         this.height = 960;
         this.title = "Contra";
-        r = 1.0f;
-        g = 1.0f;
-        b = 1.0f;
-        a = 1.0f;
+        EventSystem.addObserver(this);
     }
     private void init(){
         // Setup an error callback. The default implementation
@@ -89,7 +91,7 @@ public class Window {
         imguiLayer = new ImGuiLayer(pickingTexture,glfwWindow, glslVersion);
         imguiLayer.initImGui();
 
-        Window.changeScene(0);
+        Window.changeScene(new LevelEditorScene());
     }
 
     public static Window get(){
@@ -99,20 +101,17 @@ public class Window {
         return Window.window;
     }
 
-    public static void changeScene(int newScene){
-        switch(newScene){
-            case 0:
-                currentScene = new LevelEditorScene();
-                currentScene.load();
-                currentScene.init();
-                currentScene.start();
-                break;
-            case 1:
-                currentScene = new LevelScene();
-            default:
-                assert false: "Unknown Scene'" + newScene + "'";
-                break;
+    public static void changeScene(SceneInitializer sceneInitializer) {
+        if(currentScene != null){
+            currentScene.destroy();
         }
+
+        getImGuilayer().getPropertiesWindow().setActiveGameObject(null);
+        currentScene = new Scene(sceneInitializer);
+        currentScene.load();
+        currentScene.init();
+        currentScene.start();
+
     }
 
     public void run(){
@@ -140,7 +139,7 @@ public class Window {
         float endTime;
         float dt = -1.0f;
 
-        glClearColor(r, g, b, a);
+        glClearColor(1f, 1f, 1f, 1.0f);
 
         Shader defaultShader = AssetPool.getShader("assets/shaders/default.glsl");
         Shader pickingShader = AssetPool.getShader("assets/shaders/pickingShader.glsl");
@@ -154,7 +153,7 @@ public class Window {
             pickingTexture.enableWriting();
 
             glViewport(0,0,1920,1080);
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClearColor(0f, 0f, 0f, 0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             Renderer.bindShader(pickingShader);
@@ -166,14 +165,19 @@ public class Window {
             framebuffer.bind();
 
             currentScene.debugDraw().beginFrame();
-            glClearColor(r,g,b,a);
+            glClearColor(1f,1f,1f,1f);
             glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
 
             if (dt >= 0) {
                 currentScene.debugDraw().draw();
                 Renderer.bindShader(defaultShader);
-                currentScene.update(dt);
-                currentScene.renderer().render();
+                if(runTimePlaying){
+                    currentScene.update(dt);
+                }else{
+                    currentScene.editorUpdate(dt);
+                }
+
+                currentScene.render();
             }
             framebuffer.unbind();
 
@@ -186,7 +190,6 @@ public class Window {
             dt = endTime - startTime;
             startTime = endTime;
         }
-        currentScene.saveExit();
     }
 
     public static Scene getScene(){
@@ -217,5 +220,26 @@ public class Window {
 
     public static float getTargetAspectRatio(){
         return 1f;
+    }
+
+    @Override
+    public void onNotify(GameObject go, Event event){
+        switch(event.type){
+            case GameEngineStartPlay:
+                this.runTimePlaying = true;
+                currentScene.save();
+                Window.changeScene(new LevelEditorScene());
+                break;
+            case GameEngineStopPlay:
+                this.runTimePlaying = false;
+                Window.changeScene(new LevelEditorScene());
+                break;
+            case LoadLevel:
+                Window.changeScene(new LevelEditorScene());
+                break;
+            case SaveLevel:
+                currentScene.save();
+                break;
+        }
     }
 }

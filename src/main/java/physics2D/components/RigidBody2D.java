@@ -2,20 +2,20 @@ package physics2D.components;
 
 import components.Component;
 import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.BodyType;
 import org.joml.Vector2f;
+import physics2D.enums.BodyType;
 
 public class RigidBody2D extends Component {
     private Vector2f velocity = new Vector2f();
     private float angularDamping = 0.8f;
     private float linearDamping = 0.9f;
     private float mass = 0;
-    private BodyType bodyType = BodyType.DYNAMIC;
+    private BodyType bodyType = BodyType.Dynamic;
 
     private boolean fixedRotation = false;
     private boolean continuousCollision = true;
 
-    private Body rawBody = null;
+    transient private Body rawBody = null;
 
     @Override
     public void update(float dt){

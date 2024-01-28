@@ -9,6 +9,9 @@ import org.joml.Vector2f;
 
 public class GameObject {
     private boolean serializable = true;
+
+    private boolean isDead = false;
+
     //starts at zero every game load
     public static int IDCounter = 0;
     private int uniqueID = -1;
@@ -18,7 +21,6 @@ public class GameObject {
     public boolean[] componentsBitset = new boolean[componentsSize];
     public Component[] components = new Component[componentsSize];
     public transient Transform tf;
-
     public GameObject(){
         //counter starts at zero and gets incremented everytime constructor is called
         uniqueID = IDCounter++;
@@ -36,6 +38,23 @@ public class GameObject {
         for(Component c: components){
             if(c != null) {
                 c.update(dt);
+            }
+        }
+    }
+
+    public void editorUpdate(float dt){
+        for(Component c: components){
+            if(c != null) {
+                c.editorUpdate(dt);
+            }
+        }
+    }
+
+    public void destroy(){
+        this.isDead = true;
+        for(Component c: components){
+            if(c != null){
+                c.destroy();
             }
         }
     }
@@ -153,5 +172,9 @@ public class GameObject {
 
     public void makeUnserializable(){
         this.serializable = false;
+    }
+
+    public boolean isDead() {
+        return isDead;
     }
 }

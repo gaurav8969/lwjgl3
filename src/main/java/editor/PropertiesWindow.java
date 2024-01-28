@@ -1,5 +1,8 @@
 package editor;
 
+import physics2D.components.Box2DCollider;
+import physics2D.components.CircleCollider;
+import physics2D.components.RigidBody2D;
 import renderer.PickingTexture;
 import contra.GameObject;
 import contra.MouseListener;
@@ -39,6 +42,31 @@ public class PropertiesWindow {
     public void imgui(){
         if(activeGameObject != null){
             ImGui.begin("Properties");
+
+            if(ImGui.beginPopupContextWindow("Component Adder")){
+                if(ImGui.menuItem("Add Rigidbody")){
+                    if(activeGameObject.getComponent(RigidBody2D.class) == null){
+                        activeGameObject.addComponent(new RigidBody2D());
+                    }
+                }
+
+                if(ImGui.menuItem("Add Box Collider")){
+                    if(activeGameObject.getComponent(Box2DCollider.class) == null &&
+                    activeGameObject.getComponent(CircleCollider.class) == null){
+                        activeGameObject.addComponent(new Box2DCollider());
+                    }
+                }
+
+                if(ImGui.menuItem("Add Circle Collider")){
+                    if(activeGameObject.getComponent(Box2DCollider.class) == null &&
+                            activeGameObject.getComponent(CircleCollider.class) == null){
+                        activeGameObject.addComponent(new CircleCollider());
+                    }
+                }
+
+                ImGui.endPopup();
+            }
+
             ImGui.setCursorPos(0,0);
 
             ImGui.getWindowSize(windowSize);
@@ -54,5 +82,9 @@ public class PropertiesWindow {
 
     public GameObject getActiveGameObject(){
         return activeGameObject;
+    }
+
+    public void setActiveGameObject(GameObject go){
+        this.activeGameObject = go;
     }
 }

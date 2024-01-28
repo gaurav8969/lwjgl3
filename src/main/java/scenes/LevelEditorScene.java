@@ -13,20 +13,21 @@ import util.AssetPool;
 import static org.lwjgl.opengl.GL13.glCompressedTexImage1D;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
-public class LevelEditorScene extends Scene {
-    private GameObject editorContext;
+//also initializes the scene, including the level editor resources needed
+public class LevelEditorScene extends SceneInitializer {
+    GameObject editorContext;
     private Spritesheet sprites;
     public LevelEditorScene() {}
 
     //load big resources in the init fn, avoid lag spike mid-play
     @Override
-    public void loadResources(){
+    public void loadResources(Scene scene){
         AssetPool.getShader("assets/shaders/default.glsl");
         AssetPool.loadSpriteSheet("assets/images/blocks.png",84,16,16,0);
         AssetPool.loadSpriteSheet("assets/images/gizmos.png", 3, 24, 48,0);
 
         //scrape the deserialized texture duplicates with old ids and replace with latest ones
-        for(GameObject go: gameObjects){
+        for(GameObject go: scene.getGameObjects()){
             if(go.getComponent(SpriteRenderer.class).getTexture() != null){
                 SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
                 //texID is transient so textures won't work without this step
@@ -36,32 +37,18 @@ public class LevelEditorScene extends Scene {
     }
 
     @Override
-    public void init(){
-        loadResources();
+    public void init(Scene scene){
         sprites = AssetPool.loadSpriteSheet("assets/images/blocks.png",84,16,16,0);
-        this.camera = new Camera(new Vector2f(0, 0));
 
         editorContext = new GameObject();
+        editorContext.setName("Editor Context");
+        editorContext.makeUnserializable();
         Gridlines gridInstance = new Gridlines();
         MouseControls mouseControls = new MouseControls(gridInstance);
-        EditorCamera editorCamera = new EditorCamera(camera);
+        EditorCamera editorCamera = new EditorCamera(scene.camera());
         GizmoSystem gizmo = new GizmoSystem();
-        //do not add to the scene
         editorContext.addComponent(gridInstance).addComponent(mouseControls).addComponent(editorCamera).addComponent(gizmo);
-
-        if(levelLoaded){
-            return;
-        }
-    }
-
-    @Override
-    public void update(float dt){
-       //System.out.println("FPS " + (1.0/dt));
-        editorContext.update(dt);
-        for(GameObject go: gameObjects){
-            go.update(dt); //update all objects in scene but don't call imgui for all of them
-                          //It is only called for the active object
-        }
+        scene.addGameObjectToScene(editorContext);//the scene updates it
     }
 
     @Override

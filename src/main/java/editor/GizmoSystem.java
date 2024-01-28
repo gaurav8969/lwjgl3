@@ -2,13 +2,17 @@ package editor;
 
 import components.Component;
 import components.Sprite;
+import components.Transform;
 import contra.GameObject;
 import contra.KeyListener;
 import contra.MouseListener;
 import contra.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import renderer.DebugDraw;
 import util.AssetPool;
+
+import java.lang.annotation.Target;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
@@ -42,10 +46,10 @@ public class GizmoSystem extends Component {
     }
 
     @Override
-    public void update(float dt){
+    public void editorUpdate(float dt){
         activeGameObject = propertiesWindow.getActiveGameObject();
 
-        activeGizmo.update(dt);
+        activeGizmo.editorUpdate(dt);
 
         if(KeyListener.isKeyPressed(GLFW_KEY_E) && activeGizmo != translateGizmo){
             activeGizmo.makeTransparent();

@@ -28,7 +28,8 @@ public class EditorCamera extends Component {
         this.toReset = false;
     }
 
-    public void update(float dt){
+    @Override
+    public void editorUpdate(float dt){
         toReset(dt); //check and perform reset if needed
 
         float screenX = MouseListener.getScreenX();

@@ -19,7 +19,9 @@ public class MouseControls extends Component {
     public MouseControls(Gridlines gridInstance){
         this.gridInstance = gridInstance;
     }
-    public void update(float dt){
+
+    @Override
+    public void editorUpdate(float dt){
         if(holdingObject != null) {
             Vector2f orthoPos = new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY());
             Vector2f gridPos = gridInstance.getGridPos(orthoPos);
