@@ -1,11 +1,12 @@
 package contra;
 
-import components.Component;
-import components.ComponentID;
-import components.Transform;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import components.*;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
 import org.joml.Vector2f;
+import util.AssetPool;
 
 public class GameObject {
     private boolean serializable = true;
@@ -15,7 +16,7 @@ public class GameObject {
     //starts at zero every game load
     public static int IDCounter = 0;
     private int uniqueID = -1;
-    private String name;
+    public String name;
     private int componentsSize = 16;
     //array instead of actual bitset since it causes serialization issues with gson
     public boolean[] componentsBitset = new boolean[componentsSize];
@@ -48,6 +49,30 @@ public class GameObject {
                 c.editorUpdate(dt);
             }
         }
+    }
+
+    public GameObject copy(){
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Component.class, new ComponentDeserializer())
+                .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+                .create();
+        String objAsJson = gson.toJson(this);
+        GameObject obj = gson.fromJson(objAsJson, GameObject.class);
+
+        obj.setName("Sprite_Object_Gen_" + obj.getID());
+        for(Component c: obj.components){
+            if(c != null){
+                c.generateID();
+            }
+        }
+
+        //texture id is transient, the texture is copied without id, so we update it manually
+        SpriteRenderer sprite = obj.getComponent(SpriteRenderer.class);
+        if(sprite != null && sprite.getTexture() != null){
+            sprite.setTexture(AssetPool.getTexture(sprite.getTexture().filepath));
+        }
+
+        return obj;
     }
 
     public void destroy(){
@@ -106,12 +131,6 @@ public class GameObject {
         }
     }
 
-    public int generateID(){
-        if(uniqueID == -1){
-            uniqueID = IDCounter++;
-        }
-        return uniqueID;
-    }
 
     public int getID(){
         return uniqueID;

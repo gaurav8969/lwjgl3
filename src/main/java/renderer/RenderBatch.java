@@ -32,6 +32,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
     private final int VERTEX_SIZE = 10;
     private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
 
+    private Renderer renderer;
     private SpriteRenderer[] sprites;
     private int numSprites;
     public boolean hasRoom;
@@ -45,7 +46,8 @@ public class RenderBatch implements Comparable<RenderBatch>{
     private int maxTextureSize;
     private int zIndex;
 
-    public RenderBatch(int maxBatchSize, int maximumTexturesSize, int zIndex) {
+    public RenderBatch(int maxBatchSize, int maximumTexturesSize, int zIndex, Renderer renderer) {
+        this.renderer = renderer;
         this.sprites = new SpriteRenderer[maxBatchSize];
         // 4 vertices quads
         vertices = new float[maxBatchSize * 4 * VERTEX_SIZE];
@@ -103,6 +105,12 @@ public class RenderBatch implements Comparable<RenderBatch>{
                 spr.makeClean();
                 toRebuffer = true;
             }
+
+            //spr z-index mismatches containing render batcher z-index, blasphemy!
+            if(spr.zIndex() != this.zIndex){
+                destroyIfExists(spr.gameObject);
+                renderer.add(spr.gameObject);
+            }
         }
 
         if(toRebuffer){
@@ -150,7 +158,9 @@ public class RenderBatch implements Comparable<RenderBatch>{
             if(sprites[i] == spr){
                 for(int j = i; j < numSprites; j++){
                     sprites[j] = sprites[j + 1];
-                    sprites[j].setDirty(); //reload vertices and rebuffer(offloading)
+                    if(sprites[j] != null){
+                        sprites[j].setDirty(); //reload vertices and rebuffer(offloading)
+                    }
                 }
                 numSprites--;
                 return true;
@@ -211,15 +221,15 @@ public class RenderBatch implements Comparable<RenderBatch>{
         transformationMatrix.scale(tf.scale.x, tf.scale.y, 1f);
 
         // Add vertices with the appropriate properties
-        float xAdd = 1.0f;
-        float yAdd = 1.0f;
+        float xAdd = 0.5f;
+        float yAdd = 0.5f;
         for (int i=0; i < 4; i++) {
             if (i == 1) {
-                yAdd = 0.0f;
+                yAdd = -0.5f;
             } else if (i == 2) {
-                xAdd = 0.0f;
+                xAdd = -0.5f;
             } else if (i == 3) {
-                yAdd = 1.0f;
+                yAdd = +0.5f;
             }
 
             Vector4f position = new Vector4f(xAdd, yAdd, 0,1);

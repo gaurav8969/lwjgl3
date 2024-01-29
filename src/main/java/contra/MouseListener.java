@@ -4,8 +4,9 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import javax.management.monitor.MonitorSettingException;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 public class MouseListener{
     private static MouseListener instance = null;
@@ -172,5 +173,9 @@ public class MouseListener{
 
     public static void setGameViewportSize(Vector2f gameViewportSize) {
         getInstance().gameViewportSize.set(gameViewportSize);
+    }
+
+    public static void moveMouse(float dx, float dy){
+        glfwSetCursorPos(Window.getID(), MouseListener.getX() + dx, MouseListener.getY() - dy );
     }
 }

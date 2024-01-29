@@ -14,8 +14,7 @@ import util.AssetPool;
 
 import java.lang.annotation.Target;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class GizmoSystem extends Component {
     Sprite translateSprite;
@@ -26,9 +25,9 @@ public class GizmoSystem extends Component {
     PropertiesWindow propertiesWindow;
     protected GameObject activeGameObject;
     protected GameObject attachedGameObject;
-    protected Vector2f gizmoSize = new Vector2f(26,52);
-    protected Vector2f xAxisOffset = new Vector2f(66.5f,-4.1f);
-    protected Vector2f yAxisOffset = new Vector2f(21.8f ,64f);
+    protected Vector2f gizmoSize = new Vector2f(16f/80f,48f/80f);
+    protected Vector2f xAxisOffset = new Vector2f(18.f/80.0f,-10.1f/80.0f);
+    protected Vector2f yAxisOffset = new Vector2f(-8.8f/80.0f ,14f/80.0f);
     protected Vector4f xaxisColour = new Vector4f(1f,0f,0f,1f);
     protected Vector4f yaxisColour = new Vector4f(0,1f,0f,1f);
     protected Vector4f xaxisHoverColour = new Vector4f(0.5f, 0f,0f,1f);
@@ -49,6 +48,23 @@ public class GizmoSystem extends Component {
     public void editorUpdate(float dt){
         activeGameObject = propertiesWindow.getActiveGameObject();
 
+        if(activeGameObject != null && !isGizmo(activeGameObject)){
+            if(KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) &&
+                KeyListener.keyBeginPress(GLFW_KEY_D)) {
+                GameObject newObj = this.attachedGameObject.copy();
+                Window.getScene().addGameObjectToScene(newObj);
+                newObj.tf.position.add(0.1f, 0.1f);
+                this.propertiesWindow.setActiveGameObject(newObj);
+                return;
+            }else if(KeyListener.keyBeginPress(GLFW_KEY_DELETE)){
+                activeGameObject.destroy();
+                activeGizmo.makeTransparent();
+                this.propertiesWindow.setActiveGameObject(null);
+                return;
+            }else if(KeyListener.keyBeginPress(GLFW_KEY_P)){
+
+            }
+        }
         activeGizmo.editorUpdate(dt);
 
         if(KeyListener.isKeyPressed(GLFW_KEY_E) && activeGizmo != translateGizmo){
@@ -64,7 +80,7 @@ public class GizmoSystem extends Component {
         }
     }
 
-    protected boolean isGizmo(GameObject go){
+    public boolean isGizmo(GameObject go){
         int objectID = go.getID();
         return objectID == translateGizmo.xaxis.getID() || objectID == translateGizmo.yaxis.getID()
                 || objectID == scaleGizmo.xaxis.getID() || objectID == scaleGizmo.yaxis.getID();

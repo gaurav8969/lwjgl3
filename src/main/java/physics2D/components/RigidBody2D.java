@@ -15,13 +15,15 @@ public class RigidBody2D extends Component {
     private boolean fixedRotation = false;
     private boolean continuousCollision = true;
 
-    transient private Body rawBody = null;
+    private transient Body rawBody = null;
 
     @Override
-    public void update(float dt){
-        if(rawBody != null){
-            this.gameObject.tf.position.set(rawBody.getPosition().x, rawBody.getPosition().y);
-            this.gameObject.tf.rotation = (float) Math.toRadians(rawBody.getAngle());
+    public void update(float dt) {
+        if (rawBody != null) {
+            this.gameObject.tf.position.set(
+                    rawBody.getPosition().x, rawBody.getPosition().y
+            );
+            this.gameObject.tf.rotation = (float)Math.toDegrees(rawBody.getAngle());
         }
     }
 

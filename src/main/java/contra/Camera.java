@@ -10,7 +10,9 @@ public class Camera {
     private Vector2f position;
     private float zoom = 1.0f;
 
-    private Vector2f projectionSize = new Vector2f(32.0f*30.0f,32*30.0f);
+    private float projectionWidth = 6;
+    private float projectionHeight = 3;
+    private Vector2f projectionSize = new Vector2f(projectionWidth,projectionHeight);
 
     public Camera(Vector2f Position){
         this.position = Position;

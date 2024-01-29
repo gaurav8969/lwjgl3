@@ -14,8 +14,9 @@ public class Box2DCollider extends Collider {
         return halfSize;
     }
 
-    public void setHalfSize(Vector2f halfSize) {
+    public Box2DCollider setHalfSize(Vector2f halfSize) {
         this.halfSize = halfSize;
+        return this;
     }
 
     public Vector2f getOrigin(){
@@ -25,7 +26,7 @@ public class Box2DCollider extends Collider {
     @Override
     public void editorUpdate(float dt){
         Vector2f scale = new Vector2f(this.gameObject.tf.scale);
-        Vector2f centre = new Vector2f(this.gameObject.tf.position).add(new Vector2f(scale).mul(0.5f));
+        Vector2f centre = new Vector2f(this.gameObject.tf.position);
         DebugDraw.addBox2D(centre, scale.mul(scalingFactor), this.gameObject.tf.rotation,
                 new Vector3f(0,0,1), 1);
     }

@@ -7,10 +7,11 @@ import contra.MouseListener;
 import org.joml.Vector2f;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_DECIMAL;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
 public class EditorCamera extends Component {
     private Vector2f dragStart, dragEnd, currentPos, newPosition; //current and new camera position i.e
-    private float dragSensitivity = 80.0f;
+    private float dragSensitivity = 40.0f;
     private float scrollSensitivity = 0.2f;
     private Camera camera;
     private boolean wasDragging;
@@ -40,7 +41,7 @@ public class EditorCamera extends Component {
             return;
         }
 
-        if(!wasDragging && MouseListener.isDragging()){//dragging started this frame
+        if(!wasDragging && MouseListener.isDragging() && MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)){//dragging started this frame
             //some other window is clicked on
             wasDragging = true;
             dragStart.set(MouseListener.getOrthoX(), MouseListener.getOrthoY());
@@ -54,7 +55,7 @@ public class EditorCamera extends Component {
             currentPos.lerp(newPosition, dragSensitivity*dt);
             Vector2f diff = new Vector2f();
             newPosition.sub(currentPos,diff);
-            if(diff.x < 5.0f && diff.y < 5.0f){
+            if(diff.x < 0.30f && diff.y < 0.30f){
                 currentPos.set(newPosition);
             }
         }
@@ -87,7 +88,7 @@ public class EditorCamera extends Component {
 
             camera.position().lerp(new Vector2f(), posLerpTime);
 
-            if((Math.abs(camera.position().x) < 5.0f && Math.abs(camera.position().y) < 5.0f) || posLerpTime > 0.4f ){
+            if((Math.abs(camera.position().x) < 0.30f && Math.abs(camera.position().y) < 0.30f) || posLerpTime > 0.4f ){
                 camera.position().set(0.0f);
             }
 

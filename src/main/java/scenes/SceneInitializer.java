@@ -6,4 +6,6 @@ public abstract class SceneInitializer {
     public abstract void loadResources(Scene scene);
 
     public abstract void imGui();
+
+    public void update(float dt){}
 }

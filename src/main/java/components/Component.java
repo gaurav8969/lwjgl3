@@ -3,6 +3,7 @@ package components;
 import contra.GameObject;
 import editor.CImgui;
 import imgui.ImGui;
+import imgui.type.ImInt;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -64,6 +65,13 @@ public abstract class Component {
                     }else if(type == Vector4f.class) {
                         Vector4f val = (Vector4f) value;
                         CImgui.colorPicker4(name,val);
+                    }else if(type.isEnum()){
+                        String[] enumValues = getEnumValues(type);
+                        String enumType = ((Enum)value).name();
+                        ImInt index = new ImInt(indexOf(enumType, enumValues));
+                        if(ImGui.combo(field.getName(), index, enumValues, enumValues.length)){
+                            field.set(this, type.getEnumConstants()[index.get()]);
+                        }
                     }
                 }
 
@@ -76,11 +84,8 @@ public abstract class Component {
         }
     }
 
-    public int generateID(){
-        if(uniqueID == -1){
-            uniqueID = IDCounter++;
-        }
-        return uniqueID;
+    public void generateID(){
+        this.uniqueID = IDCounter++;
     }
 
     public int getID(){
@@ -95,5 +100,25 @@ public abstract class Component {
 
     public static void loadCounter(int maxID){
         IDCounter = maxID;
+    }
+
+    //helper functions
+    private <T extends Enum<T>> String[] getEnumValues(Class<T> enumType){
+        String[] enumValues = new String[enumType.getEnumConstants().length];
+        int i = 0;
+        for(T enumIntegerValue: enumType.getEnumConstants()){
+            enumValues[i] = enumIntegerValue.name();
+            i++;
+        }
+        return enumValues;
+    }
+
+    private int indexOf(String str, String[] arr){
+        for(int i = 0; i < arr.length; i++){
+            if(str.equals(arr[i])){
+                return i;
+            }
+        }
+        return -1;
     }
 }

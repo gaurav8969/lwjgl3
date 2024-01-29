@@ -1,5 +1,6 @@
 package editor;
 
+import org.joml.Vector2f;
 import physics2D.components.Box2DCollider;
 import physics2D.components.CircleCollider;
 import physics2D.components.RigidBody2D;
@@ -30,7 +31,7 @@ public class PropertiesWindow {
         ImGuiIO io = imgui.internal.ImGui.getIO();
         //we search for the objects in the current scene
 
-        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && GameViewWindow.isFocused() && !MouseListener.isDragging()) {
+        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && GameViewWindow.isFocused() && !MouseListener.isDragging()){
             int x = (int)MouseListener.getScreenX();
             int y = (int)MouseListener.getScreenY();
             entityID = pickingTexture.readPixel(x, y);
@@ -53,7 +54,8 @@ public class PropertiesWindow {
                 if(ImGui.menuItem("Add Box Collider")){
                     if(activeGameObject.getComponent(Box2DCollider.class) == null &&
                     activeGameObject.getComponent(CircleCollider.class) == null){
-                        activeGameObject.addComponent(new Box2DCollider());
+                        activeGameObject.addComponent(new Box2DCollider()
+                                .setHalfSize(new Vector2f(activeGameObject.tf.scale).mul(0.5f)));
                     }
                 }
 

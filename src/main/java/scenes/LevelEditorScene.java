@@ -10,6 +10,7 @@ import imgui.internal.ImGui;
 import org.joml.Vector2f;
 import util.AssetPool;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_P;
 import static org.lwjgl.opengl.GL13.glCompressedTexImage1D;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
@@ -40,8 +41,7 @@ public class LevelEditorScene extends SceneInitializer {
     public void init(Scene scene){
         sprites = AssetPool.loadSpriteSheet("assets/images/blocks.png",84,16,16,0);
 
-        editorContext = new GameObject();
-        editorContext.setName("Editor Context");
+        editorContext = scene.createGameObject("Editor Context");
         editorContext.makeUnserializable();
         Gridlines gridInstance = new Gridlines();
         MouseControls mouseControls = new MouseControls(gridInstance);
@@ -51,6 +51,18 @@ public class LevelEditorScene extends SceneInitializer {
         scene.addGameObjectToScene(editorContext);//the scene updates it
     }
 
+    @Override
+    public void update(float dt){
+        GameObject go = Window.getImGuilayer().getPropertiesWindow().getActiveGameObject();
+        GizmoSystem gizmoSystem = editorContext.getComponent(GizmoSystem.class);
+
+        if(go != null && !gizmoSystem.isGizmo(go)){
+            if(KeyListener.isKeyPressed(GLFW_KEY_P)){
+                MouseControls mouseControls = editorContext.getComponent(MouseControls.class);
+                mouseControls.scoop(go);
+            }
+        }
+    }
     @Override
     public void imGui(){
         ImGui.begin("Level Editor");
@@ -76,7 +88,7 @@ public class LevelEditorScene extends SceneInitializer {
             //imgui needs tex coords top left to bottom right
             if(ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y,
                     texCoords[0].x, texCoords[2].y)){
-                GameObject go = Prefabs.generateSpriteObject(sprite,64, 64);
+                GameObject go = Prefabs.generateSpriteObject(sprite,0.25f, 0.25f);
                 editorContext.getComponent(MouseControls.class).pickUp(go);
             }
             ImGui.popID();

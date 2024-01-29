@@ -101,6 +101,9 @@ public class Window implements Observer {
         return Window.window;
     }
 
+    public static long getID(){
+        return get().glfwWindow;
+    }
     public static void changeScene(SceneInitializer sceneInitializer) {
         if(currentScene != null){
             currentScene.destroy();
@@ -219,8 +222,8 @@ public class Window implements Observer {
     }
 
     public static float getTargetAspectRatio(){
-        return 1f;
-    }
+        return 1278.0f/931.0f;
+    }//copied from the viewport ss dimensions
 
     @Override
     public void onNotify(GameObject go, Event event){

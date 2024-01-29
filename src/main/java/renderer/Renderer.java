@@ -41,7 +41,7 @@ public class Renderer {
         }
 
         if(!added){
-            RenderBatch newRenderBatch = new RenderBatch(MAX_BATCH_SIZE,MAX_TEXTURES_SIZE, sprite.zIndex());
+            RenderBatch newRenderBatch = new RenderBatch(MAX_BATCH_SIZE,MAX_TEXTURES_SIZE, sprite.zIndex(), this);
             newRenderBatch.init();
             batches.add(newRenderBatch);
             newRenderBatch.addSprite(sprite);

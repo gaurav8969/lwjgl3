@@ -19,8 +19,8 @@ public class Gridlines extends Component {
             //frustum used in projection
             Vector2f projectionSize = camera.projectionSize();
             //+2 to account for corners which are rounded off due to integer division
-            int verticalLines = (int) (zoom* projectionSize.x)/ Settings.GRID_WIDTH + 2;
-            int horizontalLines = (int) (zoom* projectionSize.y)/Settings.GRID_HEIGHT + 2;
+            float verticalLines = (zoom* projectionSize.x)/ Settings.GRID_WIDTH + 2;
+            float horizontalLines = (zoom* projectionSize.y)/Settings.GRID_HEIGHT + 2;
 
             Vector2f cameraGridPos = getGridPos(cameraPos);
             //to account for missing corner lines
@@ -48,8 +48,8 @@ public class Gridlines extends Component {
     //returns world coords of an object as it snaps to grid, call after updating cameraPos
     public Vector2f getGridPos(Vector2f pos){
         Vector2f gridPos = new Vector2f();
-        gridPos.x = ((int)pos.x/Settings.GRID_WIDTH)*Settings.GRID_WIDTH;
-        gridPos.y = ((int)pos.y/Settings.GRID_HEIGHT)*Settings.GRID_HEIGHT;
+        gridPos.x = ((int)(pos.x/Settings.GRID_WIDTH))*Settings.GRID_WIDTH;
+        gridPos.y = ((int)(pos.y/Settings.GRID_HEIGHT))*Settings.GRID_HEIGHT;
         return gridPos;
     }
 

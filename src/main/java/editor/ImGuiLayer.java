@@ -22,6 +22,7 @@ public class ImGuiLayer {
     private long glfwWindow;
     private String glslVersion;
     private MenuBar menuBar;
+    private SceneHierarchyWindow sceneHierarchyWindow;
 
     public ImGuiLayer(PickingTexture pickingTexture, long glfwWindow, String glslVersion){
         this.gameViewWindow = new GameViewWindow();
@@ -29,7 +30,9 @@ public class ImGuiLayer {
         this.glfwWindow = glfwWindow;
         this.glslVersion = glslVersion;
         this.menuBar = new MenuBar();
+        this.sceneHierarchyWindow = new SceneHierarchyWindow();
     }
+
     public void initImGui(){
         imGuiGlfw =  new ImGuiImplGlfw();
         imGuiGl3 = new ImGuiImplGl3();
@@ -70,6 +73,7 @@ public class ImGuiLayer {
         gameViewWindow.imgui();
         propertiesWindow.update(currentScene, dt);
         propertiesWindow.imgui();
+        sceneHierarchyWindow.imGui();
         menuBar.imgui();
 
         ImGui.end();
