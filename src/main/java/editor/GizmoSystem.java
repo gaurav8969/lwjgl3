@@ -45,6 +45,11 @@ public class GizmoSystem extends Component {
     }
 
     @Override
+    public void update(float dt){
+        activeGizmo.makeTransparent();
+    }
+
+    @Override
     public void editorUpdate(float dt){
         activeGameObject = propertiesWindow.getActiveGameObject();
 

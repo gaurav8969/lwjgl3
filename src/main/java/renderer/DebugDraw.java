@@ -105,7 +105,8 @@ public class DebugDraw {
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        //glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
 
         // Use shader
         shader.use();

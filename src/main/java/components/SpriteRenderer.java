@@ -4,6 +4,7 @@ import renderer.Texture;
 import editor.CImgui;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import util.AssetPool;
 
 //contains sprites that are to be rendered
 public class SpriteRenderer extends Component {
@@ -17,6 +18,9 @@ public class SpriteRenderer extends Component {
 
     @Override
     public void init() {
+        if(this.sprite.getTexture() != null){
+            this.sprite.setTexture(AssetPool.getTexture(this.sprite.getTexture().filepath));
+        }
         //must deep-copy since shallow copy is always up to date, rendering dirty flagging ineffective
         lastTransform = this.gameObject.tf.copy(); //deep-copy allocation
     }
