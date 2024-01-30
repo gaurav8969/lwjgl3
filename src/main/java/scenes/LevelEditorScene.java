@@ -11,6 +11,9 @@ import imgui.internal.ImGui;
 import org.joml.Vector2f;
 import util.AssetPool;
 
+import java.io.File;
+import java.util.Collection;
+
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_P;
 import static org.lwjgl.opengl.GL13.glCompressedTexImage1D;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
@@ -45,6 +48,23 @@ public class LevelEditorScene extends SceneInitializer {
                 stateMachine.refreshTextures();
             }
         }
+
+        //sounds
+        AssetPool.addSound("assets/sounds/main-theme-overworld.ogg", true);
+        AssetPool.addSound("assets/sounds/flagpole.ogg", false);
+        AssetPool.addSound("assets/sounds/break_block.ogg", false);
+        AssetPool.addSound("assets/sounds/bump.ogg", false);
+        AssetPool.addSound("assets/sounds/coin.ogg", false);
+        AssetPool.addSound("assets/sounds/gameover.ogg", false);
+        AssetPool.addSound("assets/sounds/jump-small.ogg", false);
+        AssetPool.addSound("assets/sounds/mario_die.ogg", false);
+        AssetPool.addSound("assets/sounds/pipe.ogg", false);
+        AssetPool.addSound("assets/sounds/powerup.ogg", false);
+        AssetPool.addSound("assets/sounds/powerup_appears.ogg", false);
+        AssetPool.addSound("assets/sounds/stage_clear.ogg", false);
+        AssetPool.addSound("assets/sounds/stomp.ogg", false);
+        AssetPool.addSound("assets/sounds/kick.ogg", false);
+        AssetPool.addSound("assets/sounds/invincible.ogg", false);
     }
 
     @Override
@@ -78,16 +98,17 @@ public class LevelEditorScene extends SceneInitializer {
         ImGui.begin("Level Editor");
         editorContext.imGui();
         if(ImGui.beginTabBar("WindowTabBar")) {
+            ImVec2 windowPos = new ImVec2();
+            ImGui.getWindowPos(windowPos);
+            ImVec2 windowSize = new ImVec2();
+            ImGui.getWindowSize(windowSize);
+            float windowX2 = windowPos.x + windowSize.x;
+            ImVec2 itemSpacing = new ImVec2();
+
             if(ImGui.beginTabItem("Block")) {
-                ImVec2 windowPos = new ImVec2();
-                ImGui.getWindowPos(windowPos);
-                ImVec2 windowSize = new ImVec2();
-                ImGui.getWindowSize(windowSize);
-                ImVec2 itemSpacing = new ImVec2();
                 //method of imgui style class for horizontal and vertical spacing between widgets/lines.
                 ImGui.getStyle().getItemSpacing(itemSpacing);
 
-                float windowX2 = windowPos.x + windowSize.x;
                 for (int i = 0; i < sprites.size(); i++) {
                     Sprite sprite = sprites.getSprite(i);
                     float spriteWidth = 4 * sprite.getWidth();
@@ -140,8 +161,31 @@ public class LevelEditorScene extends SceneInitializer {
 
                 ImGui.endTabItem();
             }
-            ImGui.endTabBar();
+
+            if (ImGui.beginTabItem("Sounds")) {
+                Collection<Sound> sounds = AssetPool.getAllSounds();
+                for (Sound sound : sounds) {
+                    File tmp = new File(sound.getFilepath());
+                    if (ImGui.button(tmp.getName())) {
+                        if (!sound.isPlaying()) {
+                            sound.play();
+                        } else {
+                            sound.stop();
+                        }
+                    }
+
+                    ImVec2 lastButtonPos = new ImVec2();
+                    ImGui.getItemRectMax(lastButtonPos);
+                    float lastButtonX2 = lastButtonPos.x;
+                    float nextButtonX2 = lastButtonX2 + itemSpacing.x;
+                    if (nextButtonX2 < windowX2 - 100) {
+                        ImGui.sameLine();
+                    }
+                }
+                ImGui.endTabItem();
             }
+            ImGui.endTabBar();
+        }
         ImGui.end();
     }
 }

@@ -4,6 +4,10 @@ import observers.EventSystem;
 import observers.Observer;
 import observers.events.Event;
 import observers.events.EventType;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.ALCapabilities;
 import renderer.Framebuffer;
 import renderer.PickingTexture;
 import renderer.Shader;
@@ -19,6 +23,7 @@ import renderer.Renderer;
 import editor.ImGuiLayer;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -33,7 +38,8 @@ public class Window implements Observer {
     private Framebuffer framebuffer;
     private PickingTexture pickingTexture;
     private boolean runTimePlaying = false;
-
+    private long audioContext;
+    private long audioDevice;
 
     private Window(){
         this.width = 960;
@@ -81,6 +87,21 @@ public class Window implements Observer {
         // Make the window visible
         glfwShowWindow(glfwWindow);
 
+        // Initialize the audio device
+        String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
+        audioDevice = alcOpenDevice(defaultDeviceName);
+
+        int[] attributes = {0};
+        audioContext = alcCreateContext(audioDevice, attributes);
+        alcMakeContextCurrent(audioContext);
+
+        ALCCapabilities alcCapabilities = ALC.createCapabilities(audioDevice);
+        ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
+
+        if (!alCapabilities.OpenAL10) {
+            assert false : "Audio library not supported.";
+        }
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -122,6 +143,9 @@ public class Window implements Observer {
 
         init();
         loop();
+        //Destroy the audio context
+        alcDestroyContext(audioContext);
+        alcCloseDevice(audioDevice);
 
         //free the memory
         glfwFreeCallbacks(glfwWindow);
