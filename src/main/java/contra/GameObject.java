@@ -94,7 +94,8 @@ public class GameObject {
         for(Component c: components){
             if(c != null) {
                 String name = c.getClass().getSimpleName();
-                if(name.equals("Transform")){
+                //hacky way to get around a pesky bug
+                if(name.equals("Transform") && !this.name.equals("Editor Context")){
                     ImGui.collapsingHeader("");
                 }
 

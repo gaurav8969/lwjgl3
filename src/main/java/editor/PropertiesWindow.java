@@ -15,6 +15,7 @@ import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.ImVec2;
 import scenes.Scene;
+import util.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class PropertiesWindow {
     private ImVec2 topLeft;
     private ImVec2 windowSize;
     private List<GameObject> activeGameObjects;
-    private final float debounceTime = 0.1f;
+    private final float debounceTime = 0.05f;
     private float debounce = 0.0f;
 
     public PropertiesWindow(PickingTexture pickingTexture){
@@ -41,50 +42,30 @@ public class PropertiesWindow {
 
     public void update(Scene currentScene, float dt){
         debounce -= dt;
+            //separation of multi select and single object select features
+            if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && GameViewWindow.isFocused() && !MouseListener.isDragging()
+                && debounce < 0){
+                debounce = debounceTime;
+                int x = (int)MouseListener.getScreenX();
+                int y = (int)MouseListener.getScreenY();
+                entityID = pickingTexture.readPixel(x, y);
+                GameObject go = currentScene.getGameObject(entityID);
 
-        //we search for the objects in the current scene
-        if(!activeGameObjects.isEmpty()){
-            if(activeGameObjects.size() == 1){
-                setActiveGameObject(activeGameObjects.get(0));
-            }else{
-                if(KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) &&
-                        KeyListener.keyBeginPress(GLFW_KEY_D)) {
-                    for(GameObject go: activeGameObjects){
-                        GameObject newObj = go.copy();
-                        Window.getScene().addGameObjectToScene(newObj);
-                        newObj.tf.position.add(0.1f, 0.1f);
+                if(go == null){
+                    clearActiveObjects();
+                    return;
+                }
+
+                if(!activeGameObjects.contains(go) && go.getComponent(Unpickable.class) == null){
+                    for(GameObject obj: activeGameObjects){
+                        obj.getComponent(SpriteRenderer.class).setColour(new Vector4f(1,1,1,1));
                     }
-                }else if(KeyListener.keyBeginPress(GLFW_KEY_DELETE)){
-                    for(GameObject go: activeGameObjects){
-                        go.destroy();
-                    }
+                    activeGameObjects.clear();
+                    go.getComponent(SpriteRenderer.class).setColour(new Vector4f(0.8f,0.8f,0.8f,0.5f));
+                    activeGameObjects.add(go);
                 }
             }
         }
-
-        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && GameViewWindow.isFocused() && !MouseListener.isDragging()
-            && debounce < 0){
-            debounce = debounceTime;
-            int x = (int)MouseListener.getScreenX();
-            int y = (int)MouseListener.getScreenY();
-            entityID = pickingTexture.readPixel(x, y);
-            GameObject go = currentScene.getGameObject(entityID);
-
-            if(go == null){
-                clearActiveObjects();
-                return;
-            }
-
-            if(!activeGameObjects.contains(go) && go.getComponent(Unpickable.class) == null){
-                for(GameObject obj: activeGameObjects){
-                    obj.getComponent(SpriteRenderer.class).setColour(new Vector4f(1,1,1,1));
-                }
-                activeGameObjects.clear();
-                go.getComponent(SpriteRenderer.class).setColour(new Vector4f(0.8f,0.8f,0.8f,0.5f));
-                activeGameObjects.add(go);
-            }
-        }
-    }
 
     public void imgui(){
         if(activeGameObjects.size() == 1 && activeGameObjects.get(0) != null){
@@ -167,5 +148,9 @@ public class PropertiesWindow {
 
     public boolean isActive(GameObject go){
         return activeGameObjects.contains(go);
+    }
+
+    public List<GameObject> getActiveObjects(){
+        return activeGameObjects;
     }
 }

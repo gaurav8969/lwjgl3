@@ -106,7 +106,6 @@ public class MouseControls extends Component {
 
     @Override
     public void imGui(){}
-
     //purge duplicates created during dragging
     private void removeDuplicates(){
         List<GameObject> gameObjects = Window.getScene().getGameObjects();
