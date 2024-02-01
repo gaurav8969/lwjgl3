@@ -71,7 +71,7 @@ public class ImGuiLayer {
         currentScene.imGui();
 
         gameViewWindow.imgui();
-        propertiesWindow.update(currentScene, dt);
+        propertiesWindow.editorUpdate(currentScene, dt);
         propertiesWindow.imgui();
         sceneHierarchyWindow.imGui();
         menuBar.imgui();

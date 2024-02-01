@@ -38,7 +38,6 @@ public class MouseControls extends Component {
     @Override
     public void editorUpdate(float dt){
         if(holdingObject != null) {
-            Window.getImGuilayer().getPropertiesWindow().setActiveGameObject(null);
             Vector2f orthoPos = new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY());
             Vector2f gridPos = gridInstance.getGridPos(orthoPos);
             gridPos.x += spriteWidth/2f;
@@ -75,7 +74,8 @@ public class MouseControls extends Component {
                 DebugDraw.addBox2D(centre,new Vector2f(Math.abs(drag.x), Math.abs(drag.y)),0,1);
                 List<GameObject> gameObjects = Window.getScene().getGameObjects();
                 for(GameObject go: gameObjects){
-                    if(objectInRect(centre,new Vector2f(Math.abs(drag.x), Math.abs(drag.y)),go)){
+                    if(objectInRect(centre,new Vector2f(Math.abs(drag.x), Math.abs(drag.y)),go)
+                            && go.getComponent(Unpickable.class) == null){
                         propertiesWindow.addActiveGameObject(go);
                     }else if(propertiesWindow.isActive(go)){
                         propertiesWindow.clearObject(go);
@@ -94,13 +94,9 @@ public class MouseControls extends Component {
         holdingObject = go;
         spriteWidth = holdingObject.tf.scale.x;
         spriteHeight = holdingObject.tf.scale.y;
-        SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
-        spr.setColour(new Vector4f(.8f,.8f,.8f,0.5f));
     }
 
     public void drop(){
-        SpriteRenderer spr = holdingObject.getComponent(SpriteRenderer.class);
-        spr.setColour(new Vector4f(1f,1f,1f,1f));
         this.holdingObject = null;
     }
 
@@ -126,10 +122,33 @@ public class MouseControls extends Component {
     private boolean objectInRect(Vector2f centre, Vector2f dimensions, GameObject go){
         //readPixel is in screen coords, the rest in world coords
         int id = go.getID();
-        Vector2f pos = go.tf.position;
-        Vector2f screenCoords = MouseListener.worldToScreen(pos);
-        boolean hovering = JMath.pointInRect(centre,dimensions, pos);
-        boolean onTop = (id == pickingTexture.readPixel((int)screenCoords.x, (int)screenCoords.y));
-        return hovering && onTop;
+        Vector2f objCentre = go.tf.position;
+        Vector2f min = new Vector2f(objCentre).sub(new Vector2f(go.tf.scale).mul(0.5f));
+        Vector2f max = new Vector2f(objCentre).add(new Vector2f(go.tf.scale).mul(0.5f));
+
+        Vector2f[] vertices = {
+                new Vector2f(min.x, min.y), new Vector2f(min.x, max.y),
+                new Vector2f(max.x, max.y), new Vector2f(max.x, min.y)
+        };
+
+        //if any of the vertices or the centre are in the rect
+        boolean hovering = false;
+        for(int i = 0; i < 4; i++){
+            hovering = JMath.pointInRect(centre,dimensions, vertices[i]);
+            if(hovering)break;
+        }
+        hovering = hovering || JMath.pointInRect(centre,dimensions,objCentre);
+
+        //if any of the vertices or the centre are not covered by another obj
+        boolean onTop = false;
+        for(int i = 0; i < 4; i++){
+            Vector2f screenCoords = MouseListener.worldToScreen(vertices[i]);
+            onTop = (id == pickingTexture.readPixel((int)screenCoords.x, (int)screenCoords.y));
+            if(onTop)break;
+        }
+        Vector2f centerScreenCoords = MouseListener.worldToScreen(objCentre);
+        onTop = onTop || (id == pickingTexture.readPixel((int)centerScreenCoords.x, (int)centerScreenCoords.y));
+
+        return onTop && hovering;
     }
 }

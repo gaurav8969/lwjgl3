@@ -17,6 +17,8 @@ import imgui.ImVec2;
 import scenes.Scene;
 import util.Settings;
 
+import java.io.LineNumberReader;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,11 +27,11 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_DELETE;
 
 public class PropertiesWindow {
     private PickingTexture pickingTexture;
-    //private GameObject activeGameObject = null;
     private int entityID;
     private ImVec2 topLeft;
     private ImVec2 windowSize;
     private List<GameObject> activeGameObjects;
+    private List<Vector4f> activeColours; //original colours of the selected objects
     private final float debounceTime = 0.05f;
     private float debounce = 0.0f;
 
@@ -38,13 +40,14 @@ public class PropertiesWindow {
         topLeft = new ImVec2();
         windowSize = new ImVec2();
         this.activeGameObjects = new ArrayList<>();
+        this.activeColours = new ArrayList<>();
     }
 
-    public void update(Scene currentScene, float dt){
+    public void editorUpdate(Scene currentScene, float dt){
         debounce -= dt;
             //separation of multi select and single object select features
-            if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && GameViewWindow.isFocused() && !MouseListener.isDragging()
-                && debounce < 0){
+            if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && GameViewWindow.isFocused()
+                    && !MouseListener.isDragging() && debounce < 0){
                 debounce = debounceTime;
                 int x = (int)MouseListener.getScreenX();
                 int y = (int)MouseListener.getScreenY();
@@ -57,12 +60,8 @@ public class PropertiesWindow {
                 }
 
                 if(!activeGameObjects.contains(go) && go.getComponent(Unpickable.class) == null){
-                    for(GameObject obj: activeGameObjects){
-                        obj.getComponent(SpriteRenderer.class).setColour(new Vector4f(1,1,1,1));
-                    }
-                    activeGameObjects.clear();
-                    go.getComponent(SpriteRenderer.class).setColour(new Vector4f(0.8f,0.8f,0.8f,0.5f));
-                    activeGameObjects.add(go);
+                    clearActiveObjects();
+                    addActiveGameObject(go);
                 }
             }
         }
@@ -119,31 +118,42 @@ public class PropertiesWindow {
     }
 
     public void setActiveGameObject(GameObject go){
-        if(go != null) {
             clearActiveObjects();
-            addActiveGameObject(go);
-        }
+            if(go != null) {
+                addActiveGameObject(go);
+            }
     }
 
     public PickingTexture getPickingTexture(){return pickingTexture;}
 
     public void addActiveGameObject(GameObject go){
         if(activeGameObjects.contains(go) || go == null){return;}
-
+        SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
+        if(spr != null){
+            activeColours.add(new Vector4f(spr.getColour()));
+            spr.setColour(new Vector4f(0.8f,0.8f,0.8f,0.5f));
+        }
         activeGameObjects.add(go);
-        go.getComponent(SpriteRenderer.class).setColour(new Vector4f(0.8f,0.8f,0.8f,0.5f));
     }
 
     public void clearActiveObjects(){
-        for(GameObject obj: activeGameObjects){
-            obj.getComponent(SpriteRenderer.class).setColour(new Vector4f(1,1,1,1));
+        int size = activeGameObjects.size();
+        for(int i = 0; i < size; i++){
+            GameObject obj = activeGameObjects.get(i);
+            SpriteRenderer spr = obj.getComponent(SpriteRenderer.class);
+            if(spr != null){
+                spr.setColour(activeColours.get(i));
+            }
         }
         activeGameObjects.clear();
+        activeColours.clear();
     }
 
     public void clearObject(GameObject go){
-        go.getComponent(SpriteRenderer.class).setColour(new Vector4f(1,1,1,1));
+        int index = activeGameObjects.indexOf(go);
+        go.getComponent(SpriteRenderer.class).setColour(activeColours.get(index));
         activeGameObjects.remove(go);
+        activeColours.remove(index);
     }
 
     public boolean isActive(GameObject go){
@@ -153,4 +163,6 @@ public class PropertiesWindow {
     public List<GameObject> getActiveObjects(){
         return activeGameObjects;
     }
+
+    public List<Vector4f> getActiveColours(){return activeColours;}
 }

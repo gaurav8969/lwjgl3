@@ -86,15 +86,9 @@ public class LevelEditorScene extends SceneInitializer {
 
     @Override
     public void update(float dt){
-        GameObject go = Window.getImGuilayer().getPropertiesWindow().getActiveGameObject();
 
-        if(go != null){
-            if(KeyListener.isKeyPressed(GLFW_KEY_P)){
-                MouseControls mouseControls = editorContext.getComponent(MouseControls.class);
-                mouseControls.scoop(go);
-            }
-        }
     }
+
     @Override
     public void imGui(){
         ImGui.begin("Level Editor");

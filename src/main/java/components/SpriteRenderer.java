@@ -1,5 +1,8 @@
 package components;
 
+import contra.Window;
+import editor.PropertiesWindow;
+import imgui.internal.ImGui;
 import renderer.Texture;
 import editor.CImgui;
 import org.joml.Vector2f;
@@ -96,7 +99,9 @@ public class SpriteRenderer extends Component {
 
     @Override
     public void imGui(){
-        if(CImgui.colorPicker4("Colour picker: ", this.colour)){
+        Vector4f spriteCol = Window.getImGuilayer().getPropertiesWindow().getActiveColours().get(0);
+        if(CImgui.colorPicker4("Colour picker: ", spriteCol)){
+            colour.set(spriteCol);
             isDirty = true;
         }
 
