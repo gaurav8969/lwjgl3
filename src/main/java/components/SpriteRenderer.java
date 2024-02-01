@@ -99,5 +99,7 @@ public class SpriteRenderer extends Component {
         if(CImgui.colorPicker4("Colour picker: ", this.colour)){
             isDirty = true;
         }
+
+        this.zIndex = CImgui.dragInt("Z-index", this.zIndex);
     }
 }

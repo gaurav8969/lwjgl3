@@ -48,8 +48,8 @@ public class Gridlines extends Component {
     //returns world coords of an object as it snaps to grid, call after updating cameraPos
     public Vector2f getGridPos(Vector2f pos){
         Vector2f gridPos = new Vector2f();
-        gridPos.x = ((int)(pos.x/Settings.GRID_WIDTH))*Settings.GRID_WIDTH;
-        gridPos.y = ((int)(pos.y/Settings.GRID_HEIGHT))*Settings.GRID_HEIGHT;
+        gridPos.x = ((int)Math.floor((pos.x/Settings.GRID_WIDTH))*Settings.GRID_WIDTH);
+        gridPos.y = ((int)Math.floor((pos.y/Settings.GRID_HEIGHT))*Settings.GRID_HEIGHT);
         return gridPos;
     }
 

@@ -5,8 +5,14 @@ import com.google.gson.GsonBuilder;
 import components.*;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
+import org.joml.Math;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import util.AssetPool;
+import util.JMath;
+
+import java.util.stream.IntStream;
 
 public class GameObject {
     private boolean serializable = true;
@@ -195,5 +201,31 @@ public class GameObject {
 
     public boolean isDead() {
         return isDead;
+    }
+
+    //also works for rotated objects
+    public boolean insideObject(float x, float y){
+        Vector2f min = new Vector2f(tf.position).sub(new Vector2f(tf.scale).mul(0.5f));
+        Vector2f max = new Vector2f(tf.position).add(new Vector2f(tf.scale).mul(0.5f));
+
+        Vector2f[] vertices = {
+                new Vector2f(min.x, min.y), new Vector2f(min.x, max.y),
+                new Vector2f(max.x, max.y), new Vector2f(max.x, min.y)
+        };
+
+        Vector2f pointCoords = new Vector2f(x,y);
+        if(tf.rotation != 0.0f){
+            //inversely rotate point to check enclosure in original rect
+            JMath.rotate(pointCoords,-tf.rotation,tf.position);
+        }
+        float xPoint = pointCoords.x;
+        float yPoint = pointCoords.y;
+
+        float xMin = vertices[0].x;
+        float xMax = vertices[2].x;
+        float yMin = vertices[0].y;
+        float yMax = vertices[2].y;
+
+        return xPoint > xMin && xPoint < xMax && yPoint > yMin && yPoint < yMax;
     }
 }

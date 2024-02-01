@@ -35,4 +35,39 @@ public class JMath {
     public static boolean compare(Vector2f vec1, Vector2f vec2) {
         return compare(vec1.x, vec2.x) && compare(vec1.y, vec2.y);
     }
+
+    public static float smallest(float[] arr){
+        float smallest = Float.MAX_VALUE;
+        for(float f: arr){
+            if( f < smallest){
+                smallest = f;
+            }
+        }
+        return smallest;
+    }
+
+    public static float largest(float[] arr){
+        float largest = Float.MIN_VALUE;
+        for(float f: arr){
+            if( f > largest){
+                largest = f;
+            }
+        }
+        return largest;
+    }
+
+    //no rotated triangles for now
+    public static boolean pointInRect(Vector2f centre, Vector2f dimensions, Vector2f point){
+        Vector2f min = new Vector2f(centre).sub(new Vector2f(dimensions).mul(0.5f));
+        Vector2f max = new Vector2f(centre).add(new Vector2f(dimensions).mul(0.5f));
+
+        float xMin = min.x;
+        float xMax = max.x;
+        float yMin = min.y;
+        float yMax = max.y;
+
+        float x = point.x;
+        float y = point.y;
+        return x > xMin && x < xMax && y > yMin && y < yMax;
+    }
 }

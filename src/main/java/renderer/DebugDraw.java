@@ -26,7 +26,7 @@ public class DebugDraw {
     private final int VERTEX_SIZE = 6; //POS_SIZE + COLOUR_SIZE
     private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
 
-    private static int maxNumOfLines = 500;
+    private static int maxNumOfLines = 20000;
     private static List<Line2D> lines;
     private Shader shader;
     private float[] vertices;
@@ -144,8 +144,11 @@ public class DebugDraw {
     }
 
     // Add Box2D methods
-    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation) {
+    public static void addBox2D(Vector2f center, Vector2f dimensions) {
         // TODO: ADD CONSTANTS FOR COMMON COLORS
+        addBox2D(center, dimensions, 0, new Vector3f(0, 1, 0), 1);
+    }
+    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation) {
         addBox2D(center, dimensions, rotation, new Vector3f(0, 1, 0), 1);
     }
 

@@ -88,6 +88,7 @@ public class StateMachine extends Component {
         for(AnimationState state: states){
             if(state.title.equals(defaultStateTitle)){
                 currentState = state;
+                currentState.refreshTexture();
                 break;
             }
         }

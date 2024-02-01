@@ -71,6 +71,7 @@ public class Sound {
     public void play() {
         int state = alGetSourcei(sourceId, AL_SOURCE_STATE);
         if (state == AL_STOPPED) {
+            //source completed its duration but isPlaying is still true
             isPlaying = false;
             alSourcei(sourceId, AL_POSITION, 0);
         }
@@ -94,6 +95,7 @@ public class Sound {
 
     public boolean isPlaying() {
         int state = alGetSourcei(sourceId, AL_SOURCE_STATE);
+        //when the audio finishes its runtime
         if (state == AL_STOPPED) {
             isPlaying = false;
         }

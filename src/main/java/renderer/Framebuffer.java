@@ -1,12 +1,18 @@
 package renderer;
 
+import org.joml.Vector2f;
+
 import static org.lwjgl.opengl.GL30.*;
 
 public class Framebuffer {
     private int fboID= 0;
     private Texture texture= null;
+    private int height, width;
 
     public Framebuffer(int width, int height){
+        this.width = width;
+        this.height = height;
+
         //Generate frame buffer
         fboID = glGenFramebuffers();
         glBindFramebuffer(GL_FRAMEBUFFER,fboID);
@@ -43,4 +49,6 @@ public class Framebuffer {
     public int getTextureID() {
         return this.texture.getTexID();
     }
+
+    public Vector2f getDimensions(){return new Vector2f(width, height);}
 }

@@ -9,6 +9,7 @@ import contra.*;
 import imgui.ImVec2;
 import imgui.internal.ImGui;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import util.AssetPool;
 
 import java.io.File;
@@ -75,18 +76,19 @@ public class LevelEditorScene extends SceneInitializer {
         editorContext.makeUnserializable();
         Gridlines gridInstance = new Gridlines();
         MouseControls mouseControls = new MouseControls(gridInstance);
+        KeyControls keyControls = new KeyControls();
         EditorCamera editorCamera = new EditorCamera(scene.camera());
         GizmoSystem gizmo = new GizmoSystem();
-        editorContext.addComponent(gridInstance).addComponent(mouseControls).addComponent(editorCamera).addComponent(gizmo);
+        editorContext.addComponent(gridInstance).addComponent(mouseControls).addComponent(editorCamera).addComponent(gizmo)
+                .addComponent(keyControls);
         scene.addGameObjectToScene(editorContext);//the scene updates it
     }
 
     @Override
     public void update(float dt){
         GameObject go = Window.getImGuilayer().getPropertiesWindow().getActiveGameObject();
-        GizmoSystem gizmoSystem = editorContext.getComponent(GizmoSystem.class);
 
-        if(go != null && !gizmoSystem.isGizmo(go)){
+        if(go != null){
             if(KeyListener.isKeyPressed(GLFW_KEY_P)){
                 MouseControls mouseControls = editorContext.getComponent(MouseControls.class);
                 mouseControls.scoop(go);
@@ -104,6 +106,7 @@ public class LevelEditorScene extends SceneInitializer {
             ImGui.getWindowSize(windowSize);
             float windowX2 = windowPos.x + windowSize.x;
             ImVec2 itemSpacing = new ImVec2();
+            ImVec2 lastButtonPos = new ImVec2();
 
             if(ImGui.beginTabItem("Block")) {
                 //method of imgui style class for horizontal and vertical spacing between widgets/lines.
@@ -125,7 +128,6 @@ public class LevelEditorScene extends SceneInitializer {
                     }
                     ImGui.popID();
 
-                    ImVec2 lastButtonPos = new ImVec2();
                     ImGui.getItemRectMax(lastButtonPos);
                     float lastButtonX2 = lastButtonPos.x;
                     float nextButtonX2 = lastButtonX2 + itemSpacing.x + spriteWidth;
@@ -174,7 +176,6 @@ public class LevelEditorScene extends SceneInitializer {
                         }
                     }
 
-                    ImVec2 lastButtonPos = new ImVec2();
                     ImGui.getItemRectMax(lastButtonPos);
                     float lastButtonX2 = lastButtonPos.x;
                     float nextButtonX2 = lastButtonX2 + itemSpacing.x;

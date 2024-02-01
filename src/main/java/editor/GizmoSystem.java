@@ -2,6 +2,7 @@ package editor;
 
 import components.Component;
 import components.Sprite;
+import components.SpriteRenderer;
 import components.Transform;
 import contra.GameObject;
 import contra.KeyListener;
@@ -24,7 +25,6 @@ public class GizmoSystem extends Component {
     Gizmo activeGizmo;
     PropertiesWindow propertiesWindow;
     protected GameObject activeGameObject;
-    protected GameObject attachedGameObject;
     protected Vector2f gizmoSize = new Vector2f(16f/80f,48f/80f);
     protected Vector2f xAxisOffset = new Vector2f(18.f/80.0f,-10.1f/80.0f);
     protected Vector2f yAxisOffset = new Vector2f(-8.8f/80.0f ,14f/80.0f);
@@ -36,6 +36,7 @@ public class GizmoSystem extends Component {
     public GizmoSystem(){
         translateSprite = AssetPool.getSpriteSheet("assets/images/gizmos.png").getSprite(1);
         scaleSprite = AssetPool.getSpriteSheet("assets/images/gizmos.png").getSprite(2);
+
         this.propertiesWindow = Window.getImGuilayer().getPropertiesWindow();
         scaleGizmo = new ScaleGizmo(scaleSprite, this);
         translateGizmo = new TranslateGizmo(translateSprite, this);
@@ -53,22 +54,22 @@ public class GizmoSystem extends Component {
     public void editorUpdate(float dt){
         activeGameObject = propertiesWindow.getActiveGameObject();
 
-        if(activeGameObject != null && !isGizmo(activeGameObject)){
-            if(KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) &&
-                KeyListener.keyBeginPress(GLFW_KEY_D)) {
-                GameObject newObj = this.attachedGameObject.copy();
-                Window.getScene().addGameObjectToScene(newObj);
-                newObj.tf.position.add(0.1f, 0.1f);
-                this.propertiesWindow.setActiveGameObject(newObj);
-                return;
-            }else if(KeyListener.keyBeginPress(GLFW_KEY_DELETE)){
-                activeGameObject.destroy();
-                activeGizmo.makeTransparent();
-                this.propertiesWindow.setActiveGameObject(null);
-                return;
-            }else if(KeyListener.keyBeginPress(GLFW_KEY_P)){
+        if(activeGameObject != null){
+            float mouseX = MouseListener.getOrthoX();
+            float mouseY = MouseListener.getOrthoY();
 
+            if(activeGizmo.xaxis.insideObject(mouseX, mouseY)){
+                activeGizmo.xaxis.getComponent(SpriteRenderer.class).setColour(xaxisHoverColour);
+            }else{
+                activeGizmo.xaxis.getComponent(SpriteRenderer.class).setColour(xaxisColour);
             }
+
+            if(activeGizmo.yaxis.insideObject(mouseX, mouseY)){
+                activeGizmo.yaxis.getComponent(SpriteRenderer.class).setColour(yaxisHoverColour);
+            }else{
+                activeGizmo.yaxis.getComponent(SpriteRenderer.class).setColour(yaxisColour);
+            }
+
         }
         activeGizmo.editorUpdate(dt);
 
@@ -83,12 +84,6 @@ public class GizmoSystem extends Component {
             activeGizmo = scaleGizmo;
             activeGizmo.makeVisible();
         }
-    }
-
-    public boolean isGizmo(GameObject go){
-        int objectID = go.getID();
-        return objectID == translateGizmo.xaxis.getID() || objectID == translateGizmo.yaxis.getID()
-                || objectID == scaleGizmo.xaxis.getID() || objectID == scaleGizmo.yaxis.getID();
     }
 
     protected void changePosition(float dx, float dy ){

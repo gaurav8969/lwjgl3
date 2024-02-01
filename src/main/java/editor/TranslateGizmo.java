@@ -4,6 +4,8 @@ import components.*;
 import contra.GameObject;
 import contra.MouseListener;
 
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
+
 public class TranslateGizmo extends Gizmo {
     public TranslateGizmo(Sprite gizmoSprite, GizmoSystem gizmoSystem){
         super(gizmoSprite,gizmoSystem);
@@ -13,35 +15,24 @@ public class TranslateGizmo extends Gizmo {
     public void editorUpdate(float dt){
         GameObject activeGameObject = gizmoSystem.activeGameObject;
         if(activeGameObject != null){
-            if(!gizmoSystem.isGizmo(activeGameObject)){
-                gizmoSystem.attachedGameObject = activeGameObject;
-            }
+            if(MouseListener.isDragging() && MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)){
+                float mouseWorldX = MouseListener.getOrthoX();
+                float mouseWorldY = MouseListener.getOrthoY();
 
-            if(MouseListener.isDragging()){
-                GameObject attachedGameObject = gizmoSystem.attachedGameObject;
-
-                if(activeGameObject.getID() == xaxis.getID()){
+                if(xaxis.insideObject(mouseWorldX, mouseWorldY)){
                     xaxis.getComponent(SpriteRenderer.class).setColour(gizmoSystem.xaxisHoverColour);
                     float dragX = MouseListener.getWorldDx();
-                    attachedGameObject.tf.position.x += dragX;
+                    activeGameObject.tf.position.x += dragX;
                     gizmoSystem.changePosition(dragX, 0);
-                }
-
-                if(activeGameObject.getID() == yaxis.getID()){
+                }else if(yaxis.insideObject(mouseWorldX, mouseWorldY)){ //else if so only one of the two happens at one time
                     yaxis.getComponent(SpriteRenderer.class).setColour(gizmoSystem.yaxisHoverColour);
                     float dragY = MouseListener.getWorldDy();
-                    attachedGameObject.tf.position.y += dragY;
+                    activeGameObject.tf.position.y += dragY;
                     gizmoSystem.changePosition(0,dragY);
                 }
-            }else{
-                makeVisible();
             }
-
-            if(gizmoSystem.isGizmo(activeGameObject))return;
-
             gizmoSystem.move(activeGameObject.tf.position);
         }else{
-            gizmoSystem.attachedGameObject = null;
             makeTransparent();
         }
     }
