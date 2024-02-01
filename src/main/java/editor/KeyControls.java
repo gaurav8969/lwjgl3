@@ -21,6 +21,15 @@ public class KeyControls extends Component {
         List<GameObject> activeGameObjects = propertiesWindow.getActiveObjects();
         List<Vector4f> activeColours = propertiesWindow.getActiveColours();
         if(!activeGameObjects.isEmpty()){
+            MouseControls mouseControls = this.gameObject.getComponent(MouseControls.class);
+            if(mouseControls.holdingObject != null){
+                if(KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)){
+                    mouseControls.holdingObject.destroy();
+                    mouseControls.drop();
+                    propertiesWindow.setActiveGameObject(null);
+                }
+            }
+
             if(KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) && KeyListener.keyBeginPress(GLFW_KEY_D)) {
                 for(int i = 0; i < activeGameObjects.size(); i++){
                     GameObject go = activeGameObjects.get(i);

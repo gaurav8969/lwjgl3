@@ -21,7 +21,7 @@ import static org.lwjgl.glfw.GLFW.*;
 //class for managing level editor mouse magic
 //Not part of any specific game objects
 public class MouseControls extends Component {
-    private GameObject holdingObject = null;
+    protected GameObject holdingObject = null;
     private float spriteWidth, spriteHeight;
     private Gridlines gridInstance;
     private PickingTexture pickingTexture;
@@ -46,11 +46,6 @@ public class MouseControls extends Component {
                 holdingObject.setPosition(gridPos);
             }else{
                 holdingObject.setPosition(orthoPos);
-            }
-
-            if(KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)){
-                holdingObject.destroy();
-                holdingObject = null;
             }
 
             if(KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) && MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT)){
