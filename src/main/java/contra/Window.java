@@ -1,5 +1,6 @@
 package contra;
 
+import editor.KeyControls;
 import observers.EventSystem;
 import observers.Observer;
 import observers.events.Event;
@@ -8,6 +9,8 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
+import org.lwjgl.opengl.ARBCopyBuffer;
+import physics2D.Physics2D;
 import renderer.Framebuffer;
 import renderer.PickingTexture;
 import renderer.Shader;
@@ -196,15 +199,14 @@ public class Window implements Observer {
             glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
 
             if (dt >= 0) {
-                currentScene.debugDraw().draw();
                 Renderer.bindShader(defaultShader);
                 if(runTimePlaying){
                     currentScene.update(dt);
                 }else{
                     currentScene.editorUpdate(dt);
                 }
-
                 currentScene.render();
+                currentScene.debugDraw().draw();
             }
             framebuffer.unbind();
 
@@ -212,11 +214,16 @@ public class Window implements Observer {
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
             MouseListener.endFrame(); //so camera controls and picking are not messed up
+            KeyListener.endFrame();
 
             endTime = Time.getTime();
             dt = endTime - startTime;
             startTime = endTime;
         }
+    }
+
+    public static Physics2D getPhysics(){
+        return currentScene.physics2D;
     }
 
     public static Scene getScene(){

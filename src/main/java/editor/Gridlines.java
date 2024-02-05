@@ -9,9 +9,15 @@ import util.Settings;
 
 public class Gridlines extends Component {
     private boolean toDraw = true;
+    private DebugDraw debugDraw;
+
+    public Gridlines(){
+        this.debugDraw = new DebugDraw();
+    }
 
     @Override
     public void editorUpdate(float dt){
+        debugDraw.beginFrame();
         if(toDraw) {
             Camera camera = Window.getScene().camera();
             Vector2f cameraPos = camera.position();
@@ -30,7 +36,7 @@ public class Gridlines extends Component {
             while (x < verticalLines || y < horizontalLines) {
                 if (x < verticalLines) {
                     float xLine = cameraGridPos.x + x * Settings.GRID_WIDTH;
-                    DebugDraw.addLine2D(new Vector2f(xLine, cameraGridPos.y),
+                    debugDraw.addLine2D(new Vector2f(xLine, cameraGridPos.y),
                             new Vector2f(xLine, cameraPos.y + zoom* projectionSize.y), 1);
                     x++;
                 }
@@ -38,18 +44,19 @@ public class Gridlines extends Component {
                 if (y < horizontalLines) {
                     float yLine = cameraGridPos.y + y* Settings.GRID_HEIGHT;
                     y++;
-                    DebugDraw.addLine2D(new Vector2f(cameraGridPos.x, yLine),
+                    debugDraw.addLine2D(new Vector2f(cameraGridPos.x, yLine),
                             new Vector2f(cameraPos.x + zoom* projectionSize.x, yLine), 1);
                 }
             }
+            debugDraw.draw();
         }
     }
 
     //returns world coords of an object as it snaps to grid, call after updating cameraPos
     public Vector2f getGridPos(Vector2f pos){
         Vector2f gridPos = new Vector2f();
-        gridPos.x = ((int)Math.floor((pos.x/Settings.GRID_WIDTH))*Settings.GRID_WIDTH);
-        gridPos.y = ((int)Math.floor((pos.y/Settings.GRID_HEIGHT))*Settings.GRID_HEIGHT);
+        gridPos.y = ((float)Math.floor((pos.y/Settings.GRID_HEIGHT))*Settings.GRID_HEIGHT);
+        gridPos.x = ((float)Math.floor((pos.x/Settings.GRID_WIDTH))*Settings.GRID_WIDTH);
         return gridPos;
     }
 

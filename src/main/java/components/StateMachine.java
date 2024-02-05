@@ -2,6 +2,7 @@ package components;
 
 import imgui.ImGui;
 import imgui.type.ImString;
+import util.AssetPool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class StateMachine extends Component {
         System.out.println("Unable to find default state '" + animationTitle + "'");
     }
 
-    public void addState(String from, String to, String onTrigger){
+    public void addTrigger(String from, String to, String onTrigger){
         this.stateTransfers.put(new StateTrigger(from, onTrigger), to);
     }
 
@@ -71,16 +72,26 @@ public class StateMachine extends Component {
     public void trigger(String trigger){
         for(StateTrigger origin: stateTransfers.keySet()){
             if(origin.state.equals(currentState.title) && origin.trigger.equals(trigger)){
-                if(stateTransfers.get(origin) != null){
-                    int newStateIndex = states.indexOf(stateTransfers.get(origin));
-                    if(newStateIndex > -1){
-                        currentState = states.get(newStateIndex);
-                    }
+                 int newStateIndex = stateIndexOf(stateTransfers.get(origin));
+                if (newStateIndex > -1) {
+                    currentState = states.get(newStateIndex);
                 }
                 return;
             }
         }
-        System.out.println("Unable to find trigger '" + trigger + "'");
+        //System.out.println("Unable to find trigger '" + trigger + "'");
+    }
+
+    private int stateIndexOf(String stateTitle) {
+        int index = 0;
+        for (AnimationState state : states) {
+            if (state.title.equals(stateTitle)) {
+                return index;
+            }
+            index++;
+        }
+
+        return -1;
     }
 
     @Override
@@ -88,7 +99,7 @@ public class StateMachine extends Component {
         for(AnimationState state: states){
             if(state.title.equals(defaultStateTitle)){
                 currentState = state;
-                currentState.refreshTexture();
+                //currentState.refreshTexture();
                 break;
             }
         }
@@ -101,6 +112,7 @@ public class StateMachine extends Component {
             SpriteRenderer spr = gameObject.getComponent(SpriteRenderer.class);
             if(spr != null){
                 spr.setSprite(currentState.getCurrentSprite());
+                //spr.setTexture(currentState.getCurrentSprite().getTexture());
             }
         }
     }
@@ -112,6 +124,7 @@ public class StateMachine extends Component {
             SpriteRenderer spr = gameObject.getComponent(SpriteRenderer.class);
             if(spr != null){
                 spr.setSprite(currentState.getCurrentSprite());
+                //spr.setTexture(currentState.getCurrentSprite().getTexture());
             }
         }
     }

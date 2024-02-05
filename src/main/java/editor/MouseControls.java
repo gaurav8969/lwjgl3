@@ -27,8 +27,6 @@ public class MouseControls extends Component {
     private PickingTexture pickingTexture;
     private PropertiesWindow propertiesWindow;
 
-    //so we don't update too often
-
     public MouseControls(Gridlines gridInstance){
         this.gridInstance = gridInstance;
         this.pickingTexture = Window.getImGuilayer().getPropertiesWindow().getPickingTexture();
@@ -48,15 +46,23 @@ public class MouseControls extends Component {
                 holdingObject.setPosition(orthoPos);
             }
 
-            if(KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) && MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT)){
+            if(KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)){
+                holdingObject.destroy();
+                drop();
+                propertiesWindow.setActiveGameObject(null);
+            }
+
+            if(KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) && MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT)
+                && !placeOccupied()){
                 GameObject duplicate = holdingObject.copy();
+                duplicate.getComponent(SpriteRenderer.class).setColour(propertiesWindow.getActiveColours().get(0));
+                propertiesWindow.setActiveGameObject(duplicate);
                 drop();
                 pickUp(duplicate);
-                removeDuplicates();
                 return;
             }
 
-            if(MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT)){
+            if(MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT) && !placeOccupied()){
                 drop();
             }
         }else{
@@ -66,7 +72,7 @@ public class MouseControls extends Component {
 
                 Vector2f centre = new Vector2f(dragStart).add(drag.mul(0.5f, new Vector2f()));
 
-                DebugDraw.addBox2D(centre,new Vector2f(Math.abs(drag.x), Math.abs(drag.y)),0,1);
+                Window.getScene().debugDraw().addBox2D(centre,new Vector2f(Math.abs(drag.x), Math.abs(drag.y)),0,1);
                 List<GameObject> gameObjects = Window.getScene().getGameObjects();
                 for(GameObject go: gameObjects){
                     if(objectInRect(centre,new Vector2f(Math.abs(drag.x), Math.abs(drag.y)),go)
@@ -82,6 +88,8 @@ public class MouseControls extends Component {
 
     public void pickUp(GameObject go){
         scoop(go);
+        //line below switches focus to properties tab, a bit annoying but expected behaviour
+        //propertiesWindow.setActiveGameObject(go);
         Window.getScene().addGameObjectToScene(go);
     }
 
@@ -97,20 +105,34 @@ public class MouseControls extends Component {
 
     @Override
     public void imGui(){}
-    //purge duplicates created during dragging
-    private void removeDuplicates(){
+
+    //check if there is another object present where holding object is hovering
+    private boolean placeOccupied(){
         List<GameObject> gameObjects = Window.getScene().getGameObjects();
-        int last = gameObjects.size() - 1;
+        for(GameObject go:gameObjects) {
+            if(go == holdingObject) {
+                continue;
+            }
 
-        //only check last three elements because only one copy can be created per frame
-        GameObject endObj = gameObjects.get(last);
-        GameObject oneBefore = gameObjects.get(last - 1);
-        GameObject twoBefore = gameObjects.get(last - 2);
+            Vector2f objCentre = go.tf.position;
+            Vector2f min = new Vector2f(objCentre).sub(new Vector2f(go.tf.scale).mul(0.5f));
+            Vector2f max = new Vector2f(objCentre).add(new Vector2f(go.tf.scale).mul(0.5f));
 
+            Vector2f[] vertices = {
+                    new Vector2f(min.x, min.y), new Vector2f(min.x, max.y),
+                    new Vector2f(max.x, max.y), new Vector2f(max.x, min.y)
+            };
 
-        if(endObj.tf.equals(oneBefore.tf) && oneBefore.tf.equals(twoBefore.tf)){
-            oneBefore.destroy();
+            if(objCentre.equals(holdingObject.tf.position))return true;
+
+            for(Vector2f vertex:vertices){
+                if(JMath.pointInRect(holdingObject.tf.position, holdingObject.tf.scale,vertex)){
+                    return true;
+                }
+            }
         }
+        System.out.println("Dead?");
+        return false;
     }
 
     //used for selecting multiple objects

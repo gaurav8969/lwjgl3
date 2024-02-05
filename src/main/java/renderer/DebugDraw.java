@@ -26,8 +26,8 @@ public class DebugDraw {
     private final int VERTEX_SIZE = 6; //POS_SIZE + COLOUR_SIZE
     private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
 
-    private static int maxNumOfLines = 20000;
-    private static List<Line2D> lines;
+    private int maxNumOfLines = 20000;
+    private List<Line2D> lines;
     private Shader shader;
     private float[] vertices;
     int vaoID,vboID;
@@ -126,41 +126,41 @@ public class DebugDraw {
         shader.detach();
     }
 
-    public static void addLine2D(Vector2f from, Vector2f to) {
+    public void addLine2D(Vector2f from, Vector2f to) {
         addLine2D(from,to, new Vector3f(0,0,0),240 );
     }
 
-    public static void addLine2D(Vector2f from, Vector2f to, int lifetime) {
+    public void addLine2D(Vector2f from, Vector2f to, int lifetime) {
         addLine2D(from,to,new Vector3f(0,0,0),lifetime);
     }
 
-    public static void addLine2D(Vector2f from, Vector2f to, Vector3f colour) {
-        addLine2D(from,to,colour,240);
+    public void addLine2D(Vector2f from, Vector2f to, Vector3f colour) {
+        addLine2D(from,to,colour,1);
     }
 
-    public static void addLine2D(Vector2f from,Vector2f to, Vector3f colour, int lifetime) {
+    public void addLine2D(Vector2f from,Vector2f to, Vector3f colour, int lifetime) {
         if(lines.size() >= maxNumOfLines) return;
         lines.add(new Line2D(from,to,colour,lifetime));
     }
 
     // Add Box2D methods
-    public static void addBox2D(Vector2f center, Vector2f dimensions) {
+    public void addBox2D(Vector2f center, Vector2f dimensions) {
         // TODO: ADD CONSTANTS FOR COMMON COLORS
-        addBox2D(center, dimensions, 0, new Vector3f(0, 1, 0), 1);
+        addBox2D(center, dimensions, 0, new Vector3f(0, 255, 0), 1);
     }
-    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation) {
-        addBox2D(center, dimensions, rotation, new Vector3f(0, 1, 0), 1);
+    public void addBox2D(Vector2f center, Vector2f dimensions, float rotation) {
+        addBox2D(center, dimensions, rotation, new Vector3f(0, 255, 0), 1);
     }
 
-    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation, Vector3f color) {
+    public void addBox2D(Vector2f center, Vector2f dimensions, float rotation, Vector3f color) {
         addBox2D(center, dimensions, rotation, color, 1);
     }
 
-    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation, int lifetime) {
-        addBox2D(center, dimensions, rotation, new Vector3f(0,1,0), lifetime);
+    public void addBox2D(Vector2f center, Vector2f dimensions, float rotation, int lifetime) {
+        addBox2D(center, dimensions, rotation, new Vector3f(0,255,0), lifetime);
     }
 
-    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation,
+    public void addBox2D(Vector2f center, Vector2f dimensions, float rotation,
                                 Vector3f color, int lifetime) {
         Vector2f min = new Vector2f(center).sub(new Vector2f(dimensions).mul(0.5f));
         Vector2f max = new Vector2f(center).add(new Vector2f(dimensions).mul(0.5f));
@@ -176,24 +176,24 @@ public class DebugDraw {
             }
         }
 
-        DebugDraw.addLine2D(vertices[0], vertices[1], color, lifetime);
-        DebugDraw.addLine2D(vertices[0], vertices[3], color, lifetime);
-        DebugDraw.addLine2D(vertices[1], vertices[2], color, lifetime);
-        DebugDraw.addLine2D(vertices[2], vertices[3], color, lifetime);
+        addLine2D(vertices[0], vertices[1], color, lifetime);
+        addLine2D(vertices[0], vertices[3], color, lifetime);
+        addLine2D(vertices[1], vertices[2], color, lifetime);
+        addLine2D(vertices[2], vertices[3], color, lifetime);
     }
 
-    public static void addCircle2D(Vector2f centre, float radius){
-        addCircle2D(centre,radius,120,new Vector3f(0,0,1));
+    public void addCircle2D(Vector2f centre, float radius){
+        addCircle2D(centre,radius,1,new Vector3f(0,0,255));
     }
-    public static void addCircle2D(Vector2f centre, float radius, int lifetime){
-        addCircle2D(centre,radius,lifetime, new Vector3f(0,0,1));
+    public void addCircle2D(Vector2f centre, float radius, int lifetime){
+        addCircle2D(centre,radius,lifetime, new Vector3f(0,0,255));
     }
 
-    public static void addCircle2D(Vector2f centre, float radius, Vector3f colour){
+    public void addCircle2D(Vector2f centre, float radius, Vector3f colour){
         addCircle2D(centre,radius,120,colour);
     }
 
-    public static void addCircle2D(Vector2f centre, float radius, int lifetime, Vector3f colour){
+    public void addCircle2D(Vector2f centre, float radius, int lifetime, Vector3f colour){
         Vector2f[] points = new Vector2f[20];
         int size = points.length;
         float increment = 360.0f/size;

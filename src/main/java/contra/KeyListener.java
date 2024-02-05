@@ -1,5 +1,7 @@
 package contra;
 
+import java.util.Arrays;
+
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
@@ -10,6 +12,10 @@ public class KeyListener {
 
     private KeyListener() {
 
+    }
+
+    public static void endFrame() {
+        Arrays.fill(getInstance().keyBeginPress, false);
     }
 
     public static KeyListener getInstance() {
@@ -30,19 +36,11 @@ public class KeyListener {
         }
     }
 
-    public static boolean isKeyPressed(int KeyCode) {
-        if (KeyCode < getInstance().keyPressed.length) {
-            return getInstance().keyPressed[KeyCode];
-        }else{
-            return false;
-        }
+    public static boolean isKeyPressed(int keyCode) {
+        return getInstance().keyPressed[keyCode];
     }
 
-    public static boolean keyBeginPress(int keycode){
-        boolean result = getInstance().keyBeginPress[keycode];
-        if(result){
-            getInstance().keyBeginPress[keycode] = false;
-        }
-        return result;
+    public static boolean keyBeginPress(int keyCode){
+        return getInstance().keyBeginPress[keyCode];
     }
 }

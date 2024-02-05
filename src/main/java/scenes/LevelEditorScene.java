@@ -10,6 +10,7 @@ import imgui.ImVec2;
 import imgui.internal.ImGui;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import renderer.DebugDraw;
 import util.AssetPool;
 
 import java.io.File;
@@ -35,6 +36,13 @@ public class LevelEditorScene extends SceneInitializer {
                 26, 16, 16, 0);
         AssetPool.loadSpriteSheet("assets/images/items.png", 43,
                 16, 16, 0);
+
+        AssetPool.loadSpriteSheet("assets/images/turtle.png",
+                4, 16, 24, 0);
+        AssetPool.loadSpriteSheet("assets/images/bigSpritesheet.png",
+                        42, 16, 32, 0);
+        AssetPool.loadSpriteSheet("assets/images/pipes.png",
+                        8, 32, 32,  0);
 
         //scrape the deserialized texture duplicates with old ids and replace with latest ones
         for(GameObject go: scene.getGameObjects()){
@@ -81,12 +89,12 @@ public class LevelEditorScene extends SceneInitializer {
         GizmoSystem gizmo = new GizmoSystem();
         editorContext.addComponent(gridInstance).addComponent(mouseControls).addComponent(editorCamera).addComponent(gizmo)
                 .addComponent(keyControls);
-        scene.addGameObjectToScene(editorContext);//the scene updates it
+        //don't add to scene or it will be added twice when the scene starts
+        scene.getGameObjects().add(editorContext);
     }
 
     @Override
-    public void update(float dt){
-
+    public void editorUpdate(float dt){
     }
 
     @Override

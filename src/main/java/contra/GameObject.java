@@ -23,7 +23,7 @@ public class GameObject {
     public static int IDCounter = 0;
     private int uniqueID = -1;
     public String name;
-    private int componentsSize = 16;
+    private final int componentsSize = 32;
     //array instead of actual bitset since it causes serialization issues with gson
     public boolean[] componentsBitset = new boolean[componentsSize];
     public Component[] components = new Component[componentsSize];
@@ -61,6 +61,7 @@ public class GameObject {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Component.class, new ComponentDeserializer())
                 .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+                .enableComplexMapKeySerialization()
                 .create();
         String objAsJson = gson.toJson(this);
         GameObject obj = gson.fromJson(objAsJson, GameObject.class);

@@ -7,5 +7,5 @@ public abstract class SceneInitializer {
 
     public abstract void imGui();
 
-    public void update(float dt){}
+    public abstract void editorUpdate(float dt);
 }

@@ -70,4 +70,32 @@ public class JMath {
         float y = point.y;
         return x > xMin && x < xMax && y > yMin && y < yMax;
     }
+
+    public static boolean pointOnRect(Vector2f centre, Vector2f dimensions, Vector2f point){
+        Vector2f min = new Vector2f(centre).sub(new Vector2f(dimensions).mul(0.5f));
+        Vector2f max = new Vector2f(centre).add(new Vector2f(dimensions).mul(0.5f));
+
+        float xMin = min.x;
+        float xMax = max.x;
+        float yMin = min.y;
+        float yMax = max.y;
+
+        float x = point.x;
+        float y = point.y;
+        return x == xMin && x == xMax && y == yMin && y == yMax;
+    }
+
+    public static boolean pointOutsideRect(Vector2f centre, Vector2f dimensions, Vector2f point){
+        Vector2f min = new Vector2f(centre).sub(new Vector2f(dimensions).mul(0.5f));
+        Vector2f max = new Vector2f(centre).add(new Vector2f(dimensions).mul(0.5f));
+
+        float xMin = min.x;
+        float xMax = max.x;
+        float yMin = min.y;
+        float yMax = max.y;
+
+        float x = point.x;
+        float y = point.y;
+        return x < xMin || x > xMax || y < yMin || y > yMax;
+    }
 }

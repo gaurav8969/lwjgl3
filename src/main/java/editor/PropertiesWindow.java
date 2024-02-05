@@ -1,5 +1,7 @@
 package editor;
 
+import components.BreakableBrick;
+import components.Ground;
 import components.SpriteRenderer;
 import contra.KeyListener;
 import contra.Window;
@@ -8,6 +10,7 @@ import org.joml.Vector4f;
 import physics2D.components.Box2DCollider;
 import physics2D.components.CircleCollider;
 import physics2D.components.RigidBody2D;
+import physics2D.enums.BodyType;
 import renderer.PickingTexture;
 import contra.GameObject;
 import contra.MouseListener;
@@ -32,8 +35,6 @@ public class PropertiesWindow {
     private ImVec2 windowSize;
     private List<GameObject> activeGameObjects;
     private List<Vector4f> activeColours; //original colours of the selected objects
-    private final float debounceTime = 0.05f;
-    private float debounce = 0.0f;
 
     public PropertiesWindow(PickingTexture pickingTexture){
         this.pickingTexture = pickingTexture;
@@ -44,11 +45,9 @@ public class PropertiesWindow {
     }
 
     public void editorUpdate(Scene currentScene, float dt){
-        debounce -= dt;
             //separation of multi select and single object select features
             if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && GameViewWindow.isFocused()
-                    && !MouseListener.isDragging() && debounce < 0){
-                debounce = debounceTime;
+                    && !MouseListener.isDragging()){
                 int x = (int)MouseListener.getScreenX();
                 int y = (int)MouseListener.getScreenY();
                 entityID = pickingTexture.readPixel(x, y);
@@ -93,6 +92,30 @@ public class PropertiesWindow {
                     }
                 }
 
+                if(ImGui.menuItem("Add Ground Component")){
+                    if(activeGameObject.getComponent(Ground.class) == null){
+                        activeGameObject.addComponent(new Ground());
+                    }
+
+                    if(activeGameObject.getComponent(Box2DCollider.class) == null &&
+                            activeGameObject.getComponent(CircleCollider.class) == null){
+                        activeGameObject.addComponent(new Box2DCollider()
+                                .setHalfSize(new Vector2f(activeGameObject.tf.scale).mul(0.5f)));
+                    }
+
+                        if(activeGameObject.getComponent(RigidBody2D.class) == null){
+                            activeGameObject.addComponent(new RigidBody2D());
+                            activeGameObject.getComponent(RigidBody2D.class).setBodyType(BodyType.Static);
+                        }
+
+                }
+
+                if(ImGui.menuItem("Add Breakable component")){
+                    if(activeGameObject.getComponent(BreakableBrick.class) == null){
+                        activeGameObject.addComponent(new BreakableBrick());
+                    }
+                }
+
                 ImGui.endPopup();
             }
 
@@ -130,8 +153,10 @@ public class PropertiesWindow {
         if(activeGameObjects.contains(go) || go == null){return;}
         SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
         if(spr != null){
-            activeColours.add(new Vector4f(spr.getColour()));
-            spr.setColour(new Vector4f(0.8f,0.8f,0.8f,0.5f));
+            Vector4f sprCol = spr.getColour();
+            activeColours.add(new Vector4f(sprCol));
+            sprCol.w = 0.5f;
+            spr.setDirty();
         }
         activeGameObjects.add(go);
     }
