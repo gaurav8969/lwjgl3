@@ -36,7 +36,6 @@ public class RigidBody2D extends Component {
                 this.gameObject.tf.position.set(
                         rawBody.getPosition().x, rawBody.getPosition().y
                 );
-                //System.out.println("RawBody pos: X-" + rawBody.getPosition().x + ",Y-" + rawBody.getPosition().y);
                 this.gameObject.tf.rotation = (float) Math.toDegrees(rawBody.getAngle());
                 Vec2 vel = rawBody.getLinearVelocity();
                 this.velocity.set(vel.x, vel.y);

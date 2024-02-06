@@ -3,14 +3,20 @@ package components;
 import contra.GameObject;
 import contra.KeyListener;
 import contra.Window;
+import observers.EventSystem;
+import observers.events.Event;
+import observers.events.EventType;
 import org.jbox2d.dynamics.contacts.Contact;
 import org.joml.Math;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import physics2D.RaycastInfo;
 import physics2D.components.PillboxCollider;
 import physics2D.components.RigidBody2D;
+import physics2D.enums.BodyType;
 import util.AssetPool;
+import util.Settings;
 
 import java.security.Key;
 
@@ -21,16 +27,19 @@ public class PlayerController extends Component{
         Small,
         Big,
         Fire,
-        Invincible
+        Invincible,
+        Die
     }
 
     public float walkSpeed = 1.9f;
     public float jumpBoost = 1.0f;
     public float jumpImpulse = 3.0f;
     public float slowDownForce = 0.05f;
+    public float hurtInvincibility = 3f;
     public Vector2f terminalVelocity = new Vector2f(2.1f, 3.1f);
 
     private PlayerState playerState = PlayerState.Small;
+    private transient  boolean hurt = false;
     public transient boolean onGround = false;
     private transient float groundDebounce = 0.0f;
     private transient float groundDebounceTime = 0.1f;
@@ -43,6 +52,9 @@ public class PlayerController extends Component{
     private transient Vector2f velocity = new Vector2f();
     private boolean isDead = false;
     private transient int enemyDebounce = 0;
+    private transient float deathMaxHeight = 0.34f;
+    private transient boolean deathGoingUp = false;
+    private transient float blinkDuration = 0.2f;
 
     @Override
     public void init(){
@@ -53,7 +65,29 @@ public class PlayerController extends Component{
 
     @Override
     public void update(float dt) {
-        //this.gameObject.getComponent(PillboxCollider.class).editorUpdate(dt);
+        hurtInvincibility -= dt;
+        blinkDuration -= dt;
+
+        if(hurt){
+            if(hurtInvincibility < 0){
+                if(playerState == PlayerState.Die){
+                    EventSystem.notify(null, new Event(EventType.LoadLevel));
+                }
+                hurt = false;
+            }else if(playerState == PlayerState.Die) {
+                    Vector2f marioPos = this.gameObject.tf.position;
+                    if(deathGoingUp && marioPos.y < deathMaxHeight) {
+                        marioPos.y += jumpImpulse/2 * dt;
+                    }else if(marioPos.y > -0.5f){
+                        deathGoingUp = false;
+                        marioPos.y -= jumpImpulse * dt;
+                    }
+                return;
+            }else{
+                blink();
+            }
+        }
+
         if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) {
             this.gameObject.tf.scale.x = playerWidth;
             this.acceleration.x = walkSpeed;
@@ -103,7 +137,10 @@ public class PlayerController extends Component{
                 this.velocity.y = 0;
             }
             groundDebounce = 0;
-        } else if (!onGround) {
+        }else if(enemyDebounce > 0){
+            enemyDebounce--;
+            this.velocity.y = (enemyDebounce)* jumpBoost*0.2f;
+        }else if (!onGround) {
             if (this.jumpTime > 0) {
                 this.velocity.y *= 0.35f;
                 this.jumpTime = 0;
@@ -137,23 +174,9 @@ public class PlayerController extends Component{
     }
 
     public void checkOnGround(){
-        Vector2f rayCastLeftBegin = new Vector2f(this.gameObject.tf.position);
         float innerPlayerWidth = this.playerWidth * 0.6f;
-        rayCastLeftBegin.sub(innerPlayerWidth/2f, 0f);
         float yVal = playerState == PlayerState.Small ? -0.14f: -0.22f;
-        Vector2f rayCastLeftEnd = new Vector2f(rayCastLeftBegin).add(0f, yVal);
-
-        RaycastInfo infoLeft = Window.getPhysics().raycast(gameObject, rayCastLeftBegin, rayCastLeftEnd);
-
-        Vector2f rayCastRightBegin = new Vector2f(rayCastLeftBegin).add(innerPlayerWidth, 0.0f);
-        Vector2f rayCastRightEnd = new Vector2f(rayCastLeftEnd).add(innerPlayerWidth, 0.0f);
-        RaycastInfo infoRight = Window.getPhysics().raycast(gameObject, rayCastRightBegin, rayCastRightEnd);
-
-        onGround = (infoLeft.hit && infoLeft.hitObject != null && infoLeft.hitObject.getComponent(Ground.class) != null) ||
-                (infoRight.hit && infoRight.hitObject != null && infoRight.hitObject.getComponent(Ground.class) != null);
-
-        /*Window.getScene().debugDraw().addLine2D(rayCastLeftBegin, rayCastLeftEnd, new Vector3f(1, 0, 0));
-        Window.getScene().debugDraw().addLine2D(rayCastRightBegin, rayCastRightEnd, new Vector3f(1, 0, 0));*/
+        onGround = Window.getPhysics().checkOnGround(this.gameObject, innerPlayerWidth, yVal);
     }
 
     @Override
@@ -192,5 +215,48 @@ public class PlayerController extends Component{
 
         AssetPool.getSound("assets/sounds/powerup.ogg").play();
         stateMachine.trigger("powerup");
+    }
+
+    public void damage(){
+        hurt = true;
+        hurtInvincibility = Settings.HURT_INVINCIBILITY;
+        this.gameObject.getComponent(StateMachine.class).trigger("die");
+        if(playerState == PlayerState.Small){
+            playerState = PlayerState.Die;
+            deathMaxHeight += this.gameObject.tf.position.y;
+            rb.setBodyType(BodyType.Static);
+            AssetPool.getSound("assets/sounds/mario_die.ogg").play();
+            deathGoingUp = true;
+            Window.getPhysics().setLock(true);
+        }else{
+            blinkDuration = 0f;
+            playerState = PlayerState.Small;
+            AssetPool.getSound("assets/sounds/pipe.ogg").play();
+            gameObject.tf.scale.y = 0.25f;
+            this.gameObject.getComponent(PillboxCollider.class).setHeight(0.2f);
+        }
+    }
+
+    public void debounce(){
+        this.enemyDebounce = 8;
+    }
+
+    public void blink(){
+        SpriteRenderer spr = this.gameObject.getComponent(SpriteRenderer.class);
+        Vector4f col = spr.getColour();
+        if(blinkDuration < 0f){
+            blinkDuration = 0.15f;
+            if(col.w > 0.8f){
+                col.w = 0.8f;
+            }else{
+                col.w = 1f;
+            }
+        }
+
+        if(hurtInvincibility < 0){
+            col.w = 1;
+        }
+
+        spr.setDirty();
     }
 }

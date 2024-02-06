@@ -1,8 +1,11 @@
 package physics2D;
 
+import components.Ground;
+import components.PlayerController;
 import components.Transform;
 import contra.GameObject;
 
+import contra.Window;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -23,6 +26,7 @@ public class Physics2D {
     private int velocityIterations = 8;
     private int positionIterations = 3;
 
+    private boolean locked = false;
     public Physics2D(){
         world.setContactListener(new ContraContactListener());
     }
@@ -82,10 +86,12 @@ public class Physics2D {
     }
 
     public void update(float dt) {
-        physicsTime += dt;
-        if (physicsTime >= 0.0f) {
-            physicsTime -= physicsTimeStep;
-            world.step(physicsTimeStep, velocityIterations, positionIterations);
+        if(!locked) {
+            physicsTime += dt;
+            if (physicsTime >= 0.0f) {
+                physicsTime -= physicsTimeStep;
+                world.step(physicsTimeStep, velocityIterations, positionIterations);
+            }
         }
     }
 
@@ -212,6 +218,24 @@ public class Physics2D {
         }
     }
 
+    public boolean checkOnGround(GameObject gameObject, float innerPlayerWidth, float torsoHeight){
+        Vector2f rayCastLeftBegin = new Vector2f(gameObject.tf.position);
+        rayCastLeftBegin.sub(innerPlayerWidth/2f, 0f);
+        Vector2f rayCastLeftEnd = new Vector2f(rayCastLeftBegin).add(0f, torsoHeight);
+
+        RaycastInfo infoLeft = Window.getPhysics().raycast(gameObject, rayCastLeftBegin, rayCastLeftEnd);
+
+        Vector2f rayCastRightBegin = new Vector2f(rayCastLeftBegin).add(innerPlayerWidth, 0.0f);
+        Vector2f rayCastRightEnd = new Vector2f(rayCastLeftEnd).add(innerPlayerWidth, 0.0f);
+        RaycastInfo infoRight = Window.getPhysics().raycast(gameObject, rayCastRightBegin, rayCastRightEnd);
+
+        return (infoLeft.hit && infoLeft.hitObject != null && infoLeft.hitObject.getComponent(Ground.class) != null) ||
+                (infoRight.hit && infoRight.hitObject != null && infoRight.hitObject.getComponent(Ground.class) != null);
+
+        /*Window.getScene().debugDraw().addLine2D(rayCastLeftBegin, rayCastLeftEnd, new Vector3f(1, 0, 0));
+        Window.getScene().debugDraw().addLine2D(rayCastRightBegin, rayCastRightEnd, new Vector3f(1, 0, 0));*/
+    }
+
     public Vector2f getGravity(){
         return new Vector2f(world.getGravity().x, world.getGravity().y);
     }
@@ -219,4 +243,6 @@ public class Physics2D {
     public boolean isLocked(){
         return this.world.isLocked();
     }
+
+    public void setLock(boolean lock){this.locked = lock;}
 }

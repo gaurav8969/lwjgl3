@@ -141,6 +141,7 @@ public class LevelEditorScene extends SceneInitializer {
             }
 
             if(ImGui.beginTabItem("Prefabs")){
+                int uid = 0;
                 Spritesheet playerSprites = AssetPool.getSpriteSheet("assets/images/characterSprites.png");
                 Sprite sprite = playerSprites.getSprite(0);
                 float spriteWidth = sprite.getWidth() * 4;
@@ -148,20 +149,36 @@ public class LevelEditorScene extends SceneInitializer {
                 int id = sprite.texID();
                 Vector2f[] texCoords = sprite.getTexCoords();
 
+                ImGui.pushID(uid++);
                 if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
                     GameObject object = Prefabs.generateMario();
                     editorContext.getComponent(MouseControls.class).pickUp(object);
                 }
                 ImGui.sameLine();
+                ImGui.popID();
 
                 Spritesheet items = AssetPool.getSpriteSheet("assets/images/items.png");
                 sprite = items.getSprite(0);
                 id = sprite.texID();
                 texCoords = sprite.getTexCoords();
+                ImGui.pushID(uid++);
                 if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
                     GameObject object = Prefabs.generateQuestionBlock();
                     editorContext.getComponent(MouseControls.class).pickUp(object);
                 }
+                ImGui.popID();
+
+                ImGui.sameLine();
+
+                sprite = playerSprites.getSprite(14);
+                id = sprite.texID();
+                ImGui.pushID(uid++);
+                texCoords = sprite.getTexCoords();
+                if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
+                    GameObject object = Prefabs.generateGoomba();
+                    editorContext.getComponent(MouseControls.class).pickUp(object);
+                }
+                ImGui.popID();
 
                 ImGui.endTabItem();
             }

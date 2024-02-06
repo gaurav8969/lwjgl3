@@ -1,6 +1,7 @@
 package contra;
 
 import components.*;
+import org.joml.Math;
 import org.joml.Vector2f;
 import physics2D.components.Box2DCollider;
 import physics2D.components.CircleCollider;
@@ -22,6 +23,7 @@ public class Prefabs {
         Spritesheet playerSprites = AssetPool.getSpriteSheet("assets/images/characterSprites.png");
         Spritesheet bigPlayerSprites = AssetPool.getSpriteSheet("assets/images/bigSpritesheet.png");
         GameObject mario = generateSpriteObject(playerSprites.getSprite(0),0.25f,0.25f );
+        mario.name = "Mario";
 
         //mario.setName("Mario");
         //little(sprite size) mario animations
@@ -295,5 +297,43 @@ public class Prefabs {
         flower.addComponent(new Flower());
 
         return flower;
+    }
+
+    public static GameObject generateGoomba(){
+        Spritesheet characterSprites = AssetPool.getSpriteSheet("assets/images/characterSprites.png");
+        GameObject goomba = generateSpriteObject(characterSprites.getSprite(14), 0.25f, 0.25f);
+
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Dynamic);
+        rb.setFixedRotation(true);
+        rb.setContinuousCollision(false);
+        goomba.addComponent(rb);
+
+        float defaultFrameTime = 0.2f;
+        AnimationState goombaMarch = new AnimationState();
+        goombaMarch.title = "goombaMarch";
+        goombaMarch.addFrame(characterSprites.getSprite(14), defaultFrameTime);
+        goombaMarch.addFrame(characterSprites.getSprite(15), defaultFrameTime);
+        goombaMarch.setLoop(true);
+
+        AnimationState squashedGoomba = new AnimationState();
+        squashedGoomba.title = "goombaSquashed";
+        squashedGoomba.addFrame(characterSprites.getSprite(16), defaultFrameTime);
+        squashedGoomba.setLoop(false);
+
+        StateMachine stateMachine = new StateMachine();
+        stateMachine.addState(goombaMarch);
+        stateMachine.addState(squashedGoomba);
+        stateMachine.setDefaultState("goombaMarch");
+        stateMachine.addTrigger(goombaMarch.title, squashedGoomba.title, "squash");
+
+        CircleCollider circleCollider = new CircleCollider();
+        circleCollider.setRadius(0.12f);
+
+        goomba.addComponent(circleCollider);
+        goomba.addComponent(new GoombaAI());
+        goomba.addComponent(stateMachine);
+
+        return goomba;
     }
 }

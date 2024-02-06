@@ -11,7 +11,6 @@ import observers.events.EventType;
 import org.joml.Vector2f;
 
 public class GameViewWindow{
-    private float leftX, bottomY;
     private static boolean focused = false;
     private boolean isPlaying = false;
     public void imgui(){
@@ -36,8 +35,6 @@ public class GameViewWindow{
         ImVec2 topLeft = new ImVec2();
         //pos rel to glfw parent window
         ImGui.getCursorScreenPos(topLeft);
-        leftX = topLeft.x;
-        bottomY = topLeft.y;
 
         int textureID = Window.getFramebuffer().getTextureID();
         //top left to bottom right, (0,1): top-left and (1,0) is bottom-right

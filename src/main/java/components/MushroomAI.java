@@ -10,7 +10,7 @@ import util.AssetPool;
 public class MushroomAI extends Component{
     private transient boolean goRight = true;
     //vroom speed?
-    private transient float shroomSpeed = 0.4f;
+    private transient float shroomSpeed = 2f;
     private transient RigidBody2D rb;
     private transient boolean hitPlayer = false;
 
@@ -23,9 +23,9 @@ public class MushroomAI extends Component{
     @Override
     public void update(float dt){
         if(goRight){
-            rb.addVelocity(new Vector2f(shroomSpeed, 0));
+            rb.setVelocity(new Vector2f(shroomSpeed, rb.getVelocity().y));
         }else{
-            rb.addVelocity(new Vector2f(-shroomSpeed, 0));
+            rb.setVelocity(new Vector2f(-shroomSpeed, rb.getVelocity().y));
         }
     }
 

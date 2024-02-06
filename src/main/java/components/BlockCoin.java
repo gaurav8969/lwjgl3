@@ -15,6 +15,7 @@ public class BlockCoin extends Component{
 
     @Override
     public void update(float dt){
+        super.update(dt);
         if(this.gameObject.tf.position.y < topY.y){
             this.gameObject.tf.position.y += coinSpeed*dt;
             //gives the appearance of a coin flip
@@ -23,4 +24,5 @@ public class BlockCoin extends Component{
             gameObject.destroy();
         }
     }
+
 }
