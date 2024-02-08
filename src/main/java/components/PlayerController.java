@@ -130,7 +130,7 @@ public class PlayerController extends Component{
         if (KeyListener.isKeyPressed(GLFW_KEY_SPACE) && (jumpTime > 0 || onGround || groundDebounce > 0)) {
             if ((onGround || groundDebounce > 0) && jumpTime == 0) {
                 AssetPool.getSound("assets/sounds/jump-small.ogg").play();
-                jumpTime = 33;
+                jumpTime = 35;
                 this.velocity.y = jumpImpulse;
             } else if (jumpTime > 0) {
                 jumpTime--;
@@ -265,5 +265,9 @@ public class PlayerController extends Component{
     public void setVelocity(Vector2f vel){
         this.velocity.x = vel.x;
         this.velocity.y = vel.y;
+    }
+
+    public Vector2f getVelocity(){
+        return this.velocity;
     }
 }

@@ -88,7 +88,7 @@ public class LevelEditorScene extends SceneInitializer {
         EditorCamera editorCamera = new EditorCamera(scene.camera());
         GizmoSystem gizmo = new GizmoSystem();
         editorContext.addComponent(gridInstance).addComponent(mouseControls).addComponent(editorCamera).addComponent(gizmo)
-                .addComponent(keyControls);
+                .addComponent(keyControls).addComponent(new GameCamera());
         //don't add to scene or it will be added twice when the scene starts
         scene.getGameObjects().add(editorContext);
     }

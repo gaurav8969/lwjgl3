@@ -23,6 +23,7 @@ public class Pipe extends Component{
     private Vector2f contactNormal;
     private static transient float pipeDowntime = 0.5f;
     private static transient boolean entering;
+    private boolean receiving = false;
 
     public Pipe(){
 
@@ -89,6 +90,9 @@ public class Pipe extends Component{
             if(pipeDowntime < 0) {
                 entering = false;
                 GameObject connectingPipe = Window.getScene().getGameObject(connectingPipeName);
+                Pipe pipeComponent = connectingPipe.getComponent(Pipe.class);
+                pipeComponent.receiving = true;
+
                 Vector2f pipePos = connectingPipe.tf.position;
                 RigidBody2D rbPlayer = collidingPlayer.getComponent(RigidBody2D.class);
                 rbPlayer.setPosition(new Vector2f(pipePos.x, pipePos.y));
@@ -106,6 +110,10 @@ public class Pipe extends Component{
         PlayerController playerController = collidingObject.getComponent(PlayerController.class);
 
         if (playerController != null){
+            if(receiving){
+                this.gameObject.removeComponent(Ground.class);
+            }
+
             collidingPlayer = playerController.gameObject;
             this.contactNormal = contactNormal;
         }
@@ -113,12 +121,14 @@ public class Pipe extends Component{
 
     @Override
     public void endCollision(GameObject collidingObject, Contact contact, Vector2f contactNormal){
-        if(collidingPlayer != null && !incoming){
+        if(collidingPlayer != null && receiving){
+            receiving = false;
             collidingPlayer.getComponent(SpriteRenderer.class).setZIndex(0);
             collidingPlayer.getComponent(RigidBody2D.class).setNotSensor();
             collidingPlayer.getComponent(PlayerController.class).gravityScale = 0.7f;
             collidingPlayer.getComponent(PlayerController.class).friction = 0.05f;
             collidingObject.getComponent(PlayerController.class).sliding = false;
+            this.gameObject.addComponent(new Ground());
             collidingPlayer = null;
         }
     }
