@@ -43,4 +43,10 @@ public class KeyListener {
     public static boolean keyBeginPress(int keyCode){
         return getInstance().keyBeginPress[keyCode];
     }
+
+    public static void clear(){
+        Arrays.fill(getInstance().keyBeginPress, false);
+        Arrays.fill(getInstance().keyPressed, false);
+    }
+
 }

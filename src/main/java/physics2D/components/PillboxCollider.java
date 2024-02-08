@@ -15,8 +15,8 @@ public class PillboxCollider extends Component {
     public Vector2f offset;
 
     public PillboxCollider(){
-        this.width = 0.09f;
-        this.height = 0.2f;
+        this.width = 0.2f;
+        this.height = 0.25f;
         this.offset = new Vector2f();
     }
 
@@ -63,12 +63,12 @@ public class PillboxCollider extends Component {
     }
 
     public void recalculateColliders(){
-        float circleRadius = this.width;
-        float boxHeight = height - circleRadius;
+        float circleRadius = this.width/2;
+        float boxHeight = height - 2*circleRadius;
         topCircle.setRadius(circleRadius);
         bottomCircle.setRadius(circleRadius);
-        topCircle.setOffset(new Vector2f(offset).add(0, boxHeight/4.0f));
-        bottomCircle.setOffset(new Vector2f(offset).sub(0, boxHeight/4.0f));
+        topCircle.setOffset(new Vector2f(offset).add(0, boxHeight/2.0f));
+        bottomCircle.setOffset(new Vector2f(offset).sub(0, boxHeight/2.0f));
         box.setHalfSize(new Vector2f(circleRadius,boxHeight/2.0f));
         box.setOffset(offset);
     }

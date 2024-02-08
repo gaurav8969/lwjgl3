@@ -55,7 +55,9 @@ public class MouseControls extends Component {
             if(KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) && MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT)
                 && !placeOccupied()){
                 GameObject duplicate = holdingObject.copy();
-                duplicate.getComponent(SpriteRenderer.class).setColour(propertiesWindow.getActiveColours().get(0));
+                if(!propertiesWindow.getActiveObjects().isEmpty()){
+                    duplicate.getComponent(SpriteRenderer.class).setColour(propertiesWindow.getActiveColours().get(0));
+                }
                 propertiesWindow.setActiveGameObject(duplicate);
                 drop();
                 pickUp(duplicate);
@@ -110,7 +112,7 @@ public class MouseControls extends Component {
     private boolean placeOccupied(){
         List<GameObject> gameObjects = Window.getScene().getGameObjects();
         for(GameObject go:gameObjects) {
-            if(go == holdingObject) {
+            if(go == holdingObject || go.getComponent(Unpickable.class) != null) {
                 continue;
             }
 
@@ -131,7 +133,6 @@ public class MouseControls extends Component {
                 }
             }
         }
-        System.out.println("Dead?");
         return false;
     }
 

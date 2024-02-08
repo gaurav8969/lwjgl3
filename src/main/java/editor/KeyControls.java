@@ -43,7 +43,7 @@ public class KeyControls extends Component {
         GameObject go = Window.getImGuilayer().getPropertiesWindow().getActiveGameObject();
 
         if(go != null){
-            if(KeyListener.isKeyPressed(GLFW_KEY_P)){
+            if(KeyListener.isKeyPressed(GLFW_KEY_P) && GameViewWindow.isFocused()){
                 MouseControls mouseControls = this.gameObject.getComponent(MouseControls.class);
                 mouseControls.scoop(go);
             }

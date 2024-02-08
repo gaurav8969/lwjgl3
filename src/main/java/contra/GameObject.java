@@ -132,7 +132,7 @@ public class GameObject {
     public <T extends Component> void removeComponent(Class<T> componentClass){
         for (int id=0; id < componentsSize; id++) {
             Component c = components[id];
-            if (componentClass.isAssignableFrom(c.getClass())) {
+            if (c != null && componentClass.isAssignableFrom(c.getClass())) {
                 componentsBitset[id] = false;
                 components[id] = null;
             }

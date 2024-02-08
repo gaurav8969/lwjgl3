@@ -95,6 +95,7 @@ public class LevelEditorScene extends SceneInitializer {
 
     @Override
     public void editorUpdate(float dt){
+
     }
 
     @Override
@@ -176,6 +177,51 @@ public class LevelEditorScene extends SceneInitializer {
                 texCoords = sprite.getTexCoords();
                 if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
                     GameObject object = Prefabs.generateGoomba();
+                    editorContext.getComponent(MouseControls.class).pickUp(object);
+                }
+                ImGui.popID();
+
+                //Down
+                Spritesheet pipes = AssetPool.getSpriteSheet("assets/images/pipes.png");
+                sprite = pipes.getSprite(0);
+                id = sprite.texID();
+                ImGui.pushID(uid++);
+                texCoords = sprite.getTexCoords();
+                if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
+                    GameObject object = Prefabs.generatePipe(Direction.Down);
+                    editorContext.getComponent(MouseControls.class).pickUp(object);
+                }
+                ImGui.popID();
+
+                //up
+                sprite = pipes.getSprite(1);
+                id = sprite.texID();
+                ImGui.pushID(uid++);
+                texCoords = sprite.getTexCoords();
+                if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
+                    GameObject object = Prefabs.generatePipe(Direction.Up);
+                    editorContext.getComponent(MouseControls.class).pickUp(object);
+                }
+                ImGui.popID();
+
+                //right
+                sprite = pipes.getSprite(2);
+                id = sprite.texID();
+                ImGui.pushID(uid++);
+                texCoords = sprite.getTexCoords();
+                if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
+                    GameObject object = Prefabs.generatePipe(Direction.Right);
+                    editorContext.getComponent(MouseControls.class).pickUp(object);
+                }
+                ImGui.popID();
+
+                //left
+                sprite = pipes.getSprite(3);
+                id = sprite.texID();
+                ImGui.pushID(uid++);
+                texCoords = sprite.getTexCoords();
+                if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
+                    GameObject object = Prefabs.generatePipe(Direction.Left);
                     editorContext.getComponent(MouseControls.class).pickUp(object);
                 }
                 ImGui.popID();

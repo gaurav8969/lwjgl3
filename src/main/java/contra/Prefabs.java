@@ -8,6 +8,7 @@ import physics2D.components.CircleCollider;
 import physics2D.components.PillboxCollider;
 import physics2D.components.RigidBody2D;
 import physics2D.enums.BodyType;
+import renderer.DebugDraw;
 import util.AssetPool;
 
 public class Prefabs {
@@ -335,5 +336,30 @@ public class Prefabs {
         goomba.addComponent(stateMachine);
 
         return goomba;
+    }
+
+    public static GameObject generatePipe(Direction direction){
+        Spritesheet pipes = AssetPool.getSpriteSheet("assets/images/pipes.png");
+        int index = direction == Direction.Down?0:
+                    direction == Direction.Up?1:
+                    direction == Direction.Right?2:
+                    direction == Direction.Left?3:-1;
+
+        GameObject pipe = generateSpriteObject(pipes.getSprite(index),0.5f,0.5f);
+
+        RigidBody2D rb = new RigidBody2D();
+        rb.setContinuousCollision(true);
+        rb.setBodyType(BodyType.Static);
+        rb.setFixedRotation(true);
+
+        Box2DCollider boxCollider = new Box2DCollider();
+        boxCollider.setHalfSize(new Vector2f(0.25f, 0.25f));
+
+        pipe.addComponent(rb);
+        pipe.addComponent(new Pipe(direction));
+        pipe.addComponent(boxCollider);
+        pipe.addComponent(new Ground());
+
+        return pipe;
     }
 }

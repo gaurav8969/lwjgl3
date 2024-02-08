@@ -34,9 +34,10 @@ public class PlayerController extends Component{
     public float walkSpeed = 1.9f;
     public float jumpBoost = 1.0f;
     public float jumpImpulse = 3.0f;
-    public float slowDownForce = 0.05f;
+    public float friction = 0.05f;
     public float hurtInvincibility = 3f;
     public Vector2f terminalVelocity = new Vector2f(2.1f, 3.1f);
+    public float gravityScale = 0.7f;
 
     private PlayerState playerState = PlayerState.Small;
     private transient  boolean hurt = false;
@@ -46,7 +47,7 @@ public class PlayerController extends Component{
     private transient RigidBody2D rb;
     private transient StateMachine stateMachine;
     private transient float bigJumpBoostFactor = 1.05f;
-    private transient float playerWidth = 0.25f;
+    public transient float playerWidth = 0.25f;
     public transient int jumpTime = 0;
     private transient Vector2f acceleration = new Vector2f();
     private transient Vector2f velocity = new Vector2f();
@@ -55,6 +56,7 @@ public class PlayerController extends Component{
     private transient float deathMaxHeight = 0.34f;
     private transient boolean deathGoingUp = false;
     private transient float blinkDuration = 0.2f;
+    public transient boolean sliding = false;
 
     @Override
     public void init(){
@@ -88,25 +90,25 @@ public class PlayerController extends Component{
             }
         }
 
-        if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) {
+        if ((KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) && !sliding) {
             this.gameObject.tf.scale.x = playerWidth;
             this.acceleration.x = walkSpeed;
 
             if (this.velocity.x < 0) {
                 this.stateMachine.trigger("switchDirection");
-                this.velocity.x += slowDownForce;
+                this.velocity.x += friction;
             } else{
                 this.stateMachine.trigger("startRunning");
             }
 
-        }else if(KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)){
+        }else if((KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) && !sliding){
             //basically how we flip the object when changing directions
             this.gameObject.tf.scale.x = -playerWidth;
             this.acceleration.x = -walkSpeed;
 
             if(this.velocity.x > 0){
                 this.stateMachine.trigger("switchDirection");
-                this.velocity.x -= slowDownForce;
+                this.velocity.x -= friction;
             }else{
                 this.stateMachine.trigger("startRunning");
             }
@@ -114,9 +116,9 @@ public class PlayerController extends Component{
             //friction
             this.acceleration.x = 0;
             if(this.velocity.x > 0){
-                this.velocity.x = Math.max(0, this.velocity.x - slowDownForce);
+                this.velocity.x = Math.max(0, this.velocity.x - friction);
             }else if(this.velocity.x < 0){
-                this.velocity.x = Math.min  (0, this.velocity.x + slowDownForce);
+                this.velocity.x = Math.min  (0, this.velocity.x + friction);
             }
 
             if(this.velocity.x == 0){
@@ -146,7 +148,7 @@ public class PlayerController extends Component{
                 this.jumpTime = 0;
             }
             groundDebounce -= dt;
-            this.acceleration.y = Window.getPhysics().getGravity().y * 0.7f;
+            this.acceleration.y = Window.getPhysics().getGravity().y * gravityScale;
         } else {
             this.velocity.y = 0;
             this.acceleration.y = 0;
@@ -175,7 +177,7 @@ public class PlayerController extends Component{
 
     public void checkOnGround(){
         float innerPlayerWidth = this.playerWidth * 0.6f;
-        float yVal = playerState == PlayerState.Small ? -0.14f: -0.22f;
+        float yVal = playerState == PlayerState.Small ? -0.14f: -0.221f;
         onGround = Window.getPhysics().checkOnGround(this.gameObject, innerPlayerWidth, yVal);
     }
 
@@ -207,7 +209,7 @@ public class PlayerController extends Component{
             if(pb != null){
                 jumpBoost *= bigJumpBoostFactor;
                 walkSpeed *= bigJumpBoostFactor;
-                pb.setHeight(0.36f);
+                pb.setHeight(0.42f);
             }
         }else if(playerState == PlayerState.Big){
             playerState = PlayerState.Fire;
@@ -233,7 +235,7 @@ public class PlayerController extends Component{
             playerState = PlayerState.Small;
             AssetPool.getSound("assets/sounds/pipe.ogg").play();
             gameObject.tf.scale.y = 0.25f;
-            this.gameObject.getComponent(PillboxCollider.class).setHeight(0.2f);
+            this.gameObject.getComponent(PillboxCollider.class).setHeight(0.25f);
         }
     }
 
@@ -258,5 +260,10 @@ public class PlayerController extends Component{
         }
 
         spr.setDirty();
+    }
+
+    public void setVelocity(Vector2f vel){
+        this.velocity.x = vel.x;
+        this.velocity.y = vel.y;
     }
 }

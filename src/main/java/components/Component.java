@@ -52,7 +52,7 @@ public abstract class Component {
                 Object value = field.get(this); //this field of the relevant component instance
                 String name = field.getName();
 
-                if(value != null){
+                if(type == String.class || value != null){
                     if(type == int.class){
                         int val = (int)value;
                         field.set(this, CImgui.dragInt(name, val));
@@ -80,6 +80,10 @@ public abstract class Component {
                         if(ImGui.combo(field.getName(), index, enumValues, enumValues.length)){
                             field.set(this, type.getEnumConstants()[index.get()]);
                         }
+                    }else if (type == String.class) {
+                        field.set(this,
+                                CImgui.inputText(field.getName() + ": ",
+                                        (String)value));
                     }
                 }
 

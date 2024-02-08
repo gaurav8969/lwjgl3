@@ -85,6 +85,7 @@ public class SpriteRenderer extends Component {
     public int zIndex(){return zIndex;}
 
     public SpriteRenderer setZIndex(int zIndex){
+        isDirty = true;
         this.zIndex = zIndex;
         return this;
     }

@@ -29,6 +29,8 @@ public class RigidBody2D extends Component {
     private boolean continuousCollision = true;
     private transient Body rawBody = null;
 
+    private Vector2f updatePos; //store pos to update later if world is locked
+
     @Override
     public void update(float dt) {
         if (rawBody != null) {
@@ -44,6 +46,13 @@ public class RigidBody2D extends Component {
                         new Vec2(this.gameObject.tf.position.x, this.gameObject.tf.position.y),
                         this.gameObject.tf.rotation
                 );
+            }
+
+            if(updatePos != null){
+                if(Window.getPhysics().isLocked()) return;
+
+                setPosition(updatePos);
+                updatePos = null;
             }
         }
     }
@@ -175,6 +184,14 @@ public class RigidBody2D extends Component {
 
     public void setRawBody(Body rawBody) {
         this.rawBody = rawBody;
+    }
+
+    public void setPosition(Vector2f pos){
+        if(Window.getPhysics().isLocked()){
+            updatePos = pos;
+        }
+        this.gameObject.tf.setPosition(pos);
+        this.rawBody.setTransform(new Vec2(pos.x,pos.y), gameObject.tf.rotation);
     }
 
     public boolean isFixedRotation() {
