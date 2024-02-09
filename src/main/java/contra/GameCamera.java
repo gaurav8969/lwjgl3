@@ -44,19 +44,19 @@ public class GameCamera extends Component {
             }
         }
 
-        boolean goingUp = playerSpeed.y > 0;
-        boolean standardRange = playerAbs.y > 0f && playerAbs.y < projectionHeight;
+        if(playerController.isDead())return;
 
-        if(standardRange)return;
-
-        if(goingUp){
-            if(playerRel.y > projectionHeight/2f){
-                cameraPos.y = Math.max(cameraPos.y, playerAbs.y - 2.5f* Settings.GRID_HEIGHT);
-            }
+        if(playerAbs.y > 0){
+            cameraPos.y = 0;
         }else{
-            if(playerRel.y < projectionHeight/2f){
-                cameraPos.y = Math.min(cameraPos.y, playerAbs.y - 2.5f*Settings.GRID_HEIGHT);
-            }
+            cameraPos.y = -projectionHeight;
         }
+
+    }
+
+    public void adjustGameCamera(){
+        Vector2f playerAbs = new Vector2f(player.tf.position);
+        cameraPos.x = playerAbs.x - sceneCamera.projectionWidth / 2f;
+        cameraPos.y = (playerAbs.y > 0)?0:-projectionHeight;
     }
 }

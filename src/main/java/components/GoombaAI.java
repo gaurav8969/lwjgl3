@@ -53,15 +53,9 @@ public class GoombaAI extends Component{
                 }
 
                 if (contactNormal.y > 0.58f) {
-                    StateMachine stateMachine = this.gameObject.getComponent(StateMachine.class);
-                    stateMachine.trigger("squash");
-                    rb.setIsSensor();
-                    rb.setBodyType(BodyType.Static);
-                    this.velocity = 0f;
+                    squash();
                     AssetPool.getSound("assets/sounds/stomp.ogg").play();
-                    squash = true;
-                    disintegrate = 1f;
-                    playerController.debounce();
+                    playerController.debounce(8);
                 }
             }
         }
@@ -71,4 +65,15 @@ public class GoombaAI extends Component{
             goRight = contactNormal.x < 0f;
         }
     }
+
+    public void squash(){
+        StateMachine stateMachine = this.gameObject.getComponent(StateMachine.class);
+        stateMachine.trigger("squash");
+        rb.setIsSensor();
+        rb.setBodyType(BodyType.Static);
+        this.velocity = 0f;
+        squash = true;
+        disintegrate = 1f;
+    }
+
 }

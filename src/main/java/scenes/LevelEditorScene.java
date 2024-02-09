@@ -226,6 +226,18 @@ public class LevelEditorScene extends SceneInitializer {
                 }
                 ImGui.popID();
 
+                //turtle
+                Spritesheet turtles = AssetPool.getSpriteSheet("assets/images/turtle.png");
+                sprite = turtles.getSprite(0);
+                id = sprite.texID();
+                ImGui.pushID(uid++);
+                texCoords = sprite.getTexCoords();
+                if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
+                    GameObject object = Prefabs.generateTurtle();
+                    editorContext.getComponent(MouseControls.class).pickUp(object);
+                }
+                ImGui.popID();
+
                 ImGui.endTabItem();
             }
 

@@ -362,4 +362,56 @@ public class Prefabs {
 
         return pipe;
     }
+
+    public static GameObject generateTurtle(){
+        Spritesheet turtles = AssetPool.getSpriteSheet("assets/images/turtle.png");
+        GameObject turtle = Prefabs.generateSpriteObject(turtles.getSprite(0), 0.25f,0.25f);
+        turtle.name = "Turtle" + turtle.getID();
+
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Dynamic);
+        rb.setFixedRotation(true);
+        rb.setContinuousCollision(false);
+        turtle.addComponent(rb);
+
+        float defaultFrameTime = 0.39f;
+
+        AnimationState scuttle = new AnimationState();
+        scuttle.title = "scuttle";
+        scuttle.addFrame(turtles.getSprite(0), defaultFrameTime);
+        scuttle.addFrame(turtles.getSprite(1), defaultFrameTime);
+        scuttle.setLoop(true);
+
+        AnimationState hiding = new AnimationState();
+        hiding.title = "hiding";
+        hiding.addFrame(turtles.getSprite(2), defaultFrameTime );
+        hiding.setLoop(false);
+
+        AnimationState tremble = new AnimationState();
+        tremble.title = "tremble";
+        tremble.addFrame(turtles.getSprite(2), defaultFrameTime/2f);
+        tremble.addFrame(turtles.getSprite(3), defaultFrameTime/2f);
+        tremble.setLoop(true);
+        
+        StateMachine stateMachine = new StateMachine();
+        stateMachine.addState(scuttle);
+        stateMachine.addState(hiding);
+        stateMachine.addState(tremble);
+        stateMachine.setDefaultState("scuttle");
+
+        stateMachine.addTrigger("scuttle", "hiding", "stomp");
+        stateMachine.addTrigger("hiding", "tremble", "tremble");
+        stateMachine.addTrigger("tremble", "scuttle", "resurrect");
+        stateMachine.addTrigger("hiding","hiding", "die" );
+        stateMachine.addTrigger("tremble", "hiding", "die");
+
+        CircleCollider circleCollider = new CircleCollider();
+        circleCollider.setRadius(0.12f);
+
+        turtle.addComponent(circleCollider);
+        turtle.addComponent(new TurtleAI());
+        turtle.addComponent(stateMachine);
+
+        return turtle;
+    }
 }

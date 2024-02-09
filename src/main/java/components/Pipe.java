@@ -1,9 +1,6 @@
 package components;
 
-import contra.Direction;
-import contra.GameObject;
-import contra.KeyListener;
-import contra.Window;
+import contra.*;
 import editor.CImgui;
 import imgui.ImGui;
 import org.jbox2d.dynamics.contacts.Contact;
@@ -19,15 +16,14 @@ public class Pipe extends Component{
     private String name;
     private String connectingPipeName;
     private boolean incoming = false;
-    private GameObject collidingPlayer;
+    private static GameObject collidingPlayer;
+    private static GameObject collidingPipe;
     private Vector2f contactNormal;
-    private static transient float pipeDowntime = 0.5f;
-    private static transient boolean entering;
+    private transient float pipeDowntime = 0.5f;
+    private transient boolean entering;
     private boolean receiving = false;
 
-    public Pipe(){
-
-    }
+    public Pipe(){}
 
     public Pipe(Direction direction){
         this.direction = direction;
@@ -42,7 +38,7 @@ public class Pipe extends Component{
 
     @Override
     public void update(float dt) {
-        if (incoming && collidingPlayer != null) {
+        if (collidingPipe == this.gameObject && incoming && collidingPlayer != null) {
             if(!entering){
                 switch (this.direction) {
                     case Down: {
@@ -101,6 +97,7 @@ public class Pipe extends Component{
                 slide(pipeDirection, false);
                 pipeDowntime = 0.5f;
                 this.gameObject.addComponent(new Ground());
+                Window.getScene().getGameObject(GameCamera.class).getComponent(GameCamera.class).adjustGameCamera();
             }
         }
     }
@@ -114,6 +111,7 @@ public class Pipe extends Component{
                 this.gameObject.removeComponent(Ground.class);
             }
 
+            collidingPipe = this.gameObject;
             collidingPlayer = playerController.gameObject;
             this.contactNormal = contactNormal;
         }
@@ -182,5 +180,4 @@ public class Pipe extends Component{
             }
         }
     }
-
 }

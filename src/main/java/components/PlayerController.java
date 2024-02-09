@@ -58,6 +58,7 @@ public class PlayerController extends Component{
     private transient float blinkDuration = 0.2f;
     public transient boolean sliding = false;
 
+
     @Override
     public void init(){
         this.rb = gameObject.getComponent(RigidBody2D.class);
@@ -229,6 +230,7 @@ public class PlayerController extends Component{
             rb.setBodyType(BodyType.Static);
             AssetPool.getSound("assets/sounds/mario_die.ogg").play();
             deathGoingUp = true;
+            isDead = true;
             Window.getPhysics().setLock(true);
         }else{
             blinkDuration = 0f;
@@ -239,8 +241,8 @@ public class PlayerController extends Component{
         }
     }
 
-    public void debounce(){
-        this.enemyDebounce = 8;
+    public void debounce(int debounce){
+        this.enemyDebounce = debounce;
     }
 
     public void blink(){
@@ -269,5 +271,9 @@ public class PlayerController extends Component{
 
     public Vector2f getVelocity(){
         return this.velocity;
+    }
+
+    public boolean isDead(){
+        return isDead;
     }
 }
