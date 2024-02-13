@@ -26,7 +26,6 @@ public class Prefabs {
         GameObject mario = generateSpriteObject(playerSprites.getSprite(0),0.25f,0.25f );
         mario.name = "Mario";
 
-        //mario.setName("Mario");
         //little(sprite size) mario animations
         AnimationState run = new AnimationState();
         run.title = "Run";
@@ -51,6 +50,17 @@ public class Prefabs {
         jump.title = "Jump";
         jump.addFrame(playerSprites.getSprite(5), 0.1f);
         jump.setLoop(false);
+
+        AnimationState die = new AnimationState();
+        die.title = "Die";
+        die.addFrame(playerSprites.getSprite(6), 0.1f);
+        die.setLoop(false);
+
+        AnimationState climb = new AnimationState();
+        climb.title = "Climb";
+        climb.addFrame(playerSprites.getSprite(7),0.1f);
+        climb.addFrame(playerSprites.getSprite(8),0.1f);
+        climb.setLoop(true);
 
         // Big mario animations
         AnimationState bigRun = new AnimationState();
@@ -77,6 +87,12 @@ public class Prefabs {
         bigJump.title = "BigJump";
         bigJump.addFrame(bigPlayerSprites.getSprite(5), 0.1f);
         bigJump.setLoop(false);
+
+        AnimationState bigClimb = new AnimationState();
+        bigClimb.title = "BigClimb";
+        bigClimb.addFrame(bigPlayerSprites.getSprite(7),0.1f);
+        bigClimb.addFrame(bigPlayerSprites.getSprite(8),0.1f);
+        bigClimb.setLoop(true);
 
         // Fire mario animations
         int fireOffset = 21;
@@ -105,10 +121,11 @@ public class Prefabs {
         fireJump.addFrame(bigPlayerSprites.getSprite(fireOffset + 5), 0.1f);
         fireJump.setLoop(false);
 
-        AnimationState die = new AnimationState();
-        die.title = "Die";
-        die.addFrame(playerSprites.getSprite(6), 0.1f);
-        die.setLoop(false);
+        AnimationState fireClimb = new AnimationState();
+        fireClimb.title = "FireClimb";
+        fireClimb.addFrame(bigPlayerSprites.getSprite(fireOffset + 7),0.1f);
+        fireClimb.addFrame(bigPlayerSprites.getSprite(fireOffset + 8),0.1f);
+        fireClimb.setLoop(true);
 
         StateMachine stateMachine = new StateMachine();
         stateMachine.addState(run);
@@ -116,16 +133,19 @@ public class Prefabs {
         stateMachine.addState(switchDirection);
         stateMachine.addState(jump);
         stateMachine.addState(die);
+        stateMachine.addState(climb);
 
         stateMachine.addState(bigRun);
         stateMachine.addState(bigIdle);
         stateMachine.addState(bigSwitchDirection);
         stateMachine.addState(bigJump);
+        stateMachine.addState(bigClimb);
 
         stateMachine.addState(fireRun);
         stateMachine.addState(fireIdle);
         stateMachine.addState(fireSwitchDirection);
         stateMachine.addState(fireJump);
+        stateMachine.addState(fireClimb);
 
         stateMachine.setDefaultState(idle.title);
         stateMachine.addTrigger(run.title, switchDirection.title, "switchDirection");
@@ -188,6 +208,51 @@ public class Prefabs {
         stateMachine.addTrigger(fireSwitchDirection.title, bigSwitchDirection.title, "die");
         stateMachine.addTrigger(fireIdle.title, bigIdle.title, "die");
         stateMachine.addTrigger(fireJump.title, bigJump.title, "die");
+
+        stateMachine.addTrigger(run.title, climb.title, "climb");
+        stateMachine.addTrigger(jump.title, climb.title, "climb");
+        stateMachine.addTrigger(bigRun.title, bigClimb.title, "climb");
+        stateMachine.addTrigger(bigJump.title, bigClimb.title, "climb");
+        stateMachine.addTrigger(fireRun.title, bigClimb.title, "climb");
+        stateMachine.addTrigger(fireJump.title, fireClimb.title, "climb");
+
+        stateMachine.addTrigger(climb.title, run.title, "startRunning");
+        stateMachine.addTrigger(bigClimb.title, bigRun.title, "startRunning");
+        stateMachine.addTrigger(fireClimb.title,fireRun.title, "startRunning");
+        stateMachine.addTrigger(climb.title, idle.title, "stopRunning");
+        stateMachine.addTrigger(bigClimb.title, bigIdle.title, "stopRunning");
+        stateMachine.addTrigger(fireClimb.title, fireIdle.title, "stopRunning");
+
+        mario.addComponent(stateMachine);
+
+        PillboxCollider pb = new PillboxCollider();
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Dynamic);
+        rb.setContinuousCollision(true);
+        rb.setFixedRotation(true);
+        rb.setMass(25.0f);
+
+        mario.addComponent(rb);
+        mario.addComponent(pb);
+        mario.addComponent(new PlayerController());
+
+        return mario;
+    }
+
+    public static GameObject generateClimberMario(){
+        Spritesheet playerSprites = AssetPool.getSpriteSheet("assets/images/characterSprites.png");
+
+        GameObject mario = Prefabs.generateSpriteObject(playerSprites.getSprite(0), 0.25f, 0.25f);
+
+        AnimationState climb = new AnimationState();
+        climb.title = "Climb";
+        climb.addFrame(playerSprites.getSprite(7),0.1f);
+        climb.addFrame(playerSprites.getSprite(8),0.1f);
+        climb.setLoop(true);
+
+        StateMachine stateMachine = new StateMachine();
+        stateMachine.addState(climb);
+        stateMachine.setDefaultState(climb.title);
 
         mario.addComponent(stateMachine);
 
@@ -371,7 +436,7 @@ public class Prefabs {
         RigidBody2D rb = new RigidBody2D();
         rb.setBodyType(BodyType.Dynamic);
         rb.setFixedRotation(true);
-        rb.setContinuousCollision(false);
+        rb.setContinuousCollision(true);
         turtle.addComponent(rb);
 
         float defaultFrameTime = 0.39f;
@@ -413,5 +478,46 @@ public class Prefabs {
         turtle.addComponent(stateMachine);
 
         return turtle;
+    }
+
+
+    public static GameObject generateFlag(){
+        Spritesheet items = AssetPool.getSpriteSheet("assets/images/items.png");
+        GameObject flag = Prefabs.generateSpriteObject(items.getSprite(6), 0.25f,0.25f);
+
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Static);
+        rb.setFixedRotation(true);
+        rb.setContinuousCollision(true);
+
+        CircleCollider circleCollider = new CircleCollider();
+        circleCollider.setRadius(0.12f);
+
+        flag.addComponent(rb);
+        flag.addComponent(new Flag());
+        flag.addComponent(circleCollider);
+
+        return flag;
+    }
+
+    public static GameObject generateFireball(Vector2f pos){
+        Spritesheet items = AssetPool.getSpriteSheet("assets/images/items.png");
+        GameObject fireball = Prefabs.generateSpriteObject(items.getSprite(32), 0.25f,0.25f);
+        fireball.tf.position = new Vector2f(pos);
+        fireball.name = "fireball " + fireball.getID();
+
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Dynamic);
+        rb.setFixedRotation(true);
+        rb.setContinuousCollision(true);
+
+        CircleCollider circleCollider = new CircleCollider();
+        circleCollider.setRadius(0.12f);
+
+        fireball.addComponent(rb);
+        fireball.addComponent(new Fireball());
+        fireball.addComponent(circleCollider);
+
+        return fireball;
     }
 }

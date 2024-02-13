@@ -5,6 +5,8 @@ import editor.CImgui;
 import imgui.ImGui;
 import org.jbox2d.dynamics.contacts.Contact;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
+import physics2D.RaycastInfo;
 import physics2D.components.RigidBody2D;
 import util.AssetPool;
 
@@ -12,16 +14,15 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Pipe extends Component{
     public Direction direction;
-    private transient RigidBody2D rb;
     private String name;
     private String connectingPipeName;
     private boolean incoming = false;
     private static GameObject collidingPlayer;
-    private static GameObject collidingPipe;
-    private Vector2f contactNormal;
     private transient float pipeDowntime = 0.5f;
     private transient boolean entering;
-    private boolean receiving = false;
+    private transient boolean receiving = false;
+    private transient float receiveDebounce = 0.4f;
+    private static boolean underground = false;
 
     public Pipe(){}
 
@@ -32,40 +33,44 @@ public class Pipe extends Component{
 
     @Override
     public void init() {
+        collidingPlayer = Window.getScene().getGameObject(PlayerController.class);
         entering = false;
-        this.rb = this.gameObject.getComponent(RigidBody2D.class);
     }
 
     @Override
     public void update(float dt) {
-        if (collidingPipe == this.gameObject && incoming && collidingPlayer != null) {
+        if(collidingPlayer == null)return;
+
+        if (incoming && !receiving){
             if(!entering){
                 switch (this.direction) {
                     case Down: {
-                        if (!KeyListener.isKeyPressed(GLFW_KEY_UP) || !(contactNormal.y < -0.5f)) {
+                        if (!KeyListener.isKeyPressed(GLFW_KEY_UP)) {
                             return;
                         }
                         break;
                     }
                     case Up: {
-                        if (!KeyListener.isKeyPressed(GLFW_KEY_DOWN) || !(contactNormal.x < 0.6f)) {
+                        if (!KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
                             return;
                         }
                         break;
                     }
                     case Right: {
-                        if (!KeyListener.isKeyPressed(GLFW_KEY_LEFT) || !(contactNormal.x > 0.5f)) {
+                        if (!KeyListener.isKeyPressed(GLFW_KEY_LEFT)) {
                             return;
                         }
                         break;
                     }
                     case Left: {
-                        if (!KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || !(contactNormal.x < -0.5f)) {
+                        if (!KeyListener.isKeyPressed(GLFW_KEY_RIGHT)) {
                             return;
                         }
                         break;
                     }
                 }
+
+                if(!atEntrance())return;
 
                 entering = true;
                 AssetPool.getSound("assets/sounds/pipe.ogg").play();
@@ -75,7 +80,7 @@ public class Pipe extends Component{
                 PlayerController playerController = collidingPlayer.getComponent(PlayerController.class);
                 playerController.gravityScale = 0f;
                 playerController.friction = 0f;
-                playerController.sliding = true;
+                playerController.locked = true;
                 slide(direction, true);
             }
 
@@ -87,6 +92,14 @@ public class Pipe extends Component{
                 entering = false;
                 GameObject connectingPipe = Window.getScene().getGameObject(connectingPipeName);
                 Pipe pipeComponent = connectingPipe.getComponent(Pipe.class);
+                if(connectingPipeName.equals("underground0")){
+                    underground = true;
+                }
+
+                if(connectingPipeName.equals("ground01")){
+                    underground = false;
+                }
+
                 pipeComponent.receiving = true;
 
                 Vector2f pipePos = connectingPipe.tf.position;
@@ -99,35 +112,20 @@ public class Pipe extends Component{
                 this.gameObject.addComponent(new Ground());
                 Window.getScene().getGameObject(GameCamera.class).getComponent(GameCamera.class).adjustGameCamera();
             }
-        }
-    }
+        }else if(receiving){
+            this.gameObject.removeComponent(Ground.class);
+            receiveDebounce -= dt;
 
-    @Override
-    public void beginCollision(GameObject collidingObject, Contact contact, Vector2f contactNormal){
-        PlayerController playerController = collidingObject.getComponent(PlayerController.class);
-
-        if (playerController != null){
-            if(receiving){
-                this.gameObject.removeComponent(Ground.class);
+            if(receiveDebounce < 0) {
+                receiveDebounce = 0.4f;
+                receiving = false;
+                collidingPlayer.getComponent(SpriteRenderer.class).setZIndex(0);
+                collidingPlayer.getComponent(RigidBody2D.class).setNotSensor();
+                collidingPlayer.getComponent(PlayerController.class).gravityScale = 0.7f;
+                collidingPlayer.getComponent(PlayerController.class).friction = 0.05f;
+                collidingPlayer.getComponent(PlayerController.class).locked = false;
+                this.gameObject.addComponent(new Ground());
             }
-
-            collidingPipe = this.gameObject;
-            collidingPlayer = playerController.gameObject;
-            this.contactNormal = contactNormal;
-        }
-    }
-
-    @Override
-    public void endCollision(GameObject collidingObject, Contact contact, Vector2f contactNormal){
-        if(collidingPlayer != null && receiving){
-            receiving = false;
-            collidingPlayer.getComponent(SpriteRenderer.class).setZIndex(0);
-            collidingPlayer.getComponent(RigidBody2D.class).setNotSensor();
-            collidingPlayer.getComponent(PlayerController.class).gravityScale = 0.7f;
-            collidingPlayer.getComponent(PlayerController.class).friction = 0.05f;
-            collidingObject.getComponent(PlayerController.class).sliding = false;
-            this.gameObject.addComponent(new Ground());
-            collidingPlayer = null;
         }
     }
 
@@ -157,7 +155,7 @@ public class Pipe extends Component{
         PlayerController playerController = collidingPlayer.getComponent(PlayerController.class);
         switch (direction) {
             case Down: {
-                playerController.setVelocity(new Vector2f(0,slideDirection*-1.8f));
+                playerController.setVelocity(new Vector2f(0,slideDirection*-1f));
                 break;
             }
             case Up: {
@@ -179,5 +177,62 @@ public class Pipe extends Component{
                 break;
             }
         }
+    }
+
+    private boolean atEntrance(){
+        switch (direction) {
+            case Down:{
+                //raytracing downwards
+                Vector2f rayStart = new Vector2f(gameObject.tf.position.x,
+                        gameObject.tf.position.y - this.gameObject.tf.scale.y * 0.5f);
+                Vector2f rayEnd = new Vector2f(rayStart.x, rayStart.y - collidingPlayer.tf.scale.y);
+
+                RaycastInfo obj = Window.getPhysics().raycast(this.gameObject,
+                        rayStart, rayEnd);
+
+                return obj.hit && obj.hitObject.getComponent(PlayerController.class) != null;
+            }
+
+            case Up:{
+                //raytracing downwards
+                Vector2f rayStart = new Vector2f(gameObject.tf.position.x,
+                        gameObject.tf.position.y + this.gameObject.tf.scale.y*0.5f);
+                Vector2f rayEnd = new Vector2f(rayStart.x, rayStart.y + collidingPlayer.tf.scale.y);
+
+                RaycastInfo obj = Window.getPhysics().raycast(this.gameObject,
+                        rayStart, rayEnd);
+
+                return obj.hit && obj.hitObject.getComponent(PlayerController.class) != null;
+            }
+
+            case Right: {
+                //raytracing rightwards
+                Vector2f rayStart = new Vector2f(gameObject.tf.position.x + gameObject.tf.scale.x*0.5f,
+                        gameObject.tf.position.y);
+                Vector2f rayEnd = new Vector2f(rayStart.x + Math.abs(collidingPlayer.tf.scale.x*0.6f), rayStart.y);
+
+                RaycastInfo obj = Window.getPhysics().raycast(this.gameObject,
+                        rayStart, rayEnd);
+
+                return obj.hit && obj.hitObject.getComponent(PlayerController.class) != null;
+            }
+
+            case Left: {
+                //raytracing rightwards
+                Vector2f rayStart = new Vector2f(gameObject.tf.position.x - this.gameObject.tf.scale.x*0.5f,
+                        gameObject.tf.position.y);
+                Vector2f rayEnd = new Vector2f(rayStart.x - Math.abs(collidingPlayer.tf.scale.x * 0.6f), rayStart.y);
+
+                RaycastInfo obj = Window.getPhysics().raycast(this.gameObject,
+                        rayStart, rayEnd);
+
+                return obj.hit && obj.hitObject.getComponent(PlayerController.class) != null;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isUnderground(){
+        return underground;
     }
 }

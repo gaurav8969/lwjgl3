@@ -2,6 +2,7 @@ package components;
 
 import contra.GameObject;
 import contra.KeyListener;
+import contra.Prefabs;
 import contra.Window;
 import observers.EventSystem;
 import observers.events.Event;
@@ -9,16 +10,12 @@ import observers.events.EventType;
 import org.jbox2d.dynamics.contacts.Contact;
 import org.joml.Math;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
-import physics2D.RaycastInfo;
 import physics2D.components.PillboxCollider;
 import physics2D.components.RigidBody2D;
 import physics2D.enums.BodyType;
 import util.AssetPool;
 import util.Settings;
-
-import java.security.Key;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -27,7 +24,6 @@ public class PlayerController extends Component{
         Small,
         Big,
         Fire,
-        Invincible,
         Die
     }
 
@@ -56,11 +52,14 @@ public class PlayerController extends Component{
     private transient float deathMaxHeight = 0.34f;
     private transient boolean deathGoingUp = false;
     private transient float blinkDuration = 0.2f;
-    public transient boolean sliding = false;
-
+    public transient boolean locked = false;
+    public transient boolean hasWon = false;
+    public transient boolean dontDeathAnimate = false;
+    public transient float winningStroll = 7f;
 
     @Override
     public void init(){
+        this.gameObject.getComponent(SpriteRenderer.class).setZIndex(10);
         this.rb = gameObject.getComponent(RigidBody2D.class);
         this.stateMachine = gameObject.getComponent(StateMachine.class);
         this.rb.setGravityScale(0.0f);
@@ -71,13 +70,21 @@ public class PlayerController extends Component{
         hurtInvincibility -= dt;
         blinkDuration -= dt;
 
+        if(hasWon){
+            winningStroll -= dt;
+            if(winningStroll < 0){
+                EventSystem.notify(null, new Event(EventType.LoadLevel));
+                return;
+            }
+        }
+
         if(hurt){
             if(hurtInvincibility < 0){
                 if(playerState == PlayerState.Die){
                     EventSystem.notify(null, new Event(EventType.LoadLevel));
                 }
                 hurt = false;
-            }else if(playerState == PlayerState.Die) {
+            }else if(!dontDeathAnimate && playerState == PlayerState.Die) {
                     Vector2f marioPos = this.gameObject.tf.position;
                     if(deathGoingUp && marioPos.y < deathMaxHeight) {
                         marioPos.y += jumpImpulse/2 * dt;
@@ -86,12 +93,22 @@ public class PlayerController extends Component{
                         marioPos.y -= jumpImpulse * dt;
                     }
                 return;
-            }else{
+            }else if(!dontDeathAnimate){
                 blink();
             }
+        }else{
+            this.gameObject.getComponent(SpriteRenderer.class).getColour().w = 1f;
         }
 
-        if ((KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) && !sliding) {
+        if(playerState == PlayerState.Fire && KeyListener.keyBeginPress(GLFW_KEY_E) && !Fireball.isCrowded()){
+            Vector2f fireballPos = new Vector2f(this.gameObject.tf.position).add(
+                    new Vector2f(this.gameObject.tf.scale.x,0f));
+
+            GameObject fireball = Prefabs.generateFireball(fireballPos);
+            Window.getScene().addGameObjectToScene(fireball);
+        }
+
+        if ((KeyListener.isKeyPressed(GLFW_KEY_RIGHT) || KeyListener.isKeyPressed(GLFW_KEY_D)) && !locked) {
             this.gameObject.tf.scale.x = playerWidth;
             this.acceleration.x = walkSpeed;
 
@@ -102,7 +119,7 @@ public class PlayerController extends Component{
                 this.stateMachine.trigger("startRunning");
             }
 
-        }else if((KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) && !sliding){
+        }else if((KeyListener.isKeyPressed(GLFW_KEY_LEFT) || KeyListener.isKeyPressed(GLFW_KEY_A)) && !locked){
             //basically how we flip the object when changing directions
             this.gameObject.tf.scale.x = -playerWidth;
             this.acceleration.x = -walkSpeed;
@@ -128,7 +145,7 @@ public class PlayerController extends Component{
         }
 
         checkOnGround();
-        if (KeyListener.isKeyPressed(GLFW_KEY_SPACE) && (jumpTime > 0 || onGround || groundDebounce > 0)) {
+        if (!locked && KeyListener.isKeyPressed(GLFW_KEY_SPACE) && (jumpTime > 0 || onGround || groundDebounce > 0)) {
             if ((onGround || groundDebounce > 0) && jumpTime == 0) {
                 AssetPool.getSound("assets/sounds/jump-small.ogg").play();
                 jumpTime = 35;
@@ -178,7 +195,7 @@ public class PlayerController extends Component{
 
     public void checkOnGround(){
         float innerPlayerWidth = this.playerWidth * 0.6f;
-        float yVal = playerState == PlayerState.Small ? -0.14f: -0.221f;
+        float yVal = playerState == PlayerState.Small ? -0.1355f: -0.221f;
         onGround = Window.getPhysics().checkOnGround(this.gameObject, innerPlayerWidth, yVal);
     }
 
@@ -221,24 +238,39 @@ public class PlayerController extends Component{
     }
 
     public void damage(){
+        if(hurtInvincibility > 0) return;
         hurt = true;
         hurtInvincibility = Settings.HURT_INVINCIBILITY;
         this.gameObject.getComponent(StateMachine.class).trigger("die");
         if(playerState == PlayerState.Small){
+            stateMachine.trigger("die");
             playerState = PlayerState.Die;
             deathMaxHeight += this.gameObject.tf.position.y;
             rb.setBodyType(BodyType.Static);
-            AssetPool.getSound("assets/sounds/mario_die.ogg").play();
             deathGoingUp = true;
+            AssetPool.getSound("assets/sounds/mario_die.ogg").play();
+            AssetPool.getSound("assets/sounds/main-theme-overworld.ogg").stop();
             isDead = true;
             Window.getPhysics().setLock(true);
         }else{
+            stateMachine.trigger("damage");
             blinkDuration = 0f;
             playerState = PlayerState.Small;
             AssetPool.getSound("assets/sounds/pipe.ogg").play();
             gameObject.tf.scale.y = 0.25f;
             this.gameObject.getComponent(PillboxCollider.class).setHeight(0.25f);
         }
+    }
+
+    public void kill(){
+        dontDeathAnimate = true;
+        hurtInvincibility = 3f;
+        playerState = PlayerState.Die;
+        hurt = true;
+        AssetPool.getSound("assets/sounds/main-theme-overworld.ogg").stop();
+        AssetPool.getSound("assets/sounds/mario_die.ogg").play();
+        isDead = true;
+        Window.getPhysics().setLock(true);
     }
 
     public void debounce(int debounce){
@@ -264,16 +296,25 @@ public class PlayerController extends Component{
         spr.setDirty();
     }
 
+    public Vector2f getVelocity(){
+        return this.velocity;
+    }
+
+    //use when world isn't stepping
     public void setVelocity(Vector2f vel){
         this.velocity.x = vel.x;
         this.velocity.y = vel.y;
     }
 
-    public Vector2f getVelocity(){
-        return this.velocity;
+    public void setPosition(Vector2f pos){
+        rb.setPosition(pos);
     }
 
     public boolean isDead(){
         return isDead;
+    }
+
+    public void triggerAnimation(String trigger){
+        stateMachine.trigger(trigger);
     }
 }

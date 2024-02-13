@@ -1,8 +1,6 @@
 package editor;
 
-import components.BreakableBrick;
-import components.Ground;
-import components.SpriteRenderer;
+import components.*;
 import contra.KeyListener;
 import contra.Window;
 import org.joml.Vector2f;
@@ -110,9 +108,23 @@ public class PropertiesWindow {
 
                 }
 
+                if(ImGui.menuItem("Add Bop Component")){
+                    if(activeGameObject.getComponent(Boppable.class) == null){
+                        activeGameObject.addComponent(new Boppable());
+                    }
+
+                    if(activeGameObject.getComponent(BreakableBrick.class) == null){
+                        activeGameObject.addComponent(new BreakableBrick());
+                    }
+                }
+
                 if(ImGui.menuItem("Add Breakable component")){
                     if(activeGameObject.getComponent(BreakableBrick.class) == null){
                         activeGameObject.addComponent(new BreakableBrick());
+                    }
+
+                    if(activeGameObject.getComponent(Boppable.class) == null){
+                        activeGameObject.addComponent(new Boppable());
                     }
                 }
 

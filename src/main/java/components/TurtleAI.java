@@ -7,6 +7,7 @@ import org.joml.Math;
 import org.joml.Vector2f;
 import physics2D.RaycastInfo;
 import physics2D.components.RigidBody2D;
+import util.AssetPool;
 
 public class TurtleAI extends Component{
     private enum State{
@@ -35,6 +36,7 @@ public class TurtleAI extends Component{
 
     @Override
     public void update(float dt){
+        if(!Window.getScene().camera().withinProjection(this.gameObject.tf.position))return;
         if(haltDebounce > 0){
             haltDebounce -= dt;
         }else{
@@ -82,16 +84,26 @@ public class TurtleAI extends Component{
                     stateMachine.trigger("stomp");
                     playerController.debounce(16);
                     turtleState = State.Hiding;
-                } else {
+                    AssetPool.getSound("assets/sounds/bump.ogg").play();
+                } else{
                     playerController.damage();
                     return;
                 }
             }else if(turtleState == State.Dead){
                 if(Math.abs(contactNormal.x) < 0.4f){
                     turtleSpeed = 0f;
-                }else if(contactNormal.y < 0.1f && turtleSpeed > 0f && haltDebounce < 0f){
-                    playerController.damage();
-                    return;
+                }else if(contactNormal.y < 0.1f && haltDebounce < 0f){
+                    if(playerController.gameObject.tf.scale.x > 0){
+                        if(turtleSpeed > 0 && !goingRight) {
+                            playerController.damage();
+                            return;
+                        }
+                    }else{
+                        if(turtleSpeed > 0 && goingRight){
+                            playerController.damage();
+                            return;
+                        }
+                    }
                 }
             }
         }
@@ -111,9 +123,10 @@ public class TurtleAI extends Component{
         //send shell racing across the floor, lynching goombas
         if(playerController != null && Math.abs(contactNormal.x) > 0.8f
                 && haltDebounce < 0){
+            AssetPool.getSound("assets/sounds/bump.ogg").play();
             stateMachine.trigger("die");
             turtleState = State.Dead;
-            turtleSpeed = 1.5f;
+            turtleSpeed = 3.5f;
             goingRight = contactNormal.x < 0;
             this.gameObject.tf.scale.x *= (goingRight)? -1:1;
         }
@@ -128,5 +141,16 @@ public class TurtleAI extends Component{
                 turtlePos, back );
 
         return onBack.hit && onBack.hitObject.getComponent(PlayerController.class) != null;
+    }
+
+    public void kill(){
+        stateMachine.trigger("stomp");
+        stateMachine.trigger("die");
+        turtleState = State.Dead;
+        turtleSpeed = 0f;
+    }
+
+    private void onGround(){
+
     }
 }

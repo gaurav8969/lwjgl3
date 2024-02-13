@@ -14,9 +14,9 @@ public class ComponentDeserializer implements JsonSerializer<Component>, JsonDes
             String typeName = json.get("type").getAsString();
             JsonElement properties = json.get("properties");
 
-            try {
+            try{
                 return Context.deserialize(properties, Class.forName(typeName));
-            } catch (ClassNotFoundException e) {
+            }catch (ClassNotFoundException e) {
                 throw new JsonParseException("Unknown element type: " + typeName, e);
             }
         }

@@ -73,10 +73,15 @@ public class GameObject {
             }
         }
 
-        //texture id is transient, the texture is copied without id, so we update it manually
-        SpriteRenderer sprite = obj.getComponent(SpriteRenderer.class);
-        if(sprite != null && sprite.getTexture() != null){
-            sprite.setTexture(AssetPool.getTexture(sprite.getTexture().filepath));
+        StateMachine stateMachine = obj.getComponent(StateMachine.class);
+        if(stateMachine != null){
+            stateMachine.refreshTextures();
+        }else {
+            //texture id is transient, the texture is copied without id, so we update it manually
+            SpriteRenderer sprite = obj.getComponent(SpriteRenderer.class);
+            if (sprite != null && sprite.getTexture() != null) {
+                sprite.setTexture(AssetPool.getTexture(sprite.getTexture().filepath));
+            }
         }
 
         return obj;

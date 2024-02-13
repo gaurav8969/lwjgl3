@@ -11,6 +11,7 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.*;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import physics2D.components.Box2DCollider;
 import physics2D.components.CircleCollider;
 import physics2D.components.PillboxCollider;
@@ -229,11 +230,9 @@ public class Physics2D {
         Vector2f rayCastRightEnd = new Vector2f(rayCastLeftEnd).add(innerPlayerWidth, 0.0f);
         RaycastInfo infoRight = Window.getPhysics().raycast(gameObject, rayCastRightBegin, rayCastRightEnd);
 
-        return (infoLeft.hit && infoLeft.hitObject != null && infoLeft.hitObject.getComponent(Ground.class) != null) ||
-                (infoRight.hit && infoRight.hitObject != null && infoRight.hitObject.getComponent(Ground.class) != null);
-
-        /*Window.getScene().debugDraw().addLine2D(rayCastLeftBegin, rayCastLeftEnd, new Vector3f(1, 0, 0));
-        Window.getScene().debugDraw().addLine2D(rayCastRightBegin, rayCastRightEnd, new Vector3f(1, 0, 0));*/
+        boolean left = infoLeft.hit && infoLeft.hitObject != null && infoLeft.hitObject.getComponent(Ground.class) != null;
+        boolean right = infoRight.hit && infoRight.hitObject != null && infoRight.hitObject.getComponent(Ground.class) != null;
+        return left || right;
     }
 
     public Vector2f getGravity(){

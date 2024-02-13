@@ -111,8 +111,8 @@ public class StateMachine extends Component {
             currentState.update(dt);
             SpriteRenderer spr = gameObject.getComponent(SpriteRenderer.class);
             if(spr != null){
-                spr.setSprite(currentState.getCurrentSprite());
-                //spr.setTexture(currentState.getCurrentSprite().getTexture());
+                 spr.setSprite(currentState.getCurrentSprite());
+                spr.setTexture(currentState.getCurrentSprite().getTexture());
             }
         }
     }

@@ -5,6 +5,8 @@ import observers.EventSystem;
 import observers.Observer;
 import observers.events.Event;
 import observers.events.EventType;
+import org.joml.Vector2f;
+import org.joml.Vector4f;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
@@ -169,7 +171,7 @@ public class Window implements Observer {
         float endTime;
         float dt = -1.0f;
 
-        glClearColor(1f, 1f, 1f, 1.0f);
+        //glClearColor(1f, 1f, 1f, 1.0f);
 
         Shader defaultShader = AssetPool.getShader("assets/shaders/default.glsl");
         Shader pickingShader = AssetPool.getShader("assets/shaders/pickingShader.glsl");
@@ -195,7 +197,13 @@ public class Window implements Observer {
             framebuffer.bind();
 
             currentScene.debugDraw().beginFrame();
-            glClearColor(1f,1f,1f,1f);
+            if(runTimePlaying){
+                Vector4f clearColour = getScene().camera().clearColour;
+                glClearColor(clearColour.x, clearColour.y, clearColour.z, clearColour.w);
+            }else{
+                glClearColor(1f,1f,1f,1f);
+            }
+
             glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
 
             if (dt >= 0) {
@@ -261,17 +269,21 @@ public class Window implements Observer {
         switch(event.type){
             case GameEngineStartPlay:
                 this.runTimePlaying = true;
+                AssetPool.getSound("assets/sounds/main-theme-overworld.ogg").play();
                 currentScene.save();
                 Window.changeScene(new LevelEditorScene());
                 break;
             case GameEngineStopPlay:
+                AssetPool.getSound("assets/sounds/main-theme-overworld.ogg").stop();
                 this.runTimePlaying = false;
                 Window.changeScene(new LevelEditorScene());
                 break;
             case LoadLevel:
+                AssetPool.getSound("assets/sounds/main-theme-overworld.ogg").play();
                 Window.changeScene(new LevelEditorScene());
                 break;
             case SaveLevel:
+
                 currentScene.save();
                 break;
         }

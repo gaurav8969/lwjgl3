@@ -13,10 +13,13 @@ import java.util.List;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class KeyControls extends Component {
+    private final float debounceTime = 0.1f;
+    private float debounce = 0f;
     @Override
     public void editorUpdate(float dt) {
-        PropertiesWindow propertiesWindow = Window.getImGuilayer().getPropertiesWindow();
+        debounce -= dt;
 
+        PropertiesWindow propertiesWindow = Window.getImGuilayer().getPropertiesWindow();
         //we search for the objects in the current scene
         List<GameObject> activeGameObjects = propertiesWindow.getActiveObjects();
         List<Vector4f> activeColours = propertiesWindow.getActiveColours();
@@ -35,22 +38,22 @@ public class KeyControls extends Component {
                     }
                     Window.getScene().addGameObjectToScene(newObj);
                 }
-            }else if (KeyListener.keyBeginPress(GLFW_KEY_UP)) {
+            }else if (KeyListener.isKeyPressed(GLFW_KEY_UP) && debounce < 0) {
                 for (int i = 0; i < activeGameObjects.size(); i++) {
                     GameObject go = activeGameObjects.get(i);
                     go.tf.position.y += moveFactor * Settings.GRID_HEIGHT;
                 }
-            }else if (KeyListener.keyBeginPress(GLFW_KEY_DOWN)) {
+            }else if (KeyListener.isKeyPressed(GLFW_KEY_DOWN) && debounce < 0) {
                 for (int i = 0; i < activeGameObjects.size(); i++) {
                     GameObject go = activeGameObjects.get(i);
                     go.tf.position.y -= moveFactor * Settings.GRID_HEIGHT;
                 }
-            }else if (KeyListener.keyBeginPress(GLFW_KEY_LEFT)) {
+            }else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT) && debounce < 0) {
                 for (int i = 0; i < activeGameObjects.size(); i++) {
                     GameObject go = activeGameObjects.get(i);
                     go.tf.position.x -= moveFactor * Settings.GRID_WIDTH;
                 }
-            }else if (KeyListener.keyBeginPress(GLFW_KEY_RIGHT)) {
+            }else if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT) && debounce < 0) {
                 for (int i = 0; i < activeGameObjects.size(); i++) {
                     GameObject go = activeGameObjects.get(i);
                     go.tf.position.x += moveFactor * Settings.GRID_WIDTH;
@@ -70,6 +73,10 @@ public class KeyControls extends Component {
                     mouseControls.scoop(go);
                 }
             }
+        }
+
+        if(debounce < 0) {
+            debounce = debounceTime;
         }
     }
 }

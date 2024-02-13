@@ -17,7 +17,7 @@ public abstract class Block extends Component{
     @Override
     public void init(){
         this.bopStart = new Vector2f(this.gameObject.tf.position);
-        this.topBopLocation = new Vector2f(bopStart).add(0f, 0.02f);
+        this.topBopLocation = new Vector2f(bopStart).add(0f, 0.04f);
     }
 
     @Override

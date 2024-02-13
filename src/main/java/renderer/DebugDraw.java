@@ -211,5 +211,4 @@ public class DebugDraw {
         }
         addLine2D(points[size-1], points[0], colour,lifetime);
     }
-
 }

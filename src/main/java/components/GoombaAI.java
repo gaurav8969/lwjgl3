@@ -1,6 +1,7 @@
 package components;
 
 import contra.GameObject;
+import contra.Window;
 import org.jbox2d.dynamics.contacts.Contact;
 import org.joml.Math;
 import org.joml.Vector2f;
@@ -11,11 +12,12 @@ import util.Settings;
 
 public class GoombaAI extends Component{
     private RigidBody2D rb;
-    private transient float velocity = 0.9f;
-    private transient boolean goRight = true;
+    private boolean goRight = true;
     private transient float hitCoolDown = 0f;
     private transient float disintegrate = 2f;
     private transient boolean squash = false;
+    private Vector2f velocity = new Vector2f();
+    private Vector2f acceleration = new Vector2f();
 
     @Override
     public void init() {
@@ -24,6 +26,8 @@ public class GoombaAI extends Component{
 
     @Override
     public void update(float dt){
+        if(!Window.getScene().camera().withinProjection(this.gameObject.tf.position))return;
+
         hitCoolDown -= dt;
         disintegrate -= dt;
 
@@ -31,12 +35,22 @@ public class GoombaAI extends Component{
             this.gameObject.destroy();
         }
 
-        if(goRight){
-            this.rb.setVelocity(new Vector2f(velocity,0f));
+        if(!onGround()){
+            acceleration.y = 7f;
         }else{
-            this.rb.setVelocity(new Vector2f(-velocity, 0f));
+            velocity.y = 0f;
+            acceleration.y = 0f;
         }
 
+        velocity.y -= acceleration.y*dt;
+
+        if(goRight){
+            velocity.x = 0.9f;
+        }else{
+            velocity.x = -0.9f;
+        }
+
+        this.rb.setVelocity(velocity);
     }
 
     @Override
@@ -48,13 +62,12 @@ public class GoombaAI extends Component{
                 hitCoolDown = Settings.HURT_INVINCIBILITY;
 
                 //make sure collision is horizontal
-                if (yHitStrength < 0.3f) {
+                if (yHitStrength < 0.5f) {
                     playerController.damage();
                 }
 
                 if (contactNormal.y > 0.58f) {
                     squash();
-                    AssetPool.getSound("assets/sounds/stomp.ogg").play();
                     playerController.debounce(8);
                 }
             }
@@ -71,9 +84,15 @@ public class GoombaAI extends Component{
         stateMachine.trigger("squash");
         rb.setIsSensor();
         rb.setBodyType(BodyType.Static);
-        this.velocity = 0f;
+        velocity.x = 0f;
         squash = true;
         disintegrate = 1f;
+        AssetPool.getSound("assets/sounds/stomp.ogg").play();
     }
 
+    private boolean onGround(){
+        float width = 0.25f;
+        float yVal = -0.1355f;
+        return Window.getPhysics().checkOnGround(this.gameObject, width, yVal);
+    }
 }

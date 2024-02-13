@@ -161,7 +161,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
         SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
         for(int i = 0; i < numSprites; i++){
             if(sprites[i] == spr){
-                for(int j = i; j < numSprites; j++){
+                for(int j = i; j < numSprites - 1; j++){
                     sprites[j] = sprites[j + 1];
                     if(sprites[j] != null){
                         sprites[j].setDirty(); //reload vertices and rebuffer(offloading)

@@ -181,6 +181,8 @@ public class LevelEditorScene extends SceneInitializer {
                 }
                 ImGui.popID();
 
+                ImGui.sameLine();
+
                 //Down
                 Spritesheet pipes = AssetPool.getSpriteSheet("assets/images/pipes.png");
                 sprite = pipes.getSprite(0);
@@ -193,6 +195,8 @@ public class LevelEditorScene extends SceneInitializer {
                 }
                 ImGui.popID();
 
+                ImGui.sameLine();
+
                 //up
                 sprite = pipes.getSprite(1);
                 id = sprite.texID();
@@ -204,6 +208,8 @@ public class LevelEditorScene extends SceneInitializer {
                 }
                 ImGui.popID();
 
+                ImGui.sameLine();
+
                 //right
                 sprite = pipes.getSprite(2);
                 id = sprite.texID();
@@ -214,6 +220,8 @@ public class LevelEditorScene extends SceneInitializer {
                     editorContext.getComponent(MouseControls.class).pickUp(object);
                 }
                 ImGui.popID();
+
+                ImGui.sameLine();
 
                 //left
                 sprite = pipes.getSprite(3);
@@ -238,6 +246,31 @@ public class LevelEditorScene extends SceneInitializer {
                 }
                 ImGui.popID();
 
+                ImGui.sameLine();
+
+                //flag
+                sprite = items.getSprite(6);
+                id = sprite.texID();
+                ImGui.pushID(uid++);
+                texCoords = sprite.getTexCoords();
+                if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
+                    GameObject object = Prefabs.generateFlag();
+                    editorContext.getComponent(MouseControls.class).pickUp(object);
+                }
+                ImGui.popID();
+
+                ImGui.sameLine();
+
+                //flagstaff
+                sprite = items.getSprite(33);
+                id = sprite.texID();
+                ImGui.pushID(uid++);
+                texCoords = sprite.getTexCoords();
+                if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
+                    GameObject object = Prefabs.generateSpriteObject(sprite, 0.25f,0.25f);
+                    editorContext.getComponent(MouseControls.class).pickUp(object);
+                }
+                ImGui.popID();
                 ImGui.endTabItem();
             }
 

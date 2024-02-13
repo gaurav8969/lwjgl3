@@ -13,6 +13,7 @@ public class Camera {
     public final float projectionWidth = 6;
     public final float projectionHeight = 3;
     private Vector2f projectionSize = new Vector2f(projectionWidth,projectionHeight);
+    public Vector4f clearColour = new Vector4f(1f,1f,1f,1f);
 
     public Camera(Vector2f Position){
         this.position = Position;
@@ -74,5 +75,14 @@ public class Camera {
     public void addZoom(float value){
         this.zoom += value;
         this.adjustProjection();
+    }
+
+    public void adjustGameCamera(){
+        Window.getScene().getGameObject(GameCamera.class).getComponent(GameCamera.class).adjustGameCamera();
+    }
+
+    public boolean withinProjection(Vector2f pos){
+        return pos.x > position.x && pos.x < position.x + projectionWidth && pos.y > position.y &&
+        pos.y < position.y + projectionHeight;
     }
 }
