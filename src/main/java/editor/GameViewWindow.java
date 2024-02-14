@@ -36,6 +36,8 @@ public class GameViewWindow{
         //pos rel to glfw parent window
         ImGui.getCursorScreenPos(topLeft);
 
+        /*switch to get effects Frame buffer here for effects, change kernels in
+        assets/shaders/effectsShahder.glsl for new shader effects */
         int textureID = Window.getFramebuffer().getTextureID();
         //top left to bottom right, (0,1): top-left and (1,0) is bottom-right
         ImGui.image(textureID, windowSize.x, windowSize.y, 0,1,1,0);

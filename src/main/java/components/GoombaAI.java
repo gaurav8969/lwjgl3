@@ -62,7 +62,7 @@ public class GoombaAI extends Component{
                 hitCoolDown = Settings.HURT_INVINCIBILITY;
 
                 //make sure collision is horizontal
-                if (yHitStrength < 0.5f) {
+                if (yHitStrength < 0.5f && !squash) {
                     playerController.damage();
                 }
 

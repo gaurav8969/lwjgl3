@@ -1,5 +1,7 @@
 package contra;
 
+import components.Sprite;
+import components.SpriteRenderer;
 import editor.KeyControls;
 import observers.EventSystem;
 import observers.Observer;
@@ -13,9 +15,7 @@ import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.ARBCopyBuffer;
 import physics2D.Physics2D;
-import renderer.Framebuffer;
-import renderer.PickingTexture;
-import renderer.Shader;
+import renderer.*;
 import scenes.SceneInitializer;
 import util.AssetPool;
 import org.lwjgl.Version;
@@ -24,7 +24,6 @@ import org.lwjgl.opengl.GL;
 import scenes.LevelEditorScene;
 import scenes.Scene;
 import util.Time;
-import renderer.Renderer;
 import editor.ImGuiLayer;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -41,6 +40,7 @@ public class Window implements Observer {
     private static Scene currentScene;
     private ImGuiLayer imguiLayer;
     private Framebuffer framebuffer;
+    private Framebuffer effectsFramebuffer;
     private PickingTexture pickingTexture;
     private boolean runTimePlaying = false;
     private long audioContext;
@@ -111,6 +111,7 @@ public class Window implements Observer {
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
         this.framebuffer = new Framebuffer(1920,1080);
+        this.effectsFramebuffer = new Framebuffer(1920,1080);
         this.pickingTexture = new PickingTexture(1920,1080);
         glViewport(0,0,1920,1080);
 
@@ -175,6 +176,19 @@ public class Window implements Observer {
 
         Shader defaultShader = AssetPool.getShader("assets/shaders/default.glsl");
         Shader pickingShader = AssetPool.getShader("assets/shaders/pickingShader.glsl");
+        Shader effectsShader = AssetPool.getShader("assets/shaders/effectsShader.glsl");
+
+        Sprite effectSprite = new Sprite();
+        effectSprite.setTexture(framebuffer.texture);
+
+        GameObject effectsObject = Prefabs.generateSpriteObject(effectSprite, 6, 3);
+        effectsObject.tf.position.x = 3;
+        effectsObject.tf.position.y = 1.5f;
+        SpriteRenderer spr = effectsObject.getComponent(SpriteRenderer.class);
+
+        EffectsBatch effectsBatch = new EffectsBatch(1, 1,0,getScene().renderer());
+        effectsBatch.init();
+        effectsBatch.addSprite(spr);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -218,6 +232,11 @@ public class Window implements Observer {
             }
             framebuffer.unbind();
 
+            effectsFramebuffer.bind();
+            glClear(GL_COLOR_BUFFER_BIT); // clear the framebuffer
+            effectsBatch.render();
+            effectsFramebuffer.unbind();
+
             imguiLayer.update(currentScene,dt);
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
@@ -258,6 +277,10 @@ public class Window implements Observer {
 
     public static Framebuffer getFramebuffer(){
         return get().framebuffer;
+    }
+
+    public static Framebuffer getEffectsFramebuffer(){
+        return get().effectsFramebuffer;
     }
 
     public static float getTargetAspectRatio(){
