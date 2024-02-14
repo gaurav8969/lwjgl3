@@ -73,7 +73,6 @@ public class GoombaAI extends Component{
             }
         }
 
-
         if(yHitStrength < 0.1f){
             goRight = contactNormal.x < 0f;
         }
