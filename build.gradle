@@ -59,7 +59,6 @@ dependencies {
 
 configurations.implementation.canBeResolved = true
 
-
 jar {
     manifest {
         attributes (
@@ -86,6 +85,7 @@ task copyAssets(type: Copy) {
 }
 
 task fatJar(type: Jar) {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     manifest.from jar.manifest
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }

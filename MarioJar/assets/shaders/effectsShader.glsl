@@ -32,8 +32,9 @@ uniform sampler2D uEffectsTextures[8];
 
 out vec4 colour;
 
-const float offset = 1.0 / 30.0;
+const float offset = 1.0 / 300.0;
 void main(){
+    /*
     //Kernel effects
     vec2 offsets[9] = vec2[](
     vec2(-offset, offset), // top-left
@@ -53,7 +54,6 @@ void main(){
     1.0 / 16, 2.0 / 16, 1.0 / 16
     );
 
-
     vec3 sampleTex[9];
 
     for (int i = 0; i < 9; i++)
@@ -63,20 +63,19 @@ void main(){
     for (int i = 0; i < 9; i++){
         col += sampleTex[i] * kernel[i];
     }
+    colour = vec4(col,1.0);*/
 
-    vec4 intermCol = vec4(col, 1.0);
-
-/*    //INVERT
-    intermCol = 1 - intermCol * texture(uEffectsTextures[1], fTexCoords);
-    intermCol.w = 1;
-    colour = intermCol;*/
-
-    //colour = vec4(col,1.0);
+    /*
+    //INVERT
+    vec4 col = vec4(0.0);
+    col = 1 - fColour * texture(uEffectsTextures[1], fTexCoords);
+    col.w = 1;
+    colour = col;*/
 
 
     //GRAYSCALE
-    vec4 grayCol = vec4(0);
-     grayCol = intermCol * texture(uEffectsTextures[1], fTexCoords);
-    float avg = (grayCol.r + grayCol.g + grayCol.b)/3.0;
+    vec4 col = vec4(0.0);
+    col = fColour * texture(uEffectsTextures[1], fTexCoords);
+    float avg = (col.r + col.g + col.b)/3.0;
     colour = vec4(avg, avg, avg, 1.0);
 }

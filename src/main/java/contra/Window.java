@@ -2,18 +2,15 @@ package contra;
 
 import components.Sprite;
 import components.SpriteRenderer;
-import editor.KeyControls;
 import observers.EventSystem;
 import observers.Observer;
 import observers.events.Event;
 import observers.events.EventType;
-import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
-import org.lwjgl.opengl.ARBCopyBuffer;
 import physics2D.Physics2D;
 import renderer.*;
 import scenes.SceneInitializer;
@@ -163,19 +160,13 @@ public class Window implements Observer {
     }
 
     private void loop() {
-        // This line is critical for LWJGL's interoperation with GLFW's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the GLCapabilities instance and makes the OpenGL
-        // bindings available for use.
         float startTime = Time.getTime();
         float endTime;
         float dt = -1.0f;
 
-        //glClearColor(1f, 1f, 1f, 1.0f);
-
         Shader defaultShader = AssetPool.getShader("assets/shaders/default.glsl");
         Shader pickingShader = AssetPool.getShader("assets/shaders/pickingShader.glsl");
+        //load before the game runs to avoid lag
         Shader effectsShader = AssetPool.getShader("assets/shaders/effectsShader.glsl");
 
         Sprite effectSprite = new Sprite();
@@ -306,7 +297,6 @@ public class Window implements Observer {
                 Window.changeScene(new LevelEditorScene());
                 break;
             case SaveLevel:
-
                 currentScene.save();
                 break;
         }

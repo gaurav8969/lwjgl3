@@ -49,7 +49,7 @@ public class GameCamera extends Component {
                 cameraPos.x = playerController.gameObject.tf.position.x - 3*Settings.GRID_WIDTH;
                 cameraPos.y = -projectionHeight;
                 locked = true;
-            }else{
+            }else if (playerAbs.y < -0.25f){
                 playerController.kill();
             }
 
